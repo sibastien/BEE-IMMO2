@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bee Consulting - Immobilier</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="public-page">
+    <header class="site-header">
+      <a class="brand" href="/">
+        <span class="brand-mark">B</span>
+        <span>Bee Consulting</span>
+      </a>
+      <nav>
+        <a href="#annonces">Annonces</a>
+        <a href="#services">Services</a>
+        <a href="#avis">Avis</a>
+        <a href="#contact">Contact</a>
+        <a class="admin-link" href="/admin">Admin</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-content">
+          <p class="eyebrow">Achat, vente et location</p>
+          <h1>Bee Consulting</h1>
+          <p class="hero-copy">
+            Trouvez un appartement, une maison, une villa, un terrain ou un local commercial selon votre budget et votre ville.
+          </p>
+          <div class="hero-actions">
+            <a class="hero-primary" href="#annonces">Voir les annonces</a>
+            <a class="hero-secondary" href="#contact">Contacter l'agence</a>
+          </div>
+          <div class="hero-metrics" aria-label="Chiffres Bee Consulting">
+            <span><strong>Vente</strong> et location</span>
+            <span><strong>Hammamet</strong> et Nabeul</span>
+            <span><strong>Biens</strong> selectionnes</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="search-band" aria-label="Recherche immobiliere">
+        <div class="search-panel">
+          <label>
+            Ville ou quartier
+            <input id="locationFilter" type="search" placeholder="Hammamet, Centre, Yasmine..." />
+          </label>
+
+          <label>
+            Transaction
+            <select id="transactionFilter">
+              <option value="">Toutes</option>
+              <option value="sale">Vente</option>
+              <option value="rent">Location</option>
+            </select>
+          </label>
+
+          <label>
+            Type
+            <select id="typeFilter">
+              <option value="">Tous les biens</option>
+              <option value="apartment">Appartement</option>
+              <option value="house">Maison</option>
+              <option value="villa">Villa</option>
+              <option value="land">Terrain</option>
+              <option value="commercial">Commercial</option>
+            </select>
+          </label>
+
+          <label>
+            Prix max
+            <input id="maxPriceFilter" type="number" min="0" placeholder="Ex: 500000" />
+          </label>
+
+          <button class="primary gold-button" id="clearFilters" type="button">Reinitialiser</button>
+        </div>
+      </section>
+
+      <section class="public-section" id="annonces">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Selection disponible</p>
+            <h2>Annonces immobilieres</h2>
+          </div>
+          <p id="publicCount">Chargement...</p>
+        </div>
+
+        <div class="carousel-shell">
+          <button class="carousel-arrow carousel-arrow-left" id="carouselPrev" type="button" aria-label="Annonce precedente">&lsaquo;</button>
+          <div class="public-grid" id="publicProperties"></div>
+          <button class="carousel-arrow carousel-arrow-right" id="carouselNext" type="button" aria-label="Annonce suivante">&rsaquo;</button>
+          <div class="carousel-dots hidden" id="carouselDots"></div>
+        </div>
+      </section>
+
+      <section class="services-section" id="services" aria-label="Services Bee Consulting">
+        <div class="services-inner">
+          <div class="service-card">
+            <span class="service-icon">&#8962;</span>
+            <h3>Vendre mon bien</h3>
+            <p>Confiez votre bien a Bee Consulting pour une estimation claire et une mise en valeur professionnelle.</p>
+            <a href="#contact">Remplissez ce formulaire</a>
+          </div>
+
+          <div class="service-card">
+            <span class="service-icon">&#128226;</span>
+            <h3>Diffuser mon annonce</h3>
+            <p>Publiez votre annonce avec une presentation soignee pour toucher plus d'acheteurs et locataires.</p>
+            <a href="#contact">Remplissez ce formulaire</a>
+          </div>
+
+          <div class="service-card">
+            <span class="service-icon">&#128188;</span>
+            <h3>Investir dans l'immobilier</h3>
+            <p>Trouvez des opportunites adaptees a votre budget, votre zone et votre objectif de rentabilite.</p>
+            <a href="#contact">Remplissez ce formulaire</a>
+          </div>
+
+          <div class="service-card">
+            <span class="service-icon">&#9878;</span>
+            <h3>Accompagnement juridique</h3>
+            <p>Avancez avec plus de serenite grace a un accompagnement dans les etapes administratives.</p>
+            <a href="#contact">Remplissez ce formulaire</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="testimonials-section" id="avis" aria-label="Temoignages clients">
+        <div class="section-title testimonials-title">
+          <div>
+            <p class="eyebrow">Ils nous font confiance</p>
+            <h2>Temoignages clients</h2>
+          </div>
+        </div>
+
+        <div class="testimonial-slider" id="testimonialSlider">
+          <article class="testimonial-card">
+            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p>Une equipe serieuse et reactive. Mon appartement a ete presente proprement et les visites ont ete bien organisees.</p>
+            <strong>Amira B.</strong>
+            <span>Vente appartement - Hammamet</span>
+          </article>
+
+          <article class="testimonial-card featured">
+            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p>Bee Consulting nous a accompagne dans l'achat d'une villa avec beaucoup de clarte. Les conseils etaient precis du debut a la fin.</p>
+            <strong>Karim M.</strong>
+            <span>Achat villa - Hammamet Nord</span>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p>J'ai trouve un terrain adapte a mon budget rapidement. Le suivi etait professionnel et tres rassurant.</p>
+            <strong>Sonia T.</strong>
+            <span>Terrain - Nabeul</span>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p>La diffusion de mon annonce a ete rapide et les photos ont vraiment donne une meilleure image du bien.</p>
+            <strong>Mehdi R.</strong>
+            <span>Location villa - Yasmine Hammamet</span>
+          </article>
+
+          <article class="testimonial-card featured">
+            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p>Une agence a l'ecoute, avec des propositions serieuses et un accompagnement clair pour chaque etape.</p>
+            <strong>Nour H.</strong>
+            <span>Investissement - Hammamet</span>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p>J'avais besoin d'un local commercial bien place. Bee Consulting m'a propose des options pertinentes rapidement.</p>
+            <strong>Walid K.</strong>
+            <span>Local commercial - Bir Bouregba</span>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p>Service professionnel, bon suivi et communication simple. La visite a ete organisee tres vite.</p>
+            <strong>Ines M.</strong>
+            <span>Achat appartement - Centre Ville</span>
+          </article>
+
+          <article class="testimonial-card featured">
+            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p>L'accompagnement juridique nous a aide a avancer avec plus de confiance avant la signature.</p>
+            <strong>Fares J.</strong>
+            <span>Accompagnement juridique</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="contact-band" id="contact">
+        <div>
+          <p class="eyebrow">Bee Consulting</p>
+          <h2>Un projet immobilier ?</h2>
+          <p>Contactez l'agence pour organiser une visite ou proposer un bien.</p>
+        </div>
+        <a class="gold-button contact-button" href="tel:+21600000000">Appeler l'agence</a>
+      </section>
+    </main>
+
+    <script src="/config.js"></script>
+    <script src="/home.js"></script>
+  </body>
+</html>

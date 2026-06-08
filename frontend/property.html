@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bee Consulting - Detail annonce</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="public-page">
+    <header class="site-header">
+      <a class="brand" href="/">
+        <span class="brand-mark">B</span>
+        <span>Bee Consulting</span>
+      </a>
+      <nav>
+        <a href="/">Annonces</a>
+        <a href="#contact">Contact</a>
+        <a class="admin-link" href="/admin">Admin</a>
+      </nav>
+    </header>
+
+    <main class="detail-page">
+      <a class="back-link" href="/">Retour aux annonces</a>
+      <section id="propertyDetail" class="detail-shell">
+        <div class="empty-state">Chargement de l'annonce...</div>
+      </section>
+
+      <section class="visit-section" id="contact">
+        <div>
+          <p class="eyebrow">Bee Consulting</p>
+          <h2>Demander une visite</h2>
+          <p>Laissez vos coordonnees et l'agence vous contactera pour organiser une visite.</p>
+        </div>
+
+        <form class="visit-form" id="visitForm">
+          <div class="grid-2">
+            <label>
+              Nom complet
+              <input id="visitorName" type="text" required />
+            </label>
+
+            <label>
+              Telephone
+              <input id="visitorPhone" type="tel" required />
+            </label>
+          </div>
+
+          <label>
+            Email
+            <input id="visitorEmail" type="email" />
+          </label>
+
+          <label>
+            Message
+            <textarea id="visitorMessage" rows="4" required>Bonjour, je souhaite organiser une visite pour cette annonce.</textarea>
+          </label>
+
+          <button class="gold-button contact-button" type="submit">Envoyer la demande</button>
+          <p class="form-message" id="visitMessage"></p>
+        </form>
+      </section>
+    </main>
+
+    <script src="/config.js"></script>
+    <script src="/property.js"></script>
+  </body>
+</html>
