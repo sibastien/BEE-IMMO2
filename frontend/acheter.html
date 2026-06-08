@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bee Consulting - Acheter</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="public-page catalog-page" data-page-mode="catalog" data-transaction="sale">
+    <header class="site-header">
+      <a class="brand" href="/">
+        <span class="brand-mark">B</span>
+        <span>Bee Consulting</span>
+      </a>
+      <nav>
+        <a href="/">Accueil</a>
+        <a href="/acheter">Acheter</a>
+        <a href="/louer">Louer</a>
+        <a href="/blog">Blog</a>
+        <a href="#contact" data-contact-open>Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="catalog-hero catalog-hero-sale">
+        <div class="hero-content">
+          <p class="eyebrow">Biens a vendre</p>
+          <h1>Acheter avec Bee Consulting</h1>
+          <p class="hero-copy">
+            Explorez les appartements, maisons, villas, terrains et locaux commerciaux disponibles a la vente.
+          </p>
+        </div>
+      </section>
+
+      <section class="search-band catalog-search" aria-label="Recherche achat">
+        <div class="search-panel catalog-search-panel">
+          <label>
+            Ville ou quartier
+            <input id="locationFilter" type="search" placeholder="Hammamet, Centre, Yasmine..." />
+          </label>
+
+          <label>
+            Type
+            <select id="typeFilter">
+              <option value="">Tous les biens</option>
+              <option value="apartment">Appartement</option>
+              <option value="house">Maison</option>
+              <option value="villa">Villa</option>
+              <option value="land">Terrain</option>
+              <option value="commercial">Commercial</option>
+            </select>
+          </label>
+
+          <label>
+            Prix max
+            <input id="maxPriceFilter" type="number" min="0" placeholder="Ex: 500000" />
+          </label>
+
+          <button class="primary gold-button" id="clearFilters" type="button">Reinitialiser</button>
+        </div>
+      </section>
+
+      <section class="public-section catalog-section" id="annonces">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Achat immobilier</p>
+            <h2>Annonces a vendre</h2>
+          </div>
+          <p id="publicCount">Chargement...</p>
+        </div>
+
+        <div class="carousel-shell">
+          <button class="carousel-arrow carousel-arrow-left hidden" id="carouselPrev" type="button" aria-label="Annonce precedente">&lsaquo;</button>
+          <div class="public-grid" id="publicProperties"></div>
+          <button class="carousel-arrow carousel-arrow-right hidden" id="carouselNext" type="button" aria-label="Annonce suivante">&rsaquo;</button>
+          <div class="carousel-dots hidden" id="carouselDots"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="contact">
+      <div>
+        <a class="brand footer-brand" href="/">
+          <span class="brand-mark">B</span>
+          <span>Bee Consulting</span>
+        </a>
+        <p>
+          Bee Consulting vous aide a acheter avec confiance grace a une selection claire, des conseils utiles et un suivi serieux.
+        </p>
+      </div>
+      <div class="footer-info">
+        <span>Telephone</span>
+        <a href="tel:+21653762565">+216 53 762 565</a>
+      </div>
+      <div class="footer-info">
+        <span>Horaires d'ouverture</span>
+        <strong>Lundi - Samedi, 9h a 18h</strong>
+      </div>
+      <button class="gold-button contact-button" type="button" data-contact-open>Nous contacter</button>
+    </footer>
+
+    <div class="modal-overlay hidden" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+      <div class="modal-card contact-modal-card">
+        <button class="modal-close" type="button" aria-label="Fermer le formulaire" data-contact-close>&times;</button>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Bee Consulting</p>
+            <h2 id="contactModalTitle">Contactez l'agence</h2>
+          </div>
+        </div>
+
+        <form id="contactForm">
+          <div class="grid-2">
+            <label>
+              Nom complet
+              <input id="contactName" type="text" required />
+            </label>
+
+            <label>
+              Telephone
+              <input id="contactPhone" type="tel" required />
+            </label>
+          </div>
+
+          <label>
+            Email
+            <input id="contactEmail" type="email" />
+          </label>
+
+          <label>
+            Message
+            <textarea id="contactText" rows="4" required placeholder="Expliquez votre projet d'achat..."></textarea>
+          </label>
+
+          <button class="primary gold-button" type="submit">Envoyer la demande</button>
+          <p class="form-message" id="contactMessage"></p>
+        </form>
+      </div>
+    </div>
+
+    <script src="/config.js"></script>
+    <script src="/home.js"></script>
+  </body>
+</html>

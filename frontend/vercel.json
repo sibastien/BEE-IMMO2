@@ -11,6 +11,26 @@
       "destination": "/requests.html"
     },
     {
+      "source": "/admin/blog",
+      "destination": "/admin-blog.html"
+    },
+    {
+      "source": "/acheter",
+      "destination": "/acheter.html"
+    },
+    {
+      "source": "/louer",
+      "destination": "/louer.html"
+    },
+    {
+      "source": "/blog",
+      "destination": "/blog.html"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/blog-detail.html"
+    },
+    {
       "source": "/property/:id",
       "destination": "/property.html"
     }

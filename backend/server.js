@@ -6,6 +6,7 @@ const connectDB = require('./config/db');
 const propertyRoutes = require('./routes/propertyRoutes');
 const authRoutes = require('./routes/authRoutes');
 const requestRoutes = require('./routes/requestRoutes');
+const blogRoutes = require('./routes/blogRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
 dotenv.config();
@@ -48,6 +49,26 @@ app.get('/admin/requests', (req, res) => {
   res.sendFile('requests.html', { root: frontendPath });
 });
 
+app.get('/admin/blog', (req, res) => {
+  res.sendFile('admin-blog.html', { root: frontendPath });
+});
+
+app.get('/acheter', (req, res) => {
+  res.sendFile('acheter.html', { root: frontendPath });
+});
+
+app.get('/louer', (req, res) => {
+  res.sendFile('louer.html', { root: frontendPath });
+});
+
+app.get('/blog', (req, res) => {
+  res.sendFile('blog.html', { root: frontendPath });
+});
+
+app.get('/blog/:slug', (req, res) => {
+  res.sendFile('blog-detail.html', { root: frontendPath });
+});
+
 app.get('/property/:id', (req, res) => {
   res.sendFile('property.html', { root: frontendPath });
 });
@@ -62,6 +83,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/properties', propertyRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/requests', requestRoutes);
+app.use('/api/blog', blogRoutes);
 
 // Gestion des erreurs
 app.use(errorHandler);

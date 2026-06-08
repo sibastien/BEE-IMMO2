@@ -1,5 +1,6 @@
 const API_BASE_URL = (window.BEE_CONFIG?.API_BASE_URL || '').replace(/\/$/, '');
 const API_URL = `${API_BASE_URL}/api/properties`;
+const REQUEST_URL = `${API_BASE_URL}/api/requests`;
 
 const publicProperties = document.getElementById('publicProperties');
 const publicCount = document.getElementById('publicCount');
@@ -12,6 +13,13 @@ const carouselPrev = document.getElementById('carouselPrev');
 const carouselNext = document.getElementById('carouselNext');
 const carouselDots = document.getElementById('carouselDots');
 const testimonialSlider = document.getElementById('testimonialSlider');
+const contactModal = document.getElementById('contactModal');
+const contactForm = document.getElementById('contactForm');
+const contactMessage = document.getElementById('contactMessage');
+const contactOpeners = document.querySelectorAll('[data-contact-open]');
+const contactClosers = document.querySelectorAll('[data-contact-close]');
+const forcedTransaction = document.body.dataset.transaction || '';
+const isCatalogPage = document.body.dataset.pageMode === 'catalog';
 
 let properties = [];
 let visibleProperties = [];
@@ -49,10 +57,10 @@ const icon = (name) => {
 };
 
 const getFilteredProperties = () => {
-  const location = normalize(locationFilter.value);
-  const transaction = transactionFilter.value;
-  const type = typeFilter.value;
-  const maxPrice = Number(maxPriceFilter.value);
+  const location = normalize(locationFilter?.value);
+  const transaction = forcedTransaction || transactionFilter?.value || '';
+  const type = typeFilter?.value || '';
+  const maxPrice = Number(maxPriceFilter?.value);
 
   return properties.filter((property) => {
     const matchesLocation =
@@ -80,13 +88,15 @@ const renderProperties = () => {
 
   if (visibleProperties.length === 0) {
     publicProperties.innerHTML = '<div class="empty-state">Aucune annonce ne correspond aux filtres.</div>';
-    carouselPrev.classList.add('hidden');
-    carouselNext.classList.add('hidden');
+    carouselPrev?.classList.add('hidden');
+    carouselNext?.classList.add('hidden');
+    carouselDots?.classList.add('hidden');
     return;
   }
 
-  carouselPrev.classList.toggle('hidden', visibleProperties.length <= 1);
-  carouselNext.classList.toggle('hidden', visibleProperties.length <= 1);
+  carouselPrev?.classList.toggle('hidden', isCatalogPage || visibleProperties.length <= 1);
+  carouselNext?.classList.toggle('hidden', isCatalogPage || visibleProperties.length <= 1);
+  carouselDots?.classList.toggle('hidden', isCatalogPage);
 
   publicProperties.innerHTML = visibleProperties
     .map((property) => {
@@ -135,7 +145,9 @@ const renderProperties = () => {
     })
     .join('');
 
-  renderDots();
+  if (!isCatalogPage) {
+    renderDots();
+  }
   startImageSlideshows();
 };
 
@@ -177,6 +189,8 @@ const getActiveIndex = () => {
 };
 
 const renderDots = () => {
+  if (!carouselDots) return;
+
   carouselDots.innerHTML = visibleProperties
     .map((property, index) => `
       <button class="carousel-dot ${index === 0 ? 'active' : ''}" type="button" data-slide="${index}" aria-label="Voir annonce ${index + 1}"></button>
@@ -185,6 +199,8 @@ const renderDots = () => {
 };
 
 const updateActiveDot = () => {
+  if (!carouselDots) return;
+
   const activeIndex = getActiveIndex();
 
   carouselDots.querySelectorAll('.carousel-dot').forEach((dot, index) => {
@@ -225,29 +241,106 @@ const loadProperties = async () => {
   }
 };
 
+const openContactModal = () => {
+  contactModal?.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+  document.getElementById('contactName')?.focus();
+};
+
+const closeContactModal = () => {
+  contactModal?.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+};
+
+const setContactMessage = (message, isError = false) => {
+  if (!contactMessage) return;
+
+  contactMessage.textContent = message;
+  contactMessage.classList.toggle('error', isError);
+};
+
+const submitContactRequest = async (event) => {
+  event.preventDefault();
+  setContactMessage('Envoi en cours...');
+
+  try {
+    const response = await fetch(REQUEST_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        propertyId: 'contact-agence',
+        propertyTitle: `Contact agence - ${document.title}`,
+        name: document.getElementById('contactName').value,
+        phone: document.getElementById('contactPhone').value,
+        email: document.getElementById('contactEmail').value,
+        message: document.getElementById('contactText').value
+      })
+    });
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || 'Message impossible');
+    }
+
+    contactForm.reset();
+    setContactMessage('Message envoye. Bee Consulting vous contactera bientot.');
+    window.setTimeout(closeContactModal, 1400);
+  } catch (error) {
+    setContactMessage(error.message, true);
+  }
+};
+
 [locationFilter, transactionFilter, typeFilter, maxPriceFilter].forEach((input) => {
-  input.addEventListener('input', renderProperties);
+  input?.addEventListener('input', renderProperties);
 });
 
-clearFilters.addEventListener('click', () => {
-  locationFilter.value = '';
-  transactionFilter.value = '';
-  typeFilter.value = '';
-  maxPriceFilter.value = '';
+clearFilters?.addEventListener('click', () => {
+  if (locationFilter) locationFilter.value = '';
+  if (transactionFilter) transactionFilter.value = '';
+  if (typeFilter) typeFilter.value = '';
+  if (maxPriceFilter) maxPriceFilter.value = '';
   renderProperties();
 });
 
-carouselPrev.addEventListener('click', () => moveCarousel(-1));
-carouselNext.addEventListener('click', () => moveCarousel(1));
-carouselDots.addEventListener('click', (event) => {
+carouselPrev?.addEventListener('click', () => moveCarousel(-1));
+carouselNext?.addEventListener('click', () => moveCarousel(1));
+carouselDots?.addEventListener('click', (event) => {
   const slide = event.target.dataset.slide;
   if (slide === undefined) return;
 
   scrollToSlide(Number(slide));
 });
 publicProperties.addEventListener('scroll', () => {
+  if (isCatalogPage) return;
   window.requestAnimationFrame(updateActiveDot);
 });
 
-testimonialSlider.innerHTML += testimonialSlider.innerHTML;
+if (testimonialSlider) {
+  testimonialSlider.innerHTML += testimonialSlider.innerHTML;
+}
+
+contactOpeners.forEach((opener) => {
+  opener.addEventListener('click', (event) => {
+    event.preventDefault();
+    openContactModal();
+  });
+});
+
+contactClosers.forEach((closer) => {
+  closer.addEventListener('click', closeContactModal);
+});
+
+contactModal?.addEventListener('click', (event) => {
+  if (event.target === contactModal) {
+    closeContactModal();
+  }
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && !contactModal?.classList.contains('hidden')) {
+    closeContactModal();
+  }
+});
+
+contactForm?.addEventListener('submit', submitContactRequest);
 loadProperties();

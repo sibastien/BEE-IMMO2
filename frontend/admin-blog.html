@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bee Consulting - Blog Admin</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="admin-page">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Bee Consulting</p>
+        <h1>Gestion du blog</h1>
+      </div>
+      <div class="top-actions">
+        <a class="secondary nav-link" href="/">Voir le site</a>
+        <a class="secondary nav-link" href="/admin">Annonces</a>
+        <a class="secondary nav-link" href="/admin/requests">Demandes</a>
+        <div class="api-status" id="apiStatus">Connexion...</div>
+        <button class="secondary hidden" id="logoutButton" type="button">Deconnexion</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel login-panel" id="loginPanel">
+        <div class="section-heading">
+          <h2>Connexion admin</h2>
+        </div>
+
+        <form id="loginForm">
+          <label>
+            Email
+            <input id="adminEmail" type="email" value="admin@beeconsulting.local" required />
+          </label>
+
+          <label>
+            Mot de passe
+            <input id="adminPassword" type="password" value="admin123" required />
+          </label>
+
+          <button class="primary" type="submit">Se connecter</button>
+          <p class="form-message" id="loginMessage"></p>
+        </form>
+      </section>
+
+      <section class="panel form-panel dashboard-panel">
+        <div class="section-heading">
+          <h2>Nouvel article</h2>
+          <button class="secondary" id="resetForm" type="button">Effacer</button>
+        </div>
+
+        <form id="blogForm">
+          <input type="hidden" id="postId" />
+
+          <label>
+            Titre
+            <input id="title" type="text" required minlength="3" />
+          </label>
+
+          <label>
+            Resume
+            <textarea id="excerpt" rows="3" required minlength="10"></textarea>
+          </label>
+
+          <label>
+            Contenu
+            <textarea id="content" rows="9" required minlength="30"></textarea>
+          </label>
+
+          <div class="grid-2">
+            <label>
+              Categorie
+              <input id="category" type="text" value="Conseils immobiliers" />
+            </label>
+
+            <label>
+              Auteur
+              <input id="author" type="text" value="Bee Consulting" />
+            </label>
+          </div>
+
+          <label>
+            Image de couverture
+            <input id="coverImage" type="url" placeholder="https://..." />
+          </label>
+
+          <label>
+            Statut
+            <select id="status">
+              <option value="published">Publie</option>
+              <option value="draft">Brouillon</option>
+            </select>
+          </label>
+
+          <button class="primary" id="submitButton" type="submit">Publier l'article</button>
+          <p class="form-message" id="formMessage"></p>
+        </form>
+      </section>
+
+      <section class="panel list-panel dashboard-panel">
+        <div class="section-heading">
+          <div>
+            <h2>Articles</h2>
+            <p id="postCount">0 article</p>
+          </div>
+          <button class="secondary" id="refreshButton" type="button">Actualiser</button>
+        </div>
+
+        <div class="properties" id="postsList"></div>
+      </section>
+    </main>
+
+    <script src="/config.js"></script>
+    <script src="/admin-blog.js"></script>
+  </body>
+</html>
