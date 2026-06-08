@@ -27,15 +27,15 @@
           <h2>Connexion admin</h2>
         </div>
 
-        <form id="loginForm">
+        <form id="loginForm" autocomplete="off">
           <label>
             Email
-            <input id="adminEmail" type="email" value="admin@beeconsulting.local" required />
+            <input id="adminEmail" type="email" autocomplete="username" required />
           </label>
 
           <label>
             Mot de passe
-            <input id="adminPassword" type="password" value="admin123" required />
+            <input id="adminPassword" type="password" autocomplete="current-password" required />
           </label>
 
           <button class="primary" type="submit">Se connecter</button>
@@ -140,8 +140,14 @@
 
           <label>
             Images
-            <textarea id="images" name="images" rows="3" placeholder="Collez plusieurs URLs separees par des virgules"></textarea>
+            <textarea id="images" name="images" rows="3" placeholder="Collez une URL par ligne, ou utilisez le bouton upload ci-dessous"></textarea>
           </label>
+
+          <label>
+            Ajouter des photos depuis l'ordinateur
+            <input id="imageUpload" type="file" accept="image/*" multiple />
+          </label>
+          <div class="image-preview-grid" id="imagePreview" aria-live="polite"></div>
 
           <button class="primary" id="submitButton" type="submit">Ajouter l'annonce</button>
           <p class="form-message" id="formMessage"></p>

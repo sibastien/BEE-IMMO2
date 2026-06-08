@@ -16,6 +16,9 @@ const formMessage = document.getElementById('formMessage');
 const submitButton = document.getElementById('submitButton');
 const resetFormButton = document.getElementById('resetForm');
 const refreshButton = document.getElementById('refreshButton');
+const imagesInput = document.getElementById('images');
+const imageUpload = document.getElementById('imageUpload');
+const imagePreview = document.getElementById('imagePreview');
 
 const fields = [
   'title',
@@ -90,12 +93,93 @@ const setMessage = (message, isError = false) => {
   formMessage.classList.toggle('error', isError);
 };
 
-const getFormData = () => {
-  const images = document
-    .getElementById('images')
-    .value.split(',')
+const getImageValues = () =>
+  imagesInput.value
+    .split(/\n+/)
     .map((url) => url.trim())
     .filter(Boolean);
+
+const renderImagePreview = () => {
+  const images = getImageValues();
+
+  if (!imagePreview) return;
+
+  if (images.length === 0) {
+    imagePreview.innerHTML = '<div class="upload-hint">Aucune photo ajoutee.</div>';
+    return;
+  }
+
+  imagePreview.innerHTML = images
+    .map(
+      (image, index) => `
+        <div class="image-preview-item">
+          <img src="${image}" alt="Photo ${index + 1}" />
+          <button class="image-remove" type="button" data-image-remove="${index}" aria-label="Retirer la photo ${index + 1}">&times;</button>
+        </div>
+      `
+    )
+    .join('');
+};
+
+const resizeImageFile = (file) =>
+  new Promise((resolve, reject) => {
+    if (!file.type.startsWith('image/')) {
+      reject(new Error('Veuillez choisir uniquement des images.'));
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const image = new Image();
+
+      image.onload = () => {
+        const maxSize = 1400;
+        const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(image.width * scale);
+        canvas.height = Math.round(image.height * scale);
+
+        const context = canvas.getContext('2d');
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', 0.82));
+      };
+
+      image.onerror = () => reject(new Error("Impossible de lire l'image."));
+      image.src = reader.result;
+    };
+
+    reader.onerror = () => reject(new Error("Impossible de lire le fichier."));
+    reader.readAsDataURL(file);
+  });
+
+const handleImageUpload = async () => {
+  const files = Array.from(imageUpload.files || []);
+
+  if (files.length === 0) return;
+
+  try {
+    setMessage('Preparation des photos...');
+    const existingImages = getImageValues();
+    const availableSlots = Math.max(0, 8 - existingImages.length);
+    const selectedFiles = files.slice(0, availableSlots);
+
+    if (selectedFiles.length === 0) {
+      throw new Error('Maximum 8 photos par annonce.');
+    }
+
+    const uploadedImages = await Promise.all(selectedFiles.map(resizeImageFile));
+    imagesInput.value = [...existingImages, ...uploadedImages].join('\n');
+    imageUpload.value = '';
+    renderImagePreview();
+    setMessage(`${uploadedImages.length} photo${uploadedImages.length > 1 ? 's' : ''} ajoutee${uploadedImages.length > 1 ? 's' : ''}.`);
+  } catch (error) {
+    setMessage(error.message, true);
+  }
+};
+
+const getFormData = () => {
+  const images = getImageValues();
 
   return {
     title: document.getElementById('title').value.trim(),
@@ -129,8 +213,10 @@ const icon = (name) => {
 const resetForm = () => {
   form.reset();
   document.getElementById('propertyId').value = '';
+  if (imageUpload) imageUpload.value = '';
   submitButton.textContent = "Ajouter l'annonce";
   setMessage('');
+  renderImagePreview();
 };
 
 const fillForm = (property) => {
@@ -141,11 +227,12 @@ const fillForm = (property) => {
     if (!element) return;
 
     element.value = Array.isArray(property[field])
-      ? property[field].join(', ')
+      ? property[field].join('\n')
       : property[field] ?? '';
   });
 
   submitButton.textContent = "Modifier l'annonce";
+  renderImagePreview();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
@@ -316,6 +403,18 @@ propertiesList.addEventListener('click', async (event) => {
 });
 
 form.addEventListener('submit', saveProperty);
+imagesInput.addEventListener('input', renderImagePreview);
+imageUpload.addEventListener('change', handleImageUpload);
+imagePreview.addEventListener('click', (event) => {
+  const removeIndex = event.target.dataset.imageRemove;
+
+  if (removeIndex === undefined) return;
+
+  const images = getImageValues();
+  images.splice(Number(removeIndex), 1);
+  imagesInput.value = images.join('\n');
+  renderImagePreview();
+});
 loginForm.addEventListener('submit', loginAdmin);
 logoutButton.addEventListener('click', logoutAdmin);
 resetFormButton.addEventListener('click', resetForm);
@@ -328,3 +427,5 @@ if (getToken()) {
   setStatus(false);
   apiStatus.textContent = 'Connexion admin requise';
 }
+
+renderImagePreview();

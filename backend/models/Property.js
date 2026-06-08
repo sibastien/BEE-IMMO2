@@ -76,8 +76,8 @@ const propertySchema = new mongoose.Schema(
       default: [],
       validate: {
         validator: (urls) =>
-          urls.every((url) => /^https?:\/\/.+/i.test(url)),
-        message: 'Chaque image doit etre une URL valide'
+          urls.every((url) => /^https?:\/\/.+/i.test(url) || /^data:image\/(png|jpe?g|webp);base64,/i.test(url)),
+        message: 'Chaque image doit etre une URL ou une image upload valide'
       }
     },
     status: {

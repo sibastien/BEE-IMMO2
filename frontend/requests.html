@@ -27,15 +27,15 @@
           <h2>Connexion admin</h2>
         </div>
 
-        <form id="loginForm">
+        <form id="loginForm" autocomplete="off">
           <label>
             Email
-            <input id="adminEmail" type="email" value="admin@beeconsulting.local" required />
+            <input id="adminEmail" type="email" autocomplete="username" required />
           </label>
 
           <label>
             Mot de passe
-            <input id="adminPassword" type="password" value="admin123" required />
+            <input id="adminPassword" type="password" autocomplete="current-password" required />
           </label>
 
           <button class="primary" type="submit">Se connecter</button>
