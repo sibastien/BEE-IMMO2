@@ -117,7 +117,7 @@ const renderProperties = () => {
             }
           </div>
         `
-        : '<div class="listing-placeholder">Bee Consulting</div>';
+        : '<div class="listing-placeholder">Bee Solution & Consulting</div>';
 
       return `
         <article class="listing-card">
@@ -283,7 +283,7 @@ const submitContactRequest = async (event) => {
     }
 
     contactForm.reset();
-    setContactMessage('Message envoye. Bee Consulting vous contactera bientot.');
+    setContactMessage('Message envoye. Bee Solution & Consulting vous contactera bientot.');
     window.setTimeout(closeContactModal, 1400);
   } catch (error) {
     setContactMessage(error.message, true);

@@ -23,7 +23,7 @@ const renderPosts = (posts) => {
     .map((post) => {
       const image = post.coverImage
         ? `<img class="blog-card-image" src="${post.coverImage}" alt="${post.title}" />`
-        : '<div class="blog-card-placeholder">Bee Consulting</div>';
+        : '<div class="blog-card-placeholder">Bee Solution & Consulting</div>';
 
       return `
         <article class="blog-card">

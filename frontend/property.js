@@ -42,7 +42,7 @@ const renderDetail = (property) => {
   const images = property.images?.length ? property.images : [];
   const mainImage = images[0]
     ? `<img class="detail-main-image" src="${images[0]}" alt="${property.title}" />`
-    : '<div class="detail-placeholder">Bee Consulting</div>';
+    : '<div class="detail-placeholder">Bee Solution & Consulting</div>';
   const gallery = images
     .slice(1)
     .map((image) => `<img src="${image}" alt="${property.title}" />`)
@@ -91,7 +91,7 @@ const loadProperty = async () => {
     }
 
     currentProperty = result.data;
-    document.title = `Bee Consulting - ${currentProperty.title}`;
+    document.title = `Bee Solution & Consulting - ${currentProperty.title}`;
     renderDetail(currentProperty);
   } catch (error) {
     detailContainer.innerHTML = `<div class="empty-state">${error.message}</div>`;
@@ -136,7 +136,7 @@ const submitVisitRequest = async (event) => {
     visitForm.reset();
     document.getElementById('visitorMessage').value =
       'Bonjour, je souhaite organiser une visite pour cette annonce.';
-    setVisitMessage('Demande envoyee. Bee Consulting vous contactera bientot.');
+    setVisitMessage('Demande envoyee. Bee Solution & Consulting vous contactera bientot.');
   } catch (error) {
     setVisitMessage(error.message, true);
   }
