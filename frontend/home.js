@@ -1,6 +1,7 @@
 const API_BASE_URL = (window.BEE_CONFIG?.API_BASE_URL || '').replace(/\/$/, '');
 const API_URL = `${API_BASE_URL}/api/properties`;
 const REQUEST_URL = `${API_BASE_URL}/api/requests`;
+const TESTIMONIAL_URL = `${API_BASE_URL}/api/testimonials`;
 
 const publicProperties = document.getElementById('publicProperties');
 const publicCount = document.getElementById('publicCount');
@@ -45,6 +46,14 @@ const moneyFormatter = new Intl.NumberFormat('fr-FR', {
 });
 
 const normalize = (value) => String(value || '').toLowerCase().trim();
+
+const escapeHtml = (value) =>
+  String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 
 const icon = (name) => {
   const icons = {
@@ -106,6 +115,7 @@ const renderProperties = () => {
   publicProperties.innerHTML = visibleProperties
     .map((property) => {
       const images = property.images?.length ? property.images : [];
+      const isLand = property.propertyType === 'land';
       const image = images.length
         ? `
           <div class="listing-slideshow" data-image-count="${images.length}">
@@ -137,9 +147,15 @@ const renderProperties = () => {
             <strong>${moneyFormatter.format(property.price)}</strong>
             <div class="listing-meta">
               <span title="Superficie">${icon('surface')}${property.surface} m2</span>
-              <span title="Chambres">${icon('bed')}${property.bedrooms}</span>
-              <span title="Salles de bain">${icon('bath')}${property.bathrooms}</span>
-              <span title="Garages">${icon('garage')}${property.garages || 0}</span>
+              ${
+                isLand
+                  ? ''
+                  : `
+                    <span title="Chambres">${icon('bed')}${property.bedrooms}</span>
+                    <span title="Salles de bain">${icon('bath')}${property.bathrooms}</span>
+                    <span title="Garages">${icon('garage')}${property.garages || 0}</span>
+                  `
+              }
             </div>
             <div class="listing-actions">
               <a class="listing-cta" href="/property/${property.id || property._id}">Voir le detail</a>
@@ -246,6 +262,59 @@ const loadProperties = async () => {
   }
 };
 
+const renderStars = (rating = 5) => '&#9733;'.repeat(Math.max(1, Math.min(5, Number(rating) || 5)));
+
+const renderTestimonials = (testimonials) => {
+  if (!testimonialSlider) return;
+
+  if (!testimonials.length) {
+    testimonialSlider.innerHTML = `
+      <article class="testimonial-card">
+        <p>Aucun temoignage publie pour le moment.</p>
+        <strong>Bee Solution & Consulting</strong>
+        <span>Avis clients</span>
+      </article>
+    `;
+    return;
+  }
+
+  const cards = testimonials
+    .map((testimonial) => `
+      <article class="testimonial-card ${testimonial.featured ? 'featured' : ''}">
+        <div class="stars">${renderStars(testimonial.rating)}</div>
+        <p>${escapeHtml(testimonial.quote)}</p>
+        <strong>${escapeHtml(testimonial.clientName)}</strong>
+        <span>${escapeHtml(testimonial.context || 'Client Bee Solution & Consulting')}</span>
+      </article>
+    `)
+    .join('');
+
+  testimonialSlider.innerHTML = testimonials.length > 1 ? cards + cards : cards;
+};
+
+const loadTestimonials = async () => {
+  if (!testimonialSlider) return;
+
+  try {
+    const response = await fetch(TESTIMONIAL_URL);
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || 'Erreur API');
+    }
+
+    renderTestimonials(result.data || []);
+  } catch (error) {
+    testimonialSlider.innerHTML = `
+      <article class="testimonial-card">
+        <p>${escapeHtml(error.message)}</p>
+        <strong>Temoignages indisponibles</strong>
+        <span>Veuillez reessayer plus tard</span>
+      </article>
+    `;
+  }
+};
+
 const openContactModal = () => {
   contactModal?.classList.remove('hidden');
   document.body.classList.add('modal-open');
@@ -321,10 +390,6 @@ publicProperties.addEventListener('scroll', () => {
   window.requestAnimationFrame(updateActiveDot);
 });
 
-if (testimonialSlider) {
-  testimonialSlider.innerHTML += testimonialSlider.innerHTML;
-}
-
 contactOpeners.forEach((opener) => {
   opener.addEventListener('click', (event) => {
     event.preventDefault();
@@ -350,3 +415,4 @@ document.addEventListener('keydown', (event) => {
 
 contactForm?.addEventListener('submit', submitContactRequest);
 loadProperties();
+loadTestimonials();

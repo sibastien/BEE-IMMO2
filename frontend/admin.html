@@ -16,6 +16,7 @@
         <a class="secondary nav-link" href="/">Voir le site</a>
         <a class="secondary nav-link" href="/admin/requests">Demandes</a>
         <a class="secondary nav-link" href="/admin/blog">Blog</a>
+        <a class="secondary nav-link" href="/admin/testimonials">Avis</a>
         <div class="api-status" id="apiStatus">Connexion...</div>
         <button class="secondary hidden" id="logoutButton" type="button">Deconnexion</button>
       </div>
@@ -113,17 +114,17 @@
           </label>
 
           <div class="grid-4">
-            <label>
+            <label class="property-detail-field">
               Chambres
               <input id="bedrooms" name="bedrooms" type="number" min="0" required />
             </label>
 
-            <label>
+            <label class="property-detail-field">
               Salles de bain
               <input id="bathrooms" name="bathrooms" type="number" min="0" required />
             </label>
 
-            <label>
+            <label class="property-detail-field">
               Garages
               <input id="garages" name="garages" type="number" min="0" value="0" />
             </label>

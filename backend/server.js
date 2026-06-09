@@ -7,6 +7,7 @@ const propertyRoutes = require('./routes/propertyRoutes');
 const authRoutes = require('./routes/authRoutes');
 const requestRoutes = require('./routes/requestRoutes');
 const blogRoutes = require('./routes/blogRoutes');
+const testimonialRoutes = require('./routes/testimonialRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
 dotenv.config();
@@ -53,6 +54,10 @@ app.get('/admin/blog', (req, res) => {
   res.sendFile('admin-blog.html', { root: frontendPath });
 });
 
+app.get('/admin/testimonials', (req, res) => {
+  res.sendFile('admin-testimonials.html', { root: frontendPath });
+});
+
 app.get('/acheter', (req, res) => {
   res.sendFile('acheter.html', { root: frontendPath });
 });
@@ -84,6 +89,7 @@ app.use('/api/properties', propertyRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/requests', requestRoutes);
 app.use('/api/blog', blogRoutes);
+app.use('/api/testimonials', testimonialRoutes);
 
 // Gestion des erreurs
 app.use(errorHandler);

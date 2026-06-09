@@ -3,20 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bee Solution &amp; Consulting - Blog Admin</title>
+    <title>Bee Solution &amp; Consulting - Avis Admin</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body class="admin-page">
     <header class="topbar">
       <div>
         <p class="eyebrow">Bee Solution &amp; Consulting</p>
-        <h1>Gestion du blog</h1>
+        <h1>Gestion des avis clients</h1>
       </div>
       <div class="top-actions">
         <a class="secondary nav-link" href="/">Voir le site</a>
         <a class="secondary nav-link" href="/admin">Annonces</a>
         <a class="secondary nav-link" href="/admin/requests">Demandes</a>
-        <a class="secondary nav-link" href="/admin/testimonials">Avis</a>
+        <a class="secondary nav-link" href="/admin/blog">Blog</a>
         <div class="api-status" id="apiStatus">Connexion...</div>
         <button class="secondary hidden" id="logoutButton" type="button">Deconnexion</button>
       </div>
@@ -46,54 +46,62 @@
 
       <section class="panel form-panel dashboard-panel">
         <div class="section-heading">
-          <h2>Nouvel article</h2>
+          <h2>Nouvel avis</h2>
           <button class="secondary" id="resetForm" type="button">Effacer</button>
         </div>
 
-        <form id="blogForm">
-          <input type="hidden" id="postId" />
+        <form id="testimonialForm">
+          <input type="hidden" id="testimonialId" />
 
           <label>
-            Titre
-            <input id="title" type="text" required minlength="3" />
+            Nom du client
+            <input id="clientName" type="text" required minlength="2" placeholder="Ex: Amira B." />
           </label>
 
           <label>
-            Resume
-            <textarea id="excerpt" rows="3" required minlength="10"></textarea>
+            Contexte
+            <input id="context" type="text" placeholder="Ex: Vente appartement - Hammamet" />
           </label>
 
           <label>
-            Contenu
-            <textarea id="content" rows="9" required minlength="30"></textarea>
+            Temoignage
+            <textarea id="quote" rows="5" required minlength="10" placeholder="Ce que le client a dit..."></textarea>
           </label>
 
           <div class="grid-2">
             <label>
-              Categorie
-              <input id="category" type="text" value="Conseils immobiliers" />
+              Note
+              <select id="rating">
+                <option value="5">5 etoiles</option>
+                <option value="4">4 etoiles</option>
+                <option value="3">3 etoiles</option>
+                <option value="2">2 etoiles</option>
+                <option value="1">1 etoile</option>
+              </select>
             </label>
 
             <label>
-              Auteur
-              <input id="author" type="text" value="Bee Solution &amp; Consulting" />
+              Ordre
+              <input id="sortOrder" type="number" min="0" value="0" />
             </label>
           </div>
 
-          <label>
-            Image de couverture
-            <input id="coverImage" type="url" placeholder="https://..." />
-          </label>
+          <div class="grid-2">
+            <label>
+              Statut
+              <select id="status">
+                <option value="published">Publie</option>
+                <option value="draft">Brouillon</option>
+              </select>
+            </label>
 
-          <label>
-            Statut
-            <select id="status">
-              <option value="published">Publie</option>
-              <option value="draft">Brouillon</option>
-            </select>
-          </label>
+            <label class="checkbox-label">
+              <input id="featured" type="checkbox" />
+              Mettre en avant
+            </label>
+          </div>
 
-          <button class="primary" id="submitButton" type="submit">Publier l'article</button>
+          <button class="primary" id="submitButton" type="submit">Publier l'avis</button>
           <p class="form-message" id="formMessage"></p>
         </form>
       </section>
@@ -101,17 +109,17 @@
       <section class="panel list-panel dashboard-panel">
         <div class="section-heading">
           <div>
-            <h2>Articles</h2>
-            <p id="postCount">0 article</p>
+            <h2>Avis clients</h2>
+            <p id="testimonialCount">0 avis</p>
           </div>
           <button class="secondary" id="refreshButton" type="button">Actualiser</button>
         </div>
 
-        <div class="properties" id="postsList"></div>
+        <div class="properties" id="testimonialsList"></div>
       </section>
     </main>
 
     <script src="/config.js"></script>
-    <script src="/admin-blog.js"></script>
+    <script src="/admin-testimonials.js"></script>
   </body>
 </html>

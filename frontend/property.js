@@ -40,6 +40,7 @@ const getPropertyId = () => window.location.pathname.split('/').filter(Boolean).
 
 const renderDetail = (property) => {
   const images = property.images?.length ? property.images : [];
+  const isLand = property.propertyType === 'land';
   const mainImage = images[0]
     ? `<img class="detail-main-image" src="${images[0]}" alt="${property.title}" />`
     : '<div class="detail-placeholder">Bee Solution & Consulting</div>';
@@ -66,9 +67,15 @@ const renderDetail = (property) => {
 
       <div class="detail-meta">
         <span title="Superficie">${icon('surface')}<strong>${property.surface} m2</strong></span>
-        <span title="Chambres">${icon('bed')}<strong>${property.bedrooms}</strong></span>
-        <span title="Salles de bain">${icon('bath')}<strong>${property.bathrooms}</strong></span>
-        <span title="Garages">${icon('garage')}<strong>${property.garages || 0}</strong></span>
+        ${
+          isLand
+            ? ''
+            : `
+              <span title="Chambres">${icon('bed')}<strong>${property.bedrooms}</strong></span>
+              <span title="Salles de bain">${icon('bath')}<strong>${property.bathrooms}</strong></span>
+              <span title="Garages">${icon('garage')}<strong>${property.garages || 0}</strong></span>
+            `
+        }
       </div>
 
       <div class="detail-description">

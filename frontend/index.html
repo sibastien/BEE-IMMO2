@@ -36,57 +36,45 @@
           <p class="hero-copy">
             Un accompagnement serieux pour vendre, acheter, louer et prendre les bonnes decisions immobilieres avec une equipe qui conseille avant de vendre.
           </p>
-          <div class="hero-actions">
-            <a class="hero-primary" href="#annonces">Voir les annonces</a>
-            <a class="hero-secondary" href="#contact" data-contact-open>Contacter l'agence</a>
+          <div class="search-panel hero-search-panel" aria-label="Recherche immobiliere">
+            <label>
+              Ville ou quartier
+              <input id="locationFilter" type="search" placeholder="Hammamet, Centre, Yasmine..." />
+            </label>
+
+            <label>
+              Transaction
+              <select id="transactionFilter">
+                <option value="">Toutes</option>
+                <option value="sale">Vente</option>
+                <option value="rent">Location</option>
+              </select>
+            </label>
+
+            <label>
+              Type
+              <select id="typeFilter">
+                <option value="">Tous les biens</option>
+                <option value="apartment">Appartement</option>
+                <option value="house">Maison</option>
+                <option value="villa">Villa</option>
+                <option value="land">Terrain</option>
+                <option value="commercial">Commercial</option>
+              </select>
+            </label>
+
+            <label>
+              Budget min
+              <input id="minBudgetFilter" type="number" min="0" placeholder="Ex: 150000" />
+            </label>
+
+            <label>
+              Budget max
+              <input id="maxBudgetFilter" type="number" min="0" placeholder="Ex: 500000" />
+            </label>
+
+            <button class="primary gold-button" id="clearFilters" type="button">Reinitialiser</button>
           </div>
-          <div class="hero-metrics" aria-label="Expertise Bee Solution &amp; Consulting">
-            <span><strong>Conseil</strong> avant decision</span>
-            <span><strong>Vente</strong> et location</span>
-            <span><strong>Biens</strong> verifies</span>
-          </div>
-        </div>
-      </section>
-
-      <section class="search-band" aria-label="Recherche immobiliere">
-        <div class="search-panel">
-          <label>
-            Ville ou quartier
-            <input id="locationFilter" type="search" placeholder="Hammamet, Centre, Yasmine..." />
-          </label>
-
-          <label>
-            Transaction
-            <select id="transactionFilter">
-              <option value="">Toutes</option>
-              <option value="sale">Vente</option>
-              <option value="rent">Location</option>
-            </select>
-          </label>
-
-          <label>
-            Type
-            <select id="typeFilter">
-              <option value="">Tous les biens</option>
-              <option value="apartment">Appartement</option>
-              <option value="house">Maison</option>
-              <option value="villa">Villa</option>
-              <option value="land">Terrain</option>
-              <option value="commercial">Commercial</option>
-            </select>
-          </label>
-
-          <label>
-            Budget min
-            <input id="minBudgetFilter" type="number" min="0" placeholder="Ex: 150000" />
-          </label>
-
-          <label>
-            Budget max
-            <input id="maxBudgetFilter" type="number" min="0" placeholder="Ex: 500000" />
-          </label>
-
-          <button class="primary gold-button" id="clearFilters" type="button">Reinitialiser</button>
         </div>
       </section>
 
@@ -221,59 +209,7 @@
 
         <div class="testimonial-slider" id="testimonialSlider">
           <article class="testimonial-card">
-            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <p>Une equipe serieuse et reactive. Mon appartement a ete presente proprement et les visites ont ete bien organisees.</p>
-            <strong>Amira B.</strong>
-            <span>Vente appartement - Hammamet</span>
-          </article>
-
-          <article class="testimonial-card featured">
-            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <p>Bee Solution &amp; Consulting nous a accompagne dans l'achat d'une villa avec beaucoup de clarte. Les conseils etaient precis du debut a la fin.</p>
-            <strong>Karim M.</strong>
-            <span>Achat villa - Hammamet Nord</span>
-          </article>
-
-          <article class="testimonial-card">
-            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <p>J'ai trouve un terrain adapte a mon budget rapidement. Le suivi etait professionnel et tres rassurant.</p>
-            <strong>Sonia T.</strong>
-            <span>Terrain - Nabeul</span>
-          </article>
-
-          <article class="testimonial-card">
-            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <p>La diffusion de mon annonce a ete rapide et les photos ont vraiment donne une meilleure image du bien.</p>
-            <strong>Mehdi R.</strong>
-            <span>Location villa - Yasmine Hammamet</span>
-          </article>
-
-          <article class="testimonial-card featured">
-            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <p>Une agence a l'ecoute, avec des propositions serieuses et un accompagnement clair pour chaque etape.</p>
-            <strong>Nour H.</strong>
-            <span>Investissement - Hammamet</span>
-          </article>
-
-          <article class="testimonial-card">
-            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <p>J'avais besoin d'un local commercial bien place. Bee Solution &amp; Consulting m'a propose des options pertinentes rapidement.</p>
-            <strong>Walid K.</strong>
-            <span>Local commercial - Bir Bouregba</span>
-          </article>
-
-          <article class="testimonial-card">
-            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <p>Service professionnel, bon suivi et communication simple. La visite a ete organisee tres vite.</p>
-            <strong>Ines M.</strong>
-            <span>Achat appartement - Centre Ville</span>
-          </article>
-
-          <article class="testimonial-card featured">
-            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <p>L'accompagnement juridique nous a aide a avancer avec plus de confiance avant la signature.</p>
-            <strong>Fares J.</strong>
-            <span>Accompagnement juridique</span>
+            <p>Chargement des temoignages...</p>
           </article>
         </div>
       </section>

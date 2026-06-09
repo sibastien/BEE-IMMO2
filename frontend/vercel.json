@@ -15,6 +15,10 @@
       "destination": "/admin-blog.html"
     },
     {
+      "source": "/admin/testimonials",
+      "destination": "/admin-testimonials.html"
+    },
+    {
       "source": "/acheter",
       "destination": "/acheter.html"
     },

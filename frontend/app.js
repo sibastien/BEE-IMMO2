@@ -19,6 +19,11 @@ const refreshButton = document.getElementById('refreshButton');
 const imagesInput = document.getElementById('images');
 const imageUpload = document.getElementById('imageUpload');
 const imagePreview = document.getElementById('imagePreview');
+const propertyTypeInput = document.getElementById('propertyType');
+const bedroomsInput = document.getElementById('bedrooms');
+const bathroomsInput = document.getElementById('bathrooms');
+const garagesInput = document.getElementById('garages');
+const propertyDetailFields = document.querySelectorAll('.property-detail-field');
 
 const fields = [
   'title',
@@ -180,23 +185,43 @@ const handleImageUpload = async () => {
 
 const getFormData = () => {
   const images = getImageValues();
+  const propertyType = propertyTypeInput.value;
+  const isLand = propertyType === 'land';
 
   return {
     title: document.getElementById('title').value.trim(),
     description: document.getElementById('description').value.trim(),
     price: Number(document.getElementById('price').value),
     transactionType: document.getElementById('transactionType').value,
-    propertyType: document.getElementById('propertyType').value,
+    propertyType,
     city: document.getElementById('city').value.trim(),
     district: document.getElementById('district').value.trim(),
     address: document.getElementById('address').value.trim(),
     surface: Number(document.getElementById('surface').value),
-    bedrooms: Number(document.getElementById('bedrooms').value),
-    bathrooms: Number(document.getElementById('bathrooms').value),
-    garages: Number(document.getElementById('garages').value || 0),
+    bedrooms: isLand ? 0 : Number(bedroomsInput.value),
+    bathrooms: isLand ? 0 : Number(bathroomsInput.value),
+    garages: isLand ? 0 : Number(garagesInput.value || 0),
     images,
     status: document.getElementById('status').value
   };
+};
+
+const updatePropertyDetailRequirements = () => {
+  const isLand = propertyTypeInput.value === 'land';
+
+  bedroomsInput.required = !isLand;
+  bathroomsInput.required = !isLand;
+  garagesInput.required = false;
+
+  propertyDetailFields.forEach((field) => {
+    field.classList.toggle('optional-field', isLand);
+  });
+
+  if (isLand) {
+    bedroomsInput.value = bedroomsInput.value || 0;
+    bathroomsInput.value = bathroomsInput.value || 0;
+    garagesInput.value = garagesInput.value || 0;
+  }
 };
 
 const icon = (name) => {
@@ -216,6 +241,7 @@ const resetForm = () => {
   if (imageUpload) imageUpload.value = '';
   submitButton.textContent = "Ajouter l'annonce";
   setMessage('');
+  updatePropertyDetailRequirements();
   renderImagePreview();
 };
 
@@ -232,6 +258,7 @@ const fillForm = (property) => {
   });
 
   submitButton.textContent = "Modifier l'annonce";
+  updatePropertyDetailRequirements();
   renderImagePreview();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
@@ -247,6 +274,7 @@ const renderProperties = (properties) => {
   propertiesList.innerHTML = properties
     .map((property) => {
       const id = property.id || property._id;
+      const isLand = property.propertyType === 'land';
       const image = property.images?.[0]
         ? `<img class="property-image" src="${property.images[0]}" alt="${property.title}" />`
         : '<div class="property-placeholder">Sans image</div>';
@@ -266,9 +294,15 @@ const renderProperties = (properties) => {
               <span class="badge">${transactionLabels[property.transactionType] || property.transactionType}</span>
               <span class="badge">${propertyTypeLabels[property.propertyType] || property.propertyType}</span>
               <span class="badge icon-badge" title="Superficie">${icon('surface')}${property.surface} m2</span>
-              <span class="badge icon-badge" title="Chambres">${icon('bed')}${property.bedrooms}</span>
-              <span class="badge icon-badge" title="Salles de bain">${icon('bath')}${property.bathrooms}</span>
-              <span class="badge icon-badge" title="Garages">${icon('garage')}${property.garages || 0}</span>
+              ${
+                isLand
+                  ? ''
+                  : `
+                    <span class="badge icon-badge" title="Chambres">${icon('bed')}${property.bedrooms}</span>
+                    <span class="badge icon-badge" title="Salles de bain">${icon('bath')}${property.bathrooms}</span>
+                    <span class="badge icon-badge" title="Garages">${icon('garage')}${property.garages || 0}</span>
+                  `
+              }
             </div>
             <p class="property-description">${property.description}</p>
             <p class="property-description">${property.city}, ${property.district} - ${property.address}</p>
@@ -403,6 +437,7 @@ propertiesList.addEventListener('click', async (event) => {
 });
 
 form.addEventListener('submit', saveProperty);
+propertyTypeInput.addEventListener('change', updatePropertyDetailRequirements);
 imagesInput.addEventListener('input', renderImagePreview);
 imageUpload.addEventListener('change', handleImageUpload);
 imagePreview.addEventListener('click', (event) => {
@@ -428,4 +463,5 @@ if (getToken()) {
   apiStatus.textContent = 'Connexion admin requise';
 }
 
+updatePropertyDetailRequirements();
 renderImagePreview();

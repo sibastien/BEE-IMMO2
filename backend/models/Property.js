@@ -58,12 +58,24 @@ const propertySchema = new mongoose.Schema(
     },
     bedrooms: {
       type: Number,
-      required: [true, 'Le nombre de chambres est obligatoire'],
+      required: [
+        function requiredBedrooms() {
+          return this.propertyType !== 'land';
+        },
+        'Le nombre de chambres est obligatoire'
+      ],
+      default: 0,
       min: [0, 'Le nombre de chambres ne peut pas etre negatif']
     },
     bathrooms: {
       type: Number,
-      required: [true, 'Le nombre de salles de bain est obligatoire'],
+      required: [
+        function requiredBathrooms() {
+          return this.propertyType !== 'land';
+        },
+        'Le nombre de salles de bain est obligatoire'
+      ],
+      default: 0,
       min: [0, 'Le nombre de salles de bain ne peut pas etre negatif']
     },
     garages: {
