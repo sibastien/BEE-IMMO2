@@ -791,6 +791,15 @@ a {
   box-shadow: 0 18px 44px rgba(17, 17, 17, 0.15);
 }
 
+.clickable-listing {
+  cursor: pointer;
+}
+
+.clickable-listing:focus-visible {
+  outline: 3px solid rgba(213, 168, 61, 0.72);
+  outline-offset: 4px;
+}
+
 .listing-slideshow,
 .listing-image,
 .listing-placeholder {
@@ -1124,33 +1133,6 @@ a {
   font-weight: 800;
 }
 
-.detail-thumbs {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  padding: 10px;
-}
-
-.detail-thumb-button {
-  min-height: 0;
-  padding: 0;
-  overflow: hidden;
-  border: 2px solid transparent;
-  border-radius: 6px;
-  background: transparent;
-}
-
-.detail-thumb-button.active {
-  border-color: var(--gold);
-}
-
-.detail-thumb-button img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-}
-
 .detail-carousel-arrow,
 .photo-lightbox-arrow,
 .photo-lightbox-close {
@@ -1195,13 +1177,127 @@ a {
   font-weight: 800;
 }
 
+.agent-contact-card {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 18px;
+  border-top: 1px solid var(--line);
+  background:
+    linear-gradient(135deg, #ffffff, #fff8e8);
+}
+
+.agent-flip {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  transform-style: preserve-3d;
+  animation: agent-coin-flip 8s ease-in-out infinite;
+}
+
+.agent-contact-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 3px solid var(--gold);
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 18%;
+  background: #ffffff;
+  box-shadow: 0 12px 24px rgba(17, 17, 17, 0.12);
+  backface-visibility: hidden;
+}
+
+.agent-flip-back {
+  object-fit: contain;
+  padding: 8px;
+  transform: rotateY(180deg);
+}
+
+@keyframes agent-coin-flip {
+  0%,
+  78%,
+  100% {
+    transform: rotateY(0deg);
+  }
+
+  88% {
+    transform: rotateY(180deg);
+  }
+}
+
+.agent-contact-content {
+  min-width: 0;
+}
+
+.agent-contact-content span {
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.agent-contact-content h2 {
+  margin: 4px 0 6px;
+  color: var(--ink);
+  font-size: 21px;
+}
+
+.agent-contact-content p {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.agent-contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.agent-contact-links a {
+  padding: 7px 9px;
+  border: 1px solid rgba(213, 168, 61, 0.28);
+  border-radius: 999px;
+  color: var(--black);
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.agent-contact-links a:hover {
+  background: var(--gold-soft);
+}
+
 .detail-info {
+  position: relative;
   display: grid;
   gap: 16px;
   padding: 22px;
 }
 
+.detail-share-button {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  min-height: 36px;
+  padding: 8px 12px;
+  border-color: rgba(213, 168, 61, 0.36);
+  color: var(--black);
+  background: var(--gold-soft);
+  font-size: 13px;
+}
+
+.detail-share-button:hover {
+  background: var(--gold);
+}
+
 .detail-info h1 {
+  padding-right: 108px;
   font-size: 34px;
 }
 
@@ -1694,7 +1790,7 @@ label {
 }
 
 .optional-field::after {
-  content: "Optionnel pour ce type";
+  content: "Optionnel pour terrain";
   color: var(--muted);
   font-size: 12px;
   font-weight: 600;
@@ -2302,6 +2398,43 @@ button:disabled {
 
   .detail-meta {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .detail-share-button {
+    position: static;
+    justify-self: start;
+  }
+
+  .agent-contact-card {
+    grid-template-columns: 72px 1fr;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .agent-contact-photo {
+    width: 100%;
+    height: 100%;
+  }
+
+  .agent-flip {
+    width: 72px;
+    height: 72px;
+  }
+
+  .agent-contact-content h2 {
+    font-size: 18px;
+  }
+
+  .agent-contact-links {
+    gap: 6px;
+  }
+
+  .agent-contact-links a {
+    font-size: 12px;
+  }
+
+  .detail-info h1 {
+    padding-right: 0;
   }
 
   .catalog-page .public-grid {

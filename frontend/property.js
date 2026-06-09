@@ -11,14 +11,14 @@ const photoLightboxPrev = document.getElementById('photoLightboxPrev');
 const photoLightboxNext = document.getElementById('photoLightboxNext');
 let currentProperty = null;
 let currentPhotoIndex = 0;
+let detailCarouselTimer = null;
 
 const propertyTypeLabels = {
   apartment: 'Appartement',
   house: 'Maison',
   villa: 'Villa',
   land: 'Terrain',
-  commercial: 'Commercial',
-  shelter: 'Abri'
+  commercial: 'Commercial'
 };
 
 const transactionLabels = {
@@ -44,7 +44,7 @@ const icon = (name) => {
     bed: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11V5"/><path d="M20 19v-6a2 2 0 0 0-2-2H4v8"/><path d="M4 15h16"/><path d="M8 11V7h6a2 2 0 0 1 2 2v2"/></svg>',
     bath: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M6 12V6a2 2 0 0 1 2-2h1"/><path d="M14 6h4"/><path d="M15 4v4"/></svg>',
     garage: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10 12 4l9 6v10H3z"/><path d="M7 20v-7h10v7"/><path d="M9 16h6"/></svg>',
-    shelter: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 5l8 6"/><path d="M6 10v9h12v-9"/><path d="M9 19v-5h6v5"/></svg>'
+    abri: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h14"/><path d="M7 16l1.5-5h7L17 16"/><path d="M8 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/><path d="M16 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/></svg>'
   };
 
   return icons[name];
@@ -72,9 +72,6 @@ const updateGallery = (index) => {
     counter.textContent = `${currentPhotoIndex + 1} / ${images.length}`;
   }
 
-  detailContainer.querySelectorAll('.detail-thumb-button').forEach((button, buttonIndex) => {
-    button.classList.toggle('active', buttonIndex === currentPhotoIndex);
-  });
 };
 
 const openLightbox = (index = currentPhotoIndex) => {
@@ -104,9 +101,55 @@ const movePhoto = (direction) => {
   }
 };
 
+const stopDetailCarousel = () => {
+  if (!detailCarouselTimer) return;
+
+  window.clearInterval(detailCarouselTimer);
+  detailCarouselTimer = null;
+};
+
+const startDetailCarousel = () => {
+  stopDetailCarousel();
+
+  if (getCurrentImages().length <= 1) return;
+
+  detailCarouselTimer = window.setInterval(() => {
+    if (!photoLightbox.classList.contains('hidden')) return;
+    movePhoto(1);
+  }, 4200);
+};
+
+const shareProperty = async () => {
+  const shareUrl = window.location.href;
+  const shareTitle = currentProperty?.title || document.title;
+
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: shareTitle,
+        text: 'Decouvrez ce bien sur Bee Solution & Consulting',
+        url: shareUrl
+      });
+      return;
+    }
+
+    await navigator.clipboard.writeText(shareUrl);
+    const shareButton = detailContainer.querySelector('[data-share-property]');
+    if (!shareButton) return;
+
+    const originalText = shareButton.textContent;
+    shareButton.textContent = 'Lien copie';
+    window.setTimeout(() => {
+      shareButton.textContent = originalText;
+    }, 1600);
+  } catch (error) {
+    window.prompt('Copiez le lien de ce bien', shareUrl);
+  }
+};
+
 const renderDetail = (property) => {
   const images = property.images?.length ? property.images : [];
-  const hasOptionalDetails = ['land', 'shelter'].includes(property.propertyType);
+  const isLand = property.propertyType === 'land';
   const mainImage = images[0]
     ? `
       <div class="detail-carousel">
@@ -125,21 +168,30 @@ const renderDetail = (property) => {
       </div>
     `
     : '<div class="detail-placeholder">Bee Solution & Consulting</div>';
-  const gallery = images
-    .map((image, index) => `
-      <button class="detail-thumb-button ${index === 0 ? 'active' : ''}" type="button" data-photo-index="${index}" aria-label="Voir photo ${index + 1}">
-        <img src="${image}" alt="${property.title} - photo ${index + 1}" />
-      </button>
-    `)
-    .join('');
 
   detailContainer.innerHTML = `
     <div class="detail-gallery">
       ${mainImage}
-      ${gallery ? `<div class="detail-thumbs">${gallery}</div>` : ''}
+      <div class="agent-contact-card">
+        <div class="agent-flip" aria-label="Conseillere Bee Solution & Consulting">
+          <img class="agent-contact-photo agent-flip-front" src="/assets/bee-agent.png" alt="Conseillere Bee Solution & Consulting" />
+          <img class="agent-contact-photo agent-flip-back" src="/assets/bee-solution-consulting-logo.jpg" alt="" />
+        </div>
+        <div class="agent-contact-content">
+          <span>Votre agent immobilier</span>
+          <h2>Mariem Sellami</h2>
+          <p>Un conseiller vous accompagne pour les visites, les informations du bien et les prochaines etapes.</p>
+          <div class="agent-contact-links">
+            <a href="tel:+21653762570">+21653762570</a>
+            <a href="tel:+21653762520">+21653762520</a>
+            <a href="mailto:direction@beeimmo.com">direction@beeimmo.com</a>
+          </div>
+        </div>
+      </div>
     </div>
 
     <aside class="detail-info">
+      <button class="detail-share-button" type="button" data-share-property>Partager</button>
       <div class="listing-topline">
         <span>${transactionLabels[property.transactionType] || property.transactionType}</span>
         ${
@@ -147,7 +199,7 @@ const renderDetail = (property) => {
             ? `<span>${rentalTypeLabels[property.rentalType] || rentalTypeLabels.standard}</span>`
             : ''
         }
-        <span>${property.propertyType === 'shelter' ? icon('shelter') : ''}${propertyTypeLabels[property.propertyType] || property.propertyType}</span>
+        <span>${propertyTypeLabels[property.propertyType] || property.propertyType}</span>
       </div>
 
       <h1>${property.title}</h1>
@@ -157,12 +209,13 @@ const renderDetail = (property) => {
       <div class="detail-meta">
         <span title="Superficie">${icon('surface')}<strong>${property.surface} m2</strong></span>
         ${
-          hasOptionalDetails
+          isLand
             ? ''
             : `
               <span title="Chambres">${icon('bed')}<strong>${property.bedrooms}</strong></span>
               <span title="Salles de bain">${icon('bath')}<strong>${property.bathrooms}</strong></span>
               <span title="Garages">${icon('garage')}<strong>${property.garages || 0}</strong></span>
+              <span title="Abris voiture">${icon('abri')}<strong>${property.abris || 0}</strong></span>
             `
         }
       </div>
@@ -189,6 +242,7 @@ const loadProperty = async () => {
     currentProperty = result.data;
     document.title = `Bee Solution & Consulting - ${currentProperty.title}`;
     renderDetail(currentProperty);
+    startDetailCarousel();
   } catch (error) {
     detailContainer.innerHTML = `<div class="empty-state">${error.message}</div>`;
     visitForm.classList.add('hidden');
@@ -240,15 +294,10 @@ const submitVisitRequest = async (event) => {
 
 visitForm.addEventListener('submit', submitVisitRequest);
 detailContainer.addEventListener('click', (event) => {
-  const thumbButton = event.target.closest('[data-photo-index]');
   const openButton = event.target.closest('[data-photo-open]');
   const prevButton = event.target.closest('[data-photo-prev]');
   const nextButton = event.target.closest('[data-photo-next]');
-
-  if (thumbButton) {
-    updateGallery(Number(thumbButton.dataset.photoIndex));
-    return;
-  }
+  const shareButton = event.target.closest('[data-share-property]');
 
   if (openButton) {
     openLightbox(currentPhotoIndex);
@@ -262,6 +311,11 @@ detailContainer.addEventListener('click', (event) => {
 
   if (nextButton) {
     movePhoto(1);
+    return;
+  }
+
+  if (shareButton) {
+    shareProperty();
   }
 });
 

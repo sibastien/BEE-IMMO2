@@ -26,6 +26,7 @@ const propertyTypeInput = document.getElementById('propertyType');
 const bedroomsInput = document.getElementById('bedrooms');
 const bathroomsInput = document.getElementById('bathrooms');
 const garagesInput = document.getElementById('garages');
+const abrisInput = document.getElementById('abris');
 const propertyDetailFields = document.querySelectorAll('.property-detail-field');
 
 const fields = [
@@ -42,6 +43,7 @@ const fields = [
   'bedrooms',
   'bathrooms',
   'garages',
+  'abris',
   'images',
   'status'
 ];
@@ -51,8 +53,7 @@ const propertyTypeLabels = {
   house: 'Maison',
   villa: 'Villa',
   land: 'Terrain',
-  commercial: 'Commercial',
-  shelter: 'Abri'
+  commercial: 'Commercial'
 };
 
 const transactionLabels = {
@@ -197,7 +198,7 @@ const handleImageUpload = async () => {
 const getFormData = () => {
   const images = getImageValues();
   const propertyType = propertyTypeInput.value;
-  const hasOptionalDetails = ['land', 'shelter'].includes(propertyType);
+  const isLand = propertyType === 'land';
 
   return {
     title: document.getElementById('title').value.trim(),
@@ -210,29 +211,32 @@ const getFormData = () => {
     district: document.getElementById('district').value.trim(),
     address: document.getElementById('address').value.trim(),
     surface: Number(document.getElementById('surface').value),
-    bedrooms: hasOptionalDetails ? 0 : Number(bedroomsInput.value),
-    bathrooms: hasOptionalDetails ? 0 : Number(bathroomsInput.value),
-    garages: hasOptionalDetails ? 0 : Number(garagesInput.value || 0),
+    bedrooms: isLand ? 0 : Number(bedroomsInput.value),
+    bathrooms: isLand ? 0 : Number(bathroomsInput.value),
+    garages: isLand ? 0 : Number(garagesInput.value || 0),
+    abris: isLand ? 0 : Number(abrisInput.value || 0),
     images,
     status: document.getElementById('status').value
   };
 };
 
 const updatePropertyDetailRequirements = () => {
-  const hasOptionalDetails = ['land', 'shelter'].includes(propertyTypeInput.value);
+  const isLand = propertyTypeInput.value === 'land';
 
-  bedroomsInput.required = !hasOptionalDetails;
-  bathroomsInput.required = !hasOptionalDetails;
+  bedroomsInput.required = !isLand;
+  bathroomsInput.required = !isLand;
   garagesInput.required = false;
+  abrisInput.required = false;
 
   propertyDetailFields.forEach((field) => {
-    field.classList.toggle('optional-field', hasOptionalDetails);
+    field.classList.toggle('optional-field', isLand);
   });
 
-  if (hasOptionalDetails) {
+  if (isLand) {
     bedroomsInput.value = bedroomsInput.value || 0;
     bathroomsInput.value = bathroomsInput.value || 0;
     garagesInput.value = garagesInput.value || 0;
+    abrisInput.value = abrisInput.value || 0;
   }
 };
 
@@ -258,7 +262,7 @@ const icon = (name) => {
     bed: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11V5"/><path d="M20 19v-6a2 2 0 0 0-2-2H4v8"/><path d="M4 15h16"/><path d="M8 11V7h6a2 2 0 0 1 2 2v2"/></svg>',
     bath: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M6 12V6a2 2 0 0 1 2-2h1"/><path d="M14 6h4"/><path d="M15 4v4"/></svg>',
     garage: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10 12 4l9 6v10H3z"/><path d="M7 20v-7h10v7"/><path d="M9 16h6"/></svg>',
-    shelter: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 5l8 6"/><path d="M6 10v9h12v-9"/><path d="M9 19v-5h6v5"/></svg>'
+    abri: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h14"/><path d="M7 16l1.5-5h7L17 16"/><path d="M8 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/><path d="M16 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/></svg>'
   };
 
   return icons[name];
@@ -305,7 +309,7 @@ const renderProperties = (properties) => {
   propertiesList.innerHTML = properties
     .map((property) => {
       const id = property.id || property._id;
-      const hasOptionalDetails = ['land', 'shelter'].includes(property.propertyType);
+      const isLand = property.propertyType === 'land';
       const image = property.images?.[0]
         ? `<img class="property-image" src="${property.images[0]}" alt="${property.title}" />`
         : '<div class="property-placeholder">Sans image</div>';
@@ -328,15 +332,16 @@ const renderProperties = (properties) => {
                   ? `<span class="badge">${rentalTypeLabels[property.rentalType] || rentalTypeLabels.standard}</span>`
                   : ''
               }
-              <span class="badge icon-badge">${property.propertyType === 'shelter' ? icon('shelter') : ''}${propertyTypeLabels[property.propertyType] || property.propertyType}</span>
+              <span class="badge icon-badge">${propertyTypeLabels[property.propertyType] || property.propertyType}</span>
               <span class="badge icon-badge" title="Superficie">${icon('surface')}${property.surface} m2</span>
               ${
-                hasOptionalDetails
+                isLand
                   ? ''
                   : `
                     <span class="badge icon-badge" title="Chambres">${icon('bed')}${property.bedrooms}</span>
                     <span class="badge icon-badge" title="Salles de bain">${icon('bath')}${property.bathrooms}</span>
                     <span class="badge icon-badge" title="Garages">${icon('garage')}${property.garages || 0}</span>
+                    <span class="badge icon-badge" title="Abris voiture">${icon('abri')}${property.abris || 0}</span>
                   `
               }
             </div>

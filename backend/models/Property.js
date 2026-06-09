@@ -40,7 +40,7 @@ const propertySchema = new mongoose.Schema(
       type: String,
       required: [true, 'Le type de bien est obligatoire'],
       enum: {
-        values: ['apartment', 'house', 'villa', 'land', 'commercial', 'shelter'],
+        values: ['apartment', 'house', 'villa', 'land', 'commercial'],
         message: 'Le type de bien est invalide'
       }
     },
@@ -68,7 +68,7 @@ const propertySchema = new mongoose.Schema(
       type: Number,
       required: [
         function requiredBedrooms() {
-          return !['land', 'shelter'].includes(this.propertyType);
+          return this.propertyType !== 'land';
         },
         'Le nombre de chambres est obligatoire'
       ],
@@ -79,7 +79,7 @@ const propertySchema = new mongoose.Schema(
       type: Number,
       required: [
         function requiredBathrooms() {
-          return !['land', 'shelter'].includes(this.propertyType);
+          return this.propertyType !== 'land';
         },
         'Le nombre de salles de bain est obligatoire'
       ],
@@ -90,6 +90,11 @@ const propertySchema = new mongoose.Schema(
       type: Number,
       default: 0,
       min: [0, 'Le nombre de garages ne peut pas etre negatif']
+    },
+    abris: {
+      type: Number,
+      default: 0,
+      min: [0, "Le nombre d'abris ne peut pas etre negatif"]
     },
     images: {
       type: [String],

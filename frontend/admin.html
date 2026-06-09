@@ -92,7 +92,6 @@
                 <option value="villa">Villa</option>
                 <option value="land">Terrain</option>
                 <option value="commercial">Commercial</option>
-                <option value="shelter">Abri</option>
               </select>
             </label>
           </div>
@@ -139,15 +138,20 @@
               <input id="garages" name="garages" type="number" min="0" value="0" />
             </label>
 
-            <label>
-              Statut
-              <select id="status" name="status">
-                <option value="available">Disponible</option>
-                <option value="sold">Vendue</option>
-                <option value="rented">Louee</option>
-              </select>
+            <label class="property-detail-field">
+              Abris voiture
+              <input id="abris" name="abris" type="number" min="0" value="0" />
             </label>
           </div>
+
+          <label>
+            Statut
+            <select id="status" name="status">
+              <option value="available">Disponible</option>
+              <option value="sold">Vendue</option>
+              <option value="rented">Louee</option>
+            </select>
+          </label>
 
           <label>
             Images

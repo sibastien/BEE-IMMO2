@@ -31,8 +31,7 @@ const propertyTypeLabels = {
   house: 'Maison',
   villa: 'Villa',
   land: 'Terrain',
-  commercial: 'Commercial',
-  shelter: 'Abri'
+  commercial: 'Commercial'
 };
 
 const transactionLabels = {
@@ -68,7 +67,7 @@ const icon = (name) => {
     bed: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11V5"/><path d="M20 19v-6a2 2 0 0 0-2-2H4v8"/><path d="M4 15h16"/><path d="M8 11V7h6a2 2 0 0 1 2 2v2"/></svg>',
     bath: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M6 12V6a2 2 0 0 1 2-2h1"/><path d="M14 6h4"/><path d="M15 4v4"/></svg>',
     garage: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10 12 4l9 6v10H3z"/><path d="M7 20v-7h10v7"/><path d="M9 16h6"/></svg>',
-    shelter: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 5l8 6"/><path d="M6 10v9h12v-9"/><path d="M9 19v-5h6v5"/></svg>'
+    abri: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h14"/><path d="M7 16l1.5-5h7L17 16"/><path d="M8 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/><path d="M16 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/></svg>'
   };
 
   return icons[name];
@@ -173,8 +172,9 @@ const renderProperties = () => {
 
   publicProperties.innerHTML = visibleProperties
     .map((property) => {
+      const propertyUrl = `/property/${property.id || property._id}`;
       const images = property.images?.length ? property.images : [];
-      const hasOptionalDetails = ['land', 'shelter'].includes(property.propertyType);
+      const isLand = property.propertyType === 'land';
       const image = images.length
         ? `
           <div class="listing-slideshow" data-image-count="${images.length}">
@@ -194,7 +194,7 @@ const renderProperties = () => {
         : '<div class="listing-placeholder">Bee Solution & Consulting</div>';
 
       return `
-        <article class="listing-card">
+        <article class="listing-card clickable-listing" data-href="${propertyUrl}" tabindex="0" role="link" aria-label="Voir le detail de ${escapeHtml(property.title)}">
           ${image}
           <div class="listing-content">
             <div class="listing-topline">
@@ -204,7 +204,7 @@ const renderProperties = () => {
                   ? `<span>${rentalTypeLabels[property.rentalType] || rentalTypeLabels.standard}</span>`
                   : ''
               }
-              <span>${property.propertyType === 'shelter' ? icon('shelter') : ''}${propertyTypeLabels[property.propertyType] || property.propertyType}</span>
+              <span>${propertyTypeLabels[property.propertyType] || property.propertyType}</span>
             </div>
             <h3>${property.title}</h3>
             <p class="listing-location">${property.city}, ${property.district}</p>
@@ -212,17 +212,18 @@ const renderProperties = () => {
             <div class="listing-meta">
               <span title="Superficie">${icon('surface')}${property.surface} m2</span>
               ${
-                hasOptionalDetails
+                isLand
                   ? ''
                   : `
                     <span title="Chambres">${icon('bed')}${property.bedrooms}</span>
                     <span title="Salles de bain">${icon('bath')}${property.bathrooms}</span>
                     <span title="Garages">${icon('garage')}${property.garages || 0}</span>
+                    <span title="Abris voiture">${icon('abri')}${property.abris || 0}</span>
                   `
               }
             </div>
             <div class="listing-actions">
-              <a class="listing-cta" href="/property/${property.id || property._id}">Voir le detail</a>
+              <a class="listing-cta" href="${propertyUrl}">Voir le detail</a>
             </div>
           </div>
         </article>
@@ -464,6 +465,23 @@ carouselDots?.addEventListener('click', (event) => {
 publicProperties.addEventListener('scroll', () => {
   if (isCatalogPage) return;
   window.requestAnimationFrame(updateActiveDot);
+});
+
+publicProperties.addEventListener('click', (event) => {
+  const card = event.target.closest('.clickable-listing');
+
+  if (!card || event.target.closest('a, button')) return;
+
+  window.location.href = card.dataset.href;
+});
+
+publicProperties.addEventListener('keydown', (event) => {
+  const card = event.target.closest('.clickable-listing');
+
+  if (!card || !['Enter', ' '].includes(event.key)) return;
+
+  event.preventDefault();
+  window.location.href = card.dataset.href;
 });
 
 contactOpeners.forEach((opener) => {
