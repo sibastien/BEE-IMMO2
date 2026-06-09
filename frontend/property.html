@@ -13,7 +13,6 @@
         <span class="brand-text">Bee Solution &amp; Consulting</span>
       </a>
       <nav>
-        <a href="/">Annonces</a>
         <a href="#contact">Contact</a>
       </nav>
     </header>
@@ -103,6 +102,13 @@
         </div>
       </div>
     </footer>
+
+    <div class="photo-lightbox hidden" id="photoLightbox" role="dialog" aria-modal="true" aria-label="Photo du bien">
+      <button class="photo-lightbox-close" id="photoLightboxClose" type="button" aria-label="Fermer la photo">&times;</button>
+      <button class="photo-lightbox-arrow photo-lightbox-prev" id="photoLightboxPrev" type="button" aria-label="Photo precedente">&lsaquo;</button>
+      <img id="photoLightboxImage" src="" alt="" />
+      <button class="photo-lightbox-arrow photo-lightbox-next" id="photoLightboxNext" type="button" aria-label="Photo suivante">&rsaquo;</button>
+    </div>
 
     <script src="/config.js"></script>
     <script src="/property.js"></script>

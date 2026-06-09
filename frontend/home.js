@@ -10,7 +10,7 @@ const transactionFilter = document.getElementById('transactionFilter');
 const typeFilter = document.getElementById('typeFilter');
 const minBudgetFilter = document.getElementById('minBudgetFilter');
 const maxBudgetFilter = document.getElementById('maxBudgetFilter');
-const clearFilters = document.getElementById('clearFilters');
+const applyFilters = document.getElementById('applyFilters');
 const carouselPrev = document.getElementById('carouselPrev');
 const carouselNext = document.getElementById('carouselNext');
 const carouselDots = document.getElementById('carouselDots');
@@ -31,12 +31,19 @@ const propertyTypeLabels = {
   house: 'Maison',
   villa: 'Villa',
   land: 'Terrain',
-  commercial: 'Commercial'
+  commercial: 'Commercial',
+  shelter: 'Abri'
 };
 
 const transactionLabels = {
   sale: 'Vente',
   rent: 'Location'
+};
+
+const rentalTypeLabels = {
+  standard: 'Location normale',
+  summer: 'Location estivale',
+  nightly: 'Nuitee'
 };
 
 const moneyFormatter = new Intl.NumberFormat('fr-FR', {
@@ -60,7 +67,8 @@ const icon = (name) => {
     surface: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 4v16M4 8h16"/></svg>',
     bed: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11V5"/><path d="M20 19v-6a2 2 0 0 0-2-2H4v8"/><path d="M4 15h16"/><path d="M8 11V7h6a2 2 0 0 1 2 2v2"/></svg>',
     bath: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M6 12V6a2 2 0 0 1 2-2h1"/><path d="M14 6h4"/><path d="M15 4v4"/></svg>',
-    garage: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10 12 4l9 6v10H3z"/><path d="M7 20v-7h10v7"/><path d="M9 16h6"/></svg>'
+    garage: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10 12 4l9 6v10H3z"/><path d="M7 20v-7h10v7"/><path d="M9 16h6"/></svg>',
+    shelter: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 5l8 6"/><path d="M6 10v9h12v-9"/><path d="M9 19v-5h6v5"/></svg>'
   };
 
   return icons[name];
@@ -96,6 +104,57 @@ const getFilteredProperties = () => {
   }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 };
 
+const hydrateFiltersFromUrl = () => {
+  const params = new URLSearchParams(window.location.search);
+
+  if (locationFilter && params.has('location')) {
+    locationFilter.value = params.get('location');
+  }
+
+  if (transactionFilter && params.has('transaction')) {
+    transactionFilter.value = params.get('transaction');
+  }
+
+  if (typeFilter && params.has('type')) {
+    typeFilter.value = params.get('type');
+  }
+
+  if (minBudgetFilter && params.has('minBudget')) {
+    minBudgetFilter.value = params.get('minBudget');
+  }
+
+  if (maxBudgetFilter && params.has('maxBudget')) {
+    maxBudgetFilter.value = params.get('maxBudget');
+  }
+};
+
+const getFilterQueryString = () => {
+  const params = new URLSearchParams();
+  const location = locationFilter?.value.trim();
+  const transaction = forcedTransaction || transactionFilter?.value || '';
+  const type = typeFilter?.value || '';
+  const minBudget = minBudgetFilter?.value || '';
+  const maxBudget = maxBudgetFilter?.value || '';
+
+  if (location) params.set('location', location);
+  if (transaction) params.set('transaction', transaction);
+  if (type) params.set('type', type);
+  if (minBudget) params.set('minBudget', minBudget);
+  if (maxBudget) params.set('maxBudget', maxBudget);
+
+  const queryString = params.toString();
+  return queryString ? `?${queryString}` : '';
+};
+
+const getResultsPath = () => {
+  const transaction = forcedTransaction || transactionFilter?.value || '';
+
+  if (transaction === 'sale') return '/acheter';
+  if (transaction === 'rent') return '/louer';
+
+  return '';
+};
+
 const renderProperties = () => {
   visibleProperties = getFilteredProperties();
   publicCount.textContent = `${visibleProperties.length} annonce${visibleProperties.length > 1 ? 's' : ''}`;
@@ -115,7 +174,7 @@ const renderProperties = () => {
   publicProperties.innerHTML = visibleProperties
     .map((property) => {
       const images = property.images?.length ? property.images : [];
-      const isLand = property.propertyType === 'land';
+      const hasOptionalDetails = ['land', 'shelter'].includes(property.propertyType);
       const image = images.length
         ? `
           <div class="listing-slideshow" data-image-count="${images.length}">
@@ -140,7 +199,12 @@ const renderProperties = () => {
           <div class="listing-content">
             <div class="listing-topline">
               <span>${transactionLabels[property.transactionType] || property.transactionType}</span>
-              <span>${propertyTypeLabels[property.propertyType] || property.propertyType}</span>
+              ${
+                property.transactionType === 'rent'
+                  ? `<span>${rentalTypeLabels[property.rentalType] || rentalTypeLabels.standard}</span>`
+                  : ''
+              }
+              <span>${property.propertyType === 'shelter' ? icon('shelter') : ''}${propertyTypeLabels[property.propertyType] || property.propertyType}</span>
             </div>
             <h3>${property.title}</h3>
             <p class="listing-location">${property.city}, ${property.district}</p>
@@ -148,7 +212,7 @@ const renderProperties = () => {
             <div class="listing-meta">
               <span title="Superficie">${icon('surface')}${property.surface} m2</span>
               ${
-                isLand
+                hasOptionalDetails
                   ? ''
                   : `
                     <span title="Chambres">${icon('bed')}${property.bedrooms}</span>
@@ -368,13 +432,25 @@ const submitContactRequest = async (event) => {
   input?.addEventListener('input', renderProperties);
 });
 
-clearFilters?.addEventListener('click', () => {
-  if (locationFilter) locationFilter.value = '';
-  if (transactionFilter) transactionFilter.value = '';
-  if (typeFilter) typeFilter.value = '';
-  if (minBudgetFilter) minBudgetFilter.value = '';
-  if (maxBudgetFilter) maxBudgetFilter.value = '';
+applyFilters?.addEventListener('click', () => {
   renderProperties();
+
+  const resultsPath = getResultsPath();
+  const queryString = getFilterQueryString();
+
+  if (!isCatalogPage && resultsPath) {
+    window.location.href = `${resultsPath}${queryString}`;
+    return;
+  }
+
+  if (isCatalogPage) {
+    window.history.replaceState(null, '', `${window.location.pathname}${queryString}`);
+  }
+
+  document.getElementById('annonces')?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'start'
+  });
 });
 
 carouselPrev?.addEventListener('click', () => moveCarousel(-1));
@@ -414,5 +490,6 @@ document.addEventListener('keydown', (event) => {
 });
 
 contactForm?.addEventListener('submit', submitContactRequest);
+hydrateFiltersFromUrl();
 loadProperties();
 loadTestimonials();

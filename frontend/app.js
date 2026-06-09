@@ -19,6 +19,9 @@ const refreshButton = document.getElementById('refreshButton');
 const imagesInput = document.getElementById('images');
 const imageUpload = document.getElementById('imageUpload');
 const imagePreview = document.getElementById('imagePreview');
+const transactionTypeInput = document.getElementById('transactionType');
+const rentalTypeInput = document.getElementById('rentalType');
+const rentalTypeField = document.querySelector('.rental-type-field');
 const propertyTypeInput = document.getElementById('propertyType');
 const bedroomsInput = document.getElementById('bedrooms');
 const bathroomsInput = document.getElementById('bathrooms');
@@ -30,6 +33,7 @@ const fields = [
   'description',
   'price',
   'transactionType',
+  'rentalType',
   'propertyType',
   'city',
   'district',
@@ -47,12 +51,19 @@ const propertyTypeLabels = {
   house: 'Maison',
   villa: 'Villa',
   land: 'Terrain',
-  commercial: 'Commercial'
+  commercial: 'Commercial',
+  shelter: 'Abri'
 };
 
 const transactionLabels = {
   sale: 'Vente',
   rent: 'Location'
+};
+
+const rentalTypeLabels = {
+  standard: 'Location normale',
+  summer: 'Location estivale',
+  nightly: 'Nuitee'
 };
 
 const statusLabels = {
@@ -186,41 +197,58 @@ const handleImageUpload = async () => {
 const getFormData = () => {
   const images = getImageValues();
   const propertyType = propertyTypeInput.value;
-  const isLand = propertyType === 'land';
+  const hasOptionalDetails = ['land', 'shelter'].includes(propertyType);
 
   return {
     title: document.getElementById('title').value.trim(),
     description: document.getElementById('description').value.trim(),
     price: Number(document.getElementById('price').value),
-    transactionType: document.getElementById('transactionType').value,
+    transactionType: transactionTypeInput.value,
+    rentalType: transactionTypeInput.value === 'rent' ? rentalTypeInput.value : 'standard',
     propertyType,
     city: document.getElementById('city').value.trim(),
     district: document.getElementById('district').value.trim(),
     address: document.getElementById('address').value.trim(),
     surface: Number(document.getElementById('surface').value),
-    bedrooms: isLand ? 0 : Number(bedroomsInput.value),
-    bathrooms: isLand ? 0 : Number(bathroomsInput.value),
-    garages: isLand ? 0 : Number(garagesInput.value || 0),
+    bedrooms: hasOptionalDetails ? 0 : Number(bedroomsInput.value),
+    bathrooms: hasOptionalDetails ? 0 : Number(bathroomsInput.value),
+    garages: hasOptionalDetails ? 0 : Number(garagesInput.value || 0),
     images,
     status: document.getElementById('status').value
   };
 };
 
 const updatePropertyDetailRequirements = () => {
-  const isLand = propertyTypeInput.value === 'land';
+  const hasOptionalDetails = ['land', 'shelter'].includes(propertyTypeInput.value);
 
-  bedroomsInput.required = !isLand;
-  bathroomsInput.required = !isLand;
+  bedroomsInput.required = !hasOptionalDetails;
+  bathroomsInput.required = !hasOptionalDetails;
   garagesInput.required = false;
 
   propertyDetailFields.forEach((field) => {
-    field.classList.toggle('optional-field', isLand);
+    field.classList.toggle('optional-field', hasOptionalDetails);
   });
 
-  if (isLand) {
+  if (hasOptionalDetails) {
     bedroomsInput.value = bedroomsInput.value || 0;
     bathroomsInput.value = bathroomsInput.value || 0;
     garagesInput.value = garagesInput.value || 0;
+  }
+};
+
+const updateRentalTypeVisibility = () => {
+  const isRent = transactionTypeInput.value === 'rent';
+
+  rentalTypeField?.classList.toggle('hidden', !isRent);
+  rentalTypeInput.disabled = !isRent;
+
+  if (!isRent) {
+    rentalTypeInput.value = 'standard';
+    return;
+  }
+
+  if (!rentalTypeInput.value) {
+    rentalTypeInput.value = 'standard';
   }
 };
 
@@ -229,7 +257,8 @@ const icon = (name) => {
     surface: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 4v16M4 8h16"/></svg>',
     bed: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11V5"/><path d="M20 19v-6a2 2 0 0 0-2-2H4v8"/><path d="M4 15h16"/><path d="M8 11V7h6a2 2 0 0 1 2 2v2"/></svg>',
     bath: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M6 12V6a2 2 0 0 1 2-2h1"/><path d="M14 6h4"/><path d="M15 4v4"/></svg>',
-    garage: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10 12 4l9 6v10H3z"/><path d="M7 20v-7h10v7"/><path d="M9 16h6"/></svg>'
+    garage: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10 12 4l9 6v10H3z"/><path d="M7 20v-7h10v7"/><path d="M9 16h6"/></svg>',
+    shelter: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 5l8 6"/><path d="M6 10v9h12v-9"/><path d="M9 19v-5h6v5"/></svg>'
   };
 
   return icons[name];
@@ -241,6 +270,7 @@ const resetForm = () => {
   if (imageUpload) imageUpload.value = '';
   submitButton.textContent = "Ajouter l'annonce";
   setMessage('');
+  updateRentalTypeVisibility();
   updatePropertyDetailRequirements();
   renderImagePreview();
 };
@@ -258,6 +288,7 @@ const fillForm = (property) => {
   });
 
   submitButton.textContent = "Modifier l'annonce";
+  updateRentalTypeVisibility();
   updatePropertyDetailRequirements();
   renderImagePreview();
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -274,7 +305,7 @@ const renderProperties = (properties) => {
   propertiesList.innerHTML = properties
     .map((property) => {
       const id = property.id || property._id;
-      const isLand = property.propertyType === 'land';
+      const hasOptionalDetails = ['land', 'shelter'].includes(property.propertyType);
       const image = property.images?.[0]
         ? `<img class="property-image" src="${property.images[0]}" alt="${property.title}" />`
         : '<div class="property-placeholder">Sans image</div>';
@@ -292,10 +323,15 @@ const renderProperties = (properties) => {
             </div>
             <div class="property-meta">
               <span class="badge">${transactionLabels[property.transactionType] || property.transactionType}</span>
-              <span class="badge">${propertyTypeLabels[property.propertyType] || property.propertyType}</span>
+              ${
+                property.transactionType === 'rent'
+                  ? `<span class="badge">${rentalTypeLabels[property.rentalType] || rentalTypeLabels.standard}</span>`
+                  : ''
+              }
+              <span class="badge icon-badge">${property.propertyType === 'shelter' ? icon('shelter') : ''}${propertyTypeLabels[property.propertyType] || property.propertyType}</span>
               <span class="badge icon-badge" title="Superficie">${icon('surface')}${property.surface} m2</span>
               ${
-                isLand
+                hasOptionalDetails
                   ? ''
                   : `
                     <span class="badge icon-badge" title="Chambres">${icon('bed')}${property.bedrooms}</span>
@@ -437,6 +473,7 @@ propertiesList.addEventListener('click', async (event) => {
 });
 
 form.addEventListener('submit', saveProperty);
+transactionTypeInput.addEventListener('change', updateRentalTypeVisibility);
 propertyTypeInput.addEventListener('change', updatePropertyDetailRequirements);
 imagesInput.addEventListener('input', renderImagePreview);
 imageUpload.addEventListener('change', handleImageUpload);
@@ -464,4 +501,5 @@ if (getToken()) {
 }
 
 updatePropertyDetailRequirements();
+updateRentalTypeVisibility();
 renderImagePreview();

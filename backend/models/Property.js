@@ -28,11 +28,19 @@ const propertySchema = new mongoose.Schema(
         message: 'Le type de transaction doit etre sale ou rent'
       }
     },
+    rentalType: {
+      type: String,
+      enum: {
+        values: ['standard', 'summer', 'nightly'],
+        message: 'Le type de location est invalide'
+      },
+      default: 'standard'
+    },
     propertyType: {
       type: String,
       required: [true, 'Le type de bien est obligatoire'],
       enum: {
-        values: ['apartment', 'house', 'villa', 'land', 'commercial'],
+        values: ['apartment', 'house', 'villa', 'land', 'commercial', 'shelter'],
         message: 'Le type de bien est invalide'
       }
     },
@@ -60,7 +68,7 @@ const propertySchema = new mongoose.Schema(
       type: Number,
       required: [
         function requiredBedrooms() {
-          return this.propertyType !== 'land';
+          return !['land', 'shelter'].includes(this.propertyType);
         },
         'Le nombre de chambres est obligatoire'
       ],
@@ -71,7 +79,7 @@ const propertySchema = new mongoose.Schema(
       type: Number,
       required: [
         function requiredBathrooms() {
-          return this.propertyType !== 'land';
+          return !['land', 'shelter'].includes(this.propertyType);
         },
         'Le nombre de salles de bain est obligatoire'
       ],
