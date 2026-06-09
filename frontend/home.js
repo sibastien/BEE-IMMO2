@@ -7,7 +7,8 @@ const publicCount = document.getElementById('publicCount');
 const locationFilter = document.getElementById('locationFilter');
 const transactionFilter = document.getElementById('transactionFilter');
 const typeFilter = document.getElementById('typeFilter');
-const maxPriceFilter = document.getElementById('maxPriceFilter');
+const minBudgetFilter = document.getElementById('minBudgetFilter');
+const maxBudgetFilter = document.getElementById('maxBudgetFilter');
 const clearFilters = document.getElementById('clearFilters');
 const carouselPrev = document.getElementById('carouselPrev');
 const carouselNext = document.getElementById('carouselNext');
@@ -60,9 +61,11 @@ const getFilteredProperties = () => {
   const location = normalize(locationFilter?.value);
   const transaction = forcedTransaction || transactionFilter?.value || '';
   const type = typeFilter?.value || '';
-  const maxPrice = Number(maxPriceFilter?.value);
+  const minBudget = Number(minBudgetFilter?.value);
+  const maxBudget = Number(maxBudgetFilter?.value);
 
   return properties.filter((property) => {
+    const price = Number(property.price);
     const matchesLocation =
       !location ||
       normalize(property.city).includes(location) ||
@@ -70,14 +73,16 @@ const getFilteredProperties = () => {
       normalize(property.address).includes(location);
     const matchesTransaction = !transaction || property.transactionType === transaction;
     const matchesType = !type || property.propertyType === type;
-    const matchesPrice = !maxPrice || Number(property.price) <= maxPrice;
+    const matchesMinBudget = !minBudget || price >= minBudget;
+    const matchesMaxBudget = !maxBudget || price <= maxBudget;
 
     return (
       property.status === 'available' &&
       matchesLocation &&
       matchesTransaction &&
       matchesType &&
-      matchesPrice
+      matchesMinBudget &&
+      matchesMaxBudget
     );
   }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 };
@@ -290,7 +295,7 @@ const submitContactRequest = async (event) => {
   }
 };
 
-[locationFilter, transactionFilter, typeFilter, maxPriceFilter].forEach((input) => {
+[locationFilter, transactionFilter, typeFilter, minBudgetFilter, maxBudgetFilter].forEach((input) => {
   input?.addEventListener('input', renderProperties);
 });
 
@@ -298,7 +303,8 @@ clearFilters?.addEventListener('click', () => {
   if (locationFilter) locationFilter.value = '';
   if (transactionFilter) transactionFilter.value = '';
   if (typeFilter) typeFilter.value = '';
-  if (maxPriceFilter) maxPriceFilter.value = '';
+  if (minBudgetFilter) minBudgetFilter.value = '';
+  if (maxBudgetFilter) maxBudgetFilter.value = '';
   renderProperties();
 });
 
