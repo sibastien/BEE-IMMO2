@@ -34,7 +34,7 @@ app.use(
     },
   })
 );
-app.use(express.json({ limit: '12mb' }));
+app.use(express.json({ limit: '40mb' }));
 app.use(express.static(frontendPath));
 
 // Routes

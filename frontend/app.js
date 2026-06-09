@@ -2,6 +2,7 @@ const API_BASE_URL = (window.BEE_CONFIG?.API_BASE_URL || '').replace(/\/$/, '');
 const API_URL = `${API_BASE_URL}/api/properties`;
 const AUTH_URL = `${API_BASE_URL}/api/auth`;
 const TOKEN_KEY = 'bee_consulting_admin_token';
+const MAX_PROPERTY_IMAGES = 20;
 
 const loginPanel = document.getElementById('loginPanel');
 const dashboardPanels = document.querySelectorAll('.dashboard-panel');
@@ -188,11 +189,11 @@ const handleImageUpload = async () => {
   try {
     setMessage('Preparation des photos...');
     const existingImages = getImageValues();
-    const availableSlots = Math.max(0, 8 - existingImages.length);
+    const availableSlots = Math.max(0, MAX_PROPERTY_IMAGES - existingImages.length);
     const selectedFiles = files.slice(0, availableSlots);
 
     if (selectedFiles.length === 0) {
-      throw new Error('Maximum 8 photos par annonce.');
+      throw new Error(`Maximum ${MAX_PROPERTY_IMAGES} photos par annonce.`);
     }
 
     const uploadedImages = await Promise.all(selectedFiles.map(resizeImageFile));
