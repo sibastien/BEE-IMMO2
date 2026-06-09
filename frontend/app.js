@@ -116,6 +116,11 @@ const getImageValues = () =>
     .map((url) => url.trim())
     .filter(Boolean);
 
+const setImageValues = (images) => {
+  imagesInput.value = images.join('\n');
+  renderImagePreview();
+};
+
 const renderImagePreview = () => {
   const images = getImageValues();
 
@@ -131,6 +136,11 @@ const renderImagePreview = () => {
       (image, index) => `
         <div class="image-preview-item">
           <img src="${image}" alt="Photo ${index + 1}" />
+          <span class="image-order-badge">${index + 1}</span>
+          <div class="image-order-controls">
+            <button type="button" data-image-move="${index}" data-direction="-1" ${index === 0 ? 'disabled' : ''} aria-label="Monter la photo ${index + 1}">↑</button>
+            <button type="button" data-image-move="${index}" data-direction="1" ${index === images.length - 1 ? 'disabled' : ''} aria-label="Descendre la photo ${index + 1}">↓</button>
+          </div>
           <button class="image-remove" type="button" data-image-remove="${index}" aria-label="Retirer la photo ${index + 1}">&times;</button>
         </div>
       `
@@ -484,13 +494,26 @@ imagesInput.addEventListener('input', renderImagePreview);
 imageUpload.addEventListener('change', handleImageUpload);
 imagePreview.addEventListener('click', (event) => {
   const removeIndex = event.target.dataset.imageRemove;
-
-  if (removeIndex === undefined) return;
+  const moveIndex = event.target.dataset.imageMove;
 
   const images = getImageValues();
-  images.splice(Number(removeIndex), 1);
-  imagesInput.value = images.join('\n');
-  renderImagePreview();
+
+  if (removeIndex !== undefined) {
+    images.splice(Number(removeIndex), 1);
+    setImageValues(images);
+    return;
+  }
+
+  if (moveIndex !== undefined) {
+    const from = Number(moveIndex);
+    const to = from + Number(event.target.dataset.direction);
+
+    if (to < 0 || to >= images.length) return;
+
+    const [image] = images.splice(from, 1);
+    images.splice(to, 0, image);
+    setImageValues(images);
+  }
 });
 loginForm.addEventListener('submit', loginAdmin);
 logoutButton.addEventListener('click', logoutAdmin);
