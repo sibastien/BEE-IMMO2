@@ -59,6 +59,8 @@ const formatPropertyPrice = (property) => {
     : price;
 };
 
+const displayImageUrl = (imageUrl) => window.BeeImages?.withWatermark?.(imageUrl) || imageUrl;
+
 const normalize = (value) => String(value || '').toLowerCase().trim();
 
 const shuffleArray = (items) => {
@@ -206,7 +208,7 @@ const renderProperties = () => {
             ${images
               .map(
                 (imageUrl, index) =>
-                  `<img class="listing-image ${index === 0 ? 'active' : ''}" src="${imageUrl}" alt="${property.title}" />`
+                  `<img class="listing-image ${index === 0 ? 'active' : ''}" src="${displayImageUrl(imageUrl)}" alt="${property.title}" />`
               )
               .join('')}
             ${

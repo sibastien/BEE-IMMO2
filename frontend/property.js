@@ -45,6 +45,8 @@ const formatPropertyPrice = (property) => {
     : price;
 };
 
+const displayImageUrl = (imageUrl) => window.BeeImages?.withWatermark?.(imageUrl) || imageUrl;
+
 const icon = (name) => {
   const icons = {
     surface: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 4v16M4 8h16"/></svg>',
@@ -66,7 +68,7 @@ const updateGallery = (index) => {
   if (!images.length) return;
 
   currentPhotoIndex = (index + images.length) % images.length;
-  const activeImage = images[currentPhotoIndex];
+  const activeImage = displayImageUrl(images[currentPhotoIndex]);
   const mainImage = detailContainer.querySelector('.detail-main-image');
   const counter = detailContainer.querySelector('.detail-photo-count');
 
@@ -86,7 +88,7 @@ const openLightbox = (index = currentPhotoIndex) => {
   if (!images.length) return;
 
   updateGallery(index);
-  photoLightboxImage.src = images[currentPhotoIndex];
+  photoLightboxImage.src = displayImageUrl(images[currentPhotoIndex]);
   photoLightboxImage.alt = `${currentProperty.title} - photo ${currentPhotoIndex + 1}`;
   photoLightbox.classList.remove('hidden');
   document.body.classList.add('modal-open');
@@ -103,7 +105,7 @@ const movePhoto = (direction) => {
 
   if (!photoLightbox.classList.contains('hidden')) {
     const images = getCurrentImages();
-    photoLightboxImage.src = images[currentPhotoIndex];
+    photoLightboxImage.src = displayImageUrl(images[currentPhotoIndex]);
     photoLightboxImage.alt = `${currentProperty.title} - photo ${currentPhotoIndex + 1}`;
   }
 };
@@ -161,7 +163,7 @@ const renderDetail = (property) => {
     ? `
       <div class="detail-carousel">
         <button class="detail-main-button" type="button" data-photo-open="0" aria-label="Agrandir la photo principale">
-          <img class="detail-main-image" src="${images[0]}" alt="${property.title} - photo 1" />
+          <img class="detail-main-image" src="${displayImageUrl(images[0])}" alt="${property.title} - photo 1" />
         </button>
         ${
           images.length > 1

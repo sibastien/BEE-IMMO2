@@ -5,6 +5,7 @@ const fs = require('fs/promises');
 const path = require('path');
 const connectDB = require('./config/db');
 const Property = require('./models/Property');
+const { getWatermarkedImageUrl } = require('./utils/cloudinaryWatermark');
 const propertyRoutes = require('./routes/propertyRoutes');
 const authRoutes = require('./routes/authRoutes');
 const requestRoutes = require('./routes/requestRoutes');
@@ -145,7 +146,7 @@ app.get('/property/:id/og-image', async (req, res, next) => {
     }
 
     if (/^https?:\/\//i.test(image)) {
-      return res.redirect(image);
+      return res.redirect(getWatermarkedImageUrl(image));
     }
 
     const match = image.match(/^data:(image\/(?:png|jpe?g|webp));base64,(.+)$/i);
