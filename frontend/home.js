@@ -222,6 +222,7 @@ const renderProperties = () => {
         <article class="listing-card clickable-listing" data-href="${propertyUrl}" tabindex="0" role="link" aria-label="Voir le detail de ${escapeHtml(property.title)}">
           ${image}
           <div class="listing-content">
+            ${property.reference ? `<p class="property-reference">REF ${escapeHtml(property.reference)}</p>` : ''}
             <div class="listing-topline">
               <span>${transactionLabels[property.transactionType] || property.transactionType}</span>
               ${

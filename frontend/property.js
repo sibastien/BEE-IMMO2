@@ -210,6 +210,7 @@ const renderDetail = (property) => {
       </div>
 
       <h1>${property.title}</h1>
+      ${property.reference ? `<p class="property-reference detail-reference">REF ${property.reference}</p>` : ''}
       <p class="listing-location">${property.city}, ${property.district} - ${property.address}</p>
       <strong class="detail-price">${formatPropertyPrice(property)}</strong>
 

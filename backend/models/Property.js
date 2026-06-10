@@ -15,6 +15,14 @@ const propertySchema = new mongoose.Schema(
       trim: true,
       minlength: [10, 'La description doit contenir au moins 10 caracteres']
     },
+    reference: {
+      type: String,
+      trim: true,
+      uppercase: true,
+      unique: true,
+      sparse: true,
+      match: [/^[A-Z]{2}\d{3}$/, 'La reference doit respecter le format VA001']
+    },
     price: {
       type: Number,
       required: [true, 'Le prix est obligatoire'],

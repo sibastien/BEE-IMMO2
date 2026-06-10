@@ -1,5 +1,6 @@
 const Property = require('../models/Property');
 const { cloudinary, configureCloudinary } = require('../config/cloudinary');
+const { getNextReference } = require('../utils/propertyReference');
 
 const isBase64Image = (image) => /^data:image\/(png|jpe?g|webp);base64,/i.test(image || '');
 
@@ -48,6 +49,11 @@ const normalizePropertyPayload = async (body) => {
 const createProperty = async (req, res, next) => {
   try {
     const payload = await normalizePropertyPayload(req.body);
+
+    if (!payload.reference) {
+      payload.reference = await getNextReference(Property, payload.transactionType, payload.propertyType);
+    }
+
     const property = await Property.create(payload);
 
     res.status(201).json({
@@ -97,6 +103,8 @@ const getPropertyById = async (req, res, next) => {
 const updateProperty = async (req, res, next) => {
   try {
     const payload = await normalizePropertyPayload(req.body);
+    delete payload.reference;
+
     const property = await Property.findByIdAndUpdate(
       req.params.id,
       payload,

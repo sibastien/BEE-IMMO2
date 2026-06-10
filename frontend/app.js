@@ -351,6 +351,7 @@ const renderProperties = (properties) => {
             <div class="property-header">
               <div>
                 <h3 class="property-title">${property.title}</h3>
+                ${property.reference ? `<p class="property-reference">REF ${property.reference}</p>` : ''}
                 <strong>${formatPropertyPrice(property)}</strong>
               </div>
               <span class="badge ${property.status}">${statusLabels[property.status] || property.status}</span>
