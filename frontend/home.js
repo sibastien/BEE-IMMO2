@@ -36,7 +36,7 @@ const propertyTypeLabels = {
 
 const transactionLabels = {
   sale: 'Vente',
-  rent: 'Location annuelle'
+  rent: 'Location'
 };
 
 const rentalTypeLabels = {
