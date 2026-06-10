@@ -36,11 +36,11 @@ const propertyTypeLabels = {
 
 const transactionLabels = {
   sale: 'Vente',
-  rent: 'Location'
+  rent: 'Location annuelle'
 };
 
 const rentalTypeLabels = {
-  standard: 'Location normale',
+  standard: 'Location annuelle',
   summer: 'Location estivale',
   nightly: 'Nuitee'
 };
@@ -50,6 +50,13 @@ const moneyFormatter = new Intl.NumberFormat('fr-FR', {
   currency: 'TND',
   maximumFractionDigits: 0
 });
+
+const formatPropertyPrice = (property) => {
+  const price = moneyFormatter.format(property.price);
+  return property.transactionType === 'sale' && property.propertyType === 'land'
+    ? `${price} / m2`
+    : price;
+};
 
 const normalize = (value) => String(value || '').toLowerCase().trim();
 
@@ -208,7 +215,7 @@ const renderProperties = () => {
             </div>
             <h3>${property.title}</h3>
             <p class="listing-location">${property.city}, ${property.district}</p>
-            <strong>${moneyFormatter.format(property.price)}</strong>
+            <strong>${formatPropertyPrice(property)}</strong>
             <div class="listing-meta">
               <span title="Superficie">${icon('surface')}${property.surface} m2</span>
               ${

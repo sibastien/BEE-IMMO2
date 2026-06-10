@@ -65,7 +65,7 @@
 
           <div class="grid-2">
             <label>
-              Prix
+              <span id="priceLabel">Prix</span>
               <input id="price" name="price" type="number" min="0" required />
             </label>
 
@@ -80,7 +80,7 @@
               Transaction
               <select id="transactionType" name="transactionType" required>
                 <option value="sale">Vente</option>
-                <option value="rent">Location</option>
+                <option value="rent">Location annuelle</option>
               </select>
             </label>
 
@@ -99,7 +99,7 @@
           <label class="rental-type-field hidden">
             Type de location
             <select id="rentalType" name="rentalType">
-              <option value="standard">Location normale</option>
+              <option value="standard">Location annuelle</option>
               <option value="summer">Location estivale</option>
               <option value="nightly">Nuitee</option>
             </select>

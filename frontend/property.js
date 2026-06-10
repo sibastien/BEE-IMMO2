@@ -23,11 +23,11 @@ const propertyTypeLabels = {
 
 const transactionLabels = {
   sale: 'Vente',
-  rent: 'Location'
+  rent: 'Location annuelle'
 };
 
 const rentalTypeLabels = {
-  standard: 'Location normale',
+  standard: 'Location annuelle',
   summer: 'Location estivale',
   nightly: 'Nuitee'
 };
@@ -37,6 +37,13 @@ const moneyFormatter = new Intl.NumberFormat('fr-FR', {
   currency: 'TND',
   maximumFractionDigits: 0
 });
+
+const formatPropertyPrice = (property) => {
+  const price = moneyFormatter.format(property.price);
+  return property.transactionType === 'sale' && property.propertyType === 'land'
+    ? `${price} / m2`
+    : price;
+};
 
 const icon = (name) => {
   const icons = {
@@ -204,7 +211,7 @@ const renderDetail = (property) => {
 
       <h1>${property.title}</h1>
       <p class="listing-location">${property.city}, ${property.district} - ${property.address}</p>
-      <strong class="detail-price">${moneyFormatter.format(property.price)}</strong>
+      <strong class="detail-price">${formatPropertyPrice(property)}</strong>
 
       <div class="detail-meta">
         <span title="Superficie">${icon('surface')}<strong>${property.surface} m2</strong></span>

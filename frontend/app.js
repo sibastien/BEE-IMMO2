@@ -29,6 +29,7 @@ const bathroomsInput = document.getElementById('bathrooms');
 const garagesInput = document.getElementById('garages');
 const abrisInput = document.getElementById('abris');
 const propertyDetailFields = document.querySelectorAll('.property-detail-field');
+const priceLabel = document.getElementById('priceLabel');
 
 const fields = [
   'title',
@@ -59,11 +60,11 @@ const propertyTypeLabels = {
 
 const transactionLabels = {
   sale: 'Vente',
-  rent: 'Location'
+  rent: 'Location annuelle'
 };
 
 const rentalTypeLabels = {
-  standard: 'Location normale',
+  standard: 'Location annuelle',
   summer: 'Location estivale',
   nightly: 'Nuitee'
 };
@@ -79,6 +80,13 @@ const moneyFormatter = new Intl.NumberFormat('fr-FR', {
   currency: 'TND',
   maximumFractionDigits: 0
 });
+
+const formatPropertyPrice = (property) => {
+  const price = moneyFormatter.format(property.price);
+  return property.transactionType === 'sale' && property.propertyType === 'land'
+    ? `${price} / m2`
+    : price;
+};
 
 const getToken = () => localStorage.getItem(TOKEN_KEY);
 
@@ -267,6 +275,15 @@ const updateRentalTypeVisibility = () => {
   }
 };
 
+const updatePriceLabel = () => {
+  const isLandSale =
+    transactionTypeInput.value === 'sale' &&
+    propertyTypeInput.value === 'land';
+
+  priceLabel.textContent = isLandSale ? 'Prix par m2' : 'Prix';
+  document.getElementById('price').placeholder = isLandSale ? 'Ex: 1300' : '';
+};
+
 const icon = (name) => {
   const icons = {
     surface: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 4v16M4 8h16"/></svg>',
@@ -286,6 +303,7 @@ const resetForm = () => {
   submitButton.textContent = "Ajouter l'annonce";
   setMessage('');
   updateRentalTypeVisibility();
+  updatePriceLabel();
   updatePropertyDetailRequirements();
   renderImagePreview();
 };
@@ -304,6 +322,7 @@ const fillForm = (property) => {
 
   submitButton.textContent = "Modifier l'annonce";
   updateRentalTypeVisibility();
+  updatePriceLabel();
   updatePropertyDetailRequirements();
   renderImagePreview();
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -332,7 +351,7 @@ const renderProperties = (properties) => {
             <div class="property-header">
               <div>
                 <h3 class="property-title">${property.title}</h3>
-                <strong>${moneyFormatter.format(property.price)}</strong>
+                <strong>${formatPropertyPrice(property)}</strong>
               </div>
               <span class="badge ${property.status}">${statusLabels[property.status] || property.status}</span>
             </div>
@@ -489,8 +508,14 @@ propertiesList.addEventListener('click', async (event) => {
 });
 
 form.addEventListener('submit', saveProperty);
-transactionTypeInput.addEventListener('change', updateRentalTypeVisibility);
-propertyTypeInput.addEventListener('change', updatePropertyDetailRequirements);
+transactionTypeInput.addEventListener('change', () => {
+  updateRentalTypeVisibility();
+  updatePriceLabel();
+});
+propertyTypeInput.addEventListener('change', () => {
+  updatePropertyDetailRequirements();
+  updatePriceLabel();
+});
 imagesInput.addEventListener('input', renderImagePreview);
 imageUpload.addEventListener('change', handleImageUpload);
 imagePreview.addEventListener('click', (event) => {
@@ -531,4 +556,5 @@ if (getToken()) {
 
 updatePropertyDetailRequirements();
 updateRentalTypeVisibility();
+updatePriceLabel();
 renderImagePreview();
