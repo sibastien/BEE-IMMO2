@@ -25,6 +25,7 @@ const isCatalogPage = document.body.dataset.pageMode === 'catalog';
 
 let properties = [];
 let visibleProperties = [];
+let shuffledHomeProperties = [];
 
 const propertyTypeLabels = {
   apartment: 'Appartement',
@@ -60,6 +61,17 @@ const formatPropertyPrice = (property) => {
 
 const normalize = (value) => String(value || '').toLowerCase().trim();
 
+const shuffleArray = (items) => {
+  const shuffled = [...items];
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
+  }
+
+  return shuffled;
+};
+
 const escapeHtml = (value) =>
   String(value ?? '')
     .replace(/&/g, '&amp;')
@@ -87,7 +99,9 @@ const getFilteredProperties = () => {
   const minBudget = Number(minBudgetFilter?.value);
   const maxBudget = Number(maxBudgetFilter?.value);
 
-  return properties.filter((property) => {
+  const sourceProperties = isCatalogPage ? properties : shuffledHomeProperties;
+
+  return sourceProperties.filter((property) => {
     const price = Number(property.price);
     const matchesLocation =
       !location ||
@@ -107,7 +121,11 @@ const getFilteredProperties = () => {
       matchesMinBudget &&
       matchesMaxBudget
     );
-  }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  }).sort((a, b) => {
+    if (!isCatalogPage) return 0;
+
+    return new Date(b.createdAt) - new Date(a.createdAt);
+  });
 };
 
 const hydrateFiltersFromUrl = () => {
@@ -327,6 +345,7 @@ const loadProperties = async () => {
     }
 
     properties = result.data || [];
+    shuffledHomeProperties = shuffleArray(properties);
     renderProperties();
   } catch (error) {
     publicCount.textContent = 'API indisponible';
