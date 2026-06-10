@@ -1481,6 +1481,26 @@ a {
   line-height: 1.6;
 }
 
+.formatted-description {
+  display: grid;
+  gap: 12px;
+  padding: 2px 0 0;
+}
+
+.formatted-description p {
+  margin: 0;
+}
+
+.formatted-description .description-lead {
+  color: #3d362b;
+  font-size: 17px;
+  line-height: 1.72;
+}
+
+.structured-preview {
+  max-width: 76ch;
+}
+
 .detail-contact {
   margin-top: 24px;
   border-radius: 8px;

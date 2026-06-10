@@ -88,6 +88,23 @@ const formatPropertyPrice = (property) => {
     : price;
 };
 
+const cleanText = (value) =>
+  String(value || '')
+    .replace(/\r\n/g, '\n')
+    .replace(/[ \t]+/g, ' ')
+    .replace(/\n+/g, ' ')
+    .trim();
+
+const truncateText = (value, maxLength = 180) => {
+  const cleanValue = cleanText(value);
+
+  if (cleanValue.length <= maxLength) {
+    return cleanValue;
+  }
+
+  return `${cleanValue.slice(0, maxLength).trim()}...`;
+};
+
 const getToken = () => localStorage.getItem(TOKEN_KEY);
 
 const getAuthHeaders = () => ({
@@ -376,7 +393,7 @@ const renderProperties = (properties) => {
                   `
               }
             </div>
-            <p class="property-description">${property.description}</p>
+            <p class="property-description structured-preview">${truncateText(property.description)}</p>
             <p class="property-description">${property.city}, ${property.district} - ${property.address}</p>
             <div class="property-actions">
               <button class="secondary" type="button" data-edit="${id}">Modifier</button>

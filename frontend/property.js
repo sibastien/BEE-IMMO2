@@ -47,6 +47,67 @@ const formatPropertyPrice = (property) => {
 
 const displayImageUrl = (imageUrl) => window.BeeImages?.withWatermark?.(imageUrl) || imageUrl;
 
+const escapeHtml = (value) =>
+  String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+
+const cleanDescriptionText = (description) =>
+  String(description || '')
+    .replace(/\r\n/g, '\n')
+    .replace(/[ \t]+/g, ' ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+
+const splitLongDescription = (description) => {
+  const cleanText = cleanDescriptionText(description);
+  if (!cleanText) return [];
+
+  const manualParagraphs = cleanText
+    .split(/\n{2,}|\n(?=[A-ZÀ-Ÿ0-9-])/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+
+  if (manualParagraphs.length > 1) {
+    return manualParagraphs;
+  }
+
+  const sentences = cleanText
+    .split(/(?<=[.!?])\s+(?=[A-ZÀ-Ÿ0-9])/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean);
+
+  if (sentences.length <= 2) {
+    return [cleanText];
+  }
+
+  const paragraphs = [];
+  for (let index = 0; index < sentences.length; index += 2) {
+    paragraphs.push(sentences.slice(index, index + 2).join(' '));
+  }
+
+  return paragraphs;
+};
+
+const renderFormattedDescription = (description) => {
+  const paragraphs = splitLongDescription(description);
+
+  if (!paragraphs.length) {
+    return '<p>Details du bien disponibles sur demande.</p>';
+  }
+
+  return paragraphs
+    .map((paragraph, index) =>
+      index === 0
+        ? `<p class="description-lead">${escapeHtml(paragraph)}</p>`
+        : `<p>${escapeHtml(paragraph)}</p>`
+    )
+    .join('');
+};
+
 const icon = (name) => {
   const icons = {
     surface: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 4v16M4 8h16"/></svg>',
@@ -232,7 +293,7 @@ const renderDetail = (property) => {
 
       <div class="detail-description">
         <h2>Description</h2>
-        <p>${property.description}</p>
+        <div class="formatted-description">${renderFormattedDescription(property.description)}</div>
       </div>
 
       <a class="gold-button contact-button" href="#contact">Demander une visite</a>
