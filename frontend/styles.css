@@ -1408,10 +1408,15 @@ a {
   padding: 22px;
 }
 
-.detail-share-button {
-  position: absolute;
-  top: 14px;
-  right: 14px;
+.detail-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.detail-share-button,
+.detail-download-button {
   min-height: 36px;
   padding: 8px 12px;
   border-color: rgba(213, 168, 61, 0.36);
@@ -1420,12 +1425,22 @@ a {
   font-size: 13px;
 }
 
-.detail-share-button:hover {
+.detail-download-button {
+  background: var(--gold);
+  font-weight: 900;
+}
+
+.detail-share-button:hover,
+.detail-download-button:hover {
   background: var(--gold);
 }
 
+.detail-download-button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
 .detail-info h1 {
-  padding-right: 108px;
   font-size: 34px;
 }
 

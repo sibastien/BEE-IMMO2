@@ -112,6 +112,15 @@ const getAuthHeaders = () => ({
   Authorization: `Bearer ${getToken()}`
 });
 
+const clearAdminSession = (message = 'Session admin expiree. Veuillez vous reconnecter.') => {
+  localStorage.removeItem(TOKEN_KEY);
+  setAuthState(false);
+  resetForm();
+  setStatus(false);
+  apiStatus.textContent = 'Connexion admin requise';
+  setLoginMessage(message, true);
+};
+
 const setAuthState = (isLoggedIn) => {
   loginPanel.classList.toggle('hidden', isLoggedIn);
   dashboardPanels.forEach((panel) => {
@@ -423,6 +432,35 @@ const loadProperties = async () => {
   }
 };
 
+const validateAdminSession = async () => {
+  const token = getToken();
+
+  if (!token) {
+    setAuthState(false);
+    setStatus(false);
+    apiStatus.textContent = 'Connexion admin requise';
+    return false;
+  }
+
+  try {
+    const response = await fetch(`${AUTH_URL}/me`, {
+      headers: getAuthHeaders()
+    });
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || 'Session admin invalide');
+    }
+
+    setAuthState(true);
+    setLoginMessage('');
+    return true;
+  } catch (error) {
+    clearAdminSession();
+    return false;
+  }
+};
+
 const saveProperty = async (event) => {
   event.preventDefault();
   setMessage('Enregistrement...');
@@ -440,6 +478,9 @@ const saveProperty = async (event) => {
     const result = await response.json();
 
     if (!response.ok) {
+      if (response.status === 401) {
+        clearAdminSession();
+      }
       throw new Error(result.message || 'Erreur API');
     }
 
@@ -462,6 +503,9 @@ const deleteProperty = async (id) => {
     const result = await response.json();
 
     if (!response.ok) {
+      if (response.status === 401) {
+        clearAdminSession();
+      }
       throw new Error(result.message || 'Erreur API');
     }
 
@@ -564,13 +608,11 @@ logoutButton.addEventListener('click', logoutAdmin);
 resetFormButton.addEventListener('click', resetForm);
 refreshButton.addEventListener('click', loadProperties);
 
-setAuthState(Boolean(getToken()));
-if (getToken()) {
-  loadProperties();
-} else {
-  setStatus(false);
-  apiStatus.textContent = 'Connexion admin requise';
-}
+validateAdminSession().then((isValid) => {
+  if (isValid) {
+    loadProperties();
+  }
+});
 
 updatePropertyDetailRequirements();
 updateRentalTypeVisibility();
