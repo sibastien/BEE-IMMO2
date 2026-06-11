@@ -1413,6 +1413,9 @@ a {
   justify-content: flex-end;
   flex-wrap: wrap;
   gap: 8px;
+  justify-self: end;
+  width: min(100%, 420px);
+  margin-left: auto;
 }
 
 .detail-share-button,
@@ -2632,9 +2635,10 @@ button:disabled {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .detail-share-button {
-    position: static;
-    justify-self: start;
+  .detail-actions {
+    justify-content: flex-end;
+    justify-self: stretch;
+    width: 100%;
   }
 
   .agent-contact-card {
