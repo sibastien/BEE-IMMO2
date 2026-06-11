@@ -1,8 +1,7 @@
 const Property = require('../models/Property');
 const {
-  cloudinary,
-  configureCloudinary,
-  getMissingCloudinaryConfig
+  assertCloudinaryConfigured,
+  cloudinary
 } = require('../config/cloudinary');
 const { getNextReference } = require('../utils/propertyReference');
 
@@ -19,10 +18,7 @@ const uploadPropertyImages = async (images = []) => {
         return image;
       }
 
-      if (!configureCloudinary()) {
-        const missing = getMissingCloudinaryConfig().join(', ');
-        throw new Error(`Configuration Cloudinary manquante: ${missing}`);
-      }
+      assertCloudinaryConfigured();
 
       const upload = await cloudinary.uploader.upload(image, {
         folder: 'bee-consulting/properties',

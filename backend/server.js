@@ -8,7 +8,11 @@ const fs = require('fs/promises');
 const path = require('path');
 const connectDB = require('./config/db');
 const Property = require('./models/Property');
-const { getMissingCloudinaryConfig, hasCloudinaryConfig } = require('./config/cloudinary');
+const {
+  getCloudinaryConfigSource,
+  getMissingCloudinaryConfig,
+  hasCloudinaryConfig
+} = require('./config/cloudinary');
 const { getWatermarkedImageUrl } = require('./utils/cloudinaryWatermark');
 const propertyRoutes = require('./routes/propertyRoutes');
 const authRoutes = require('./routes/authRoutes');
@@ -175,6 +179,7 @@ app.get('/api/health', (req, res) => {
     success: true,
     message: 'API Bee Consulting en ligne',
     cloudinaryConfigured: hasCloudinaryConfig(),
+    cloudinaryConfigSource: getCloudinaryConfigSource(),
     missingCloudinaryConfig: getMissingCloudinaryConfig()
   });
 });
