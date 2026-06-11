@@ -1,5 +1,9 @@
 const Property = require('../models/Property');
-const { cloudinary, configureCloudinary } = require('../config/cloudinary');
+const {
+  cloudinary,
+  configureCloudinary,
+  getMissingCloudinaryConfig
+} = require('../config/cloudinary');
 const { getNextReference } = require('../utils/propertyReference');
 
 const isBase64Image = (image) => /^data:image\/(png|jpe?g|webp);base64,/i.test(image || '');
@@ -16,7 +20,8 @@ const uploadPropertyImages = async (images = []) => {
       }
 
       if (!configureCloudinary()) {
-        throw new Error('Configuration Cloudinary manquante');
+        const missing = getMissingCloudinaryConfig().join(', ');
+        throw new Error(`Configuration Cloudinary manquante: ${missing}`);
       }
 
       const upload = await cloudinary.uploader.upload(image, {

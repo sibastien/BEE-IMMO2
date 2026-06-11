@@ -1,10 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+
+dotenv.config();
+
 const fs = require('fs/promises');
 const path = require('path');
 const connectDB = require('./config/db');
 const Property = require('./models/Property');
+const { getMissingCloudinaryConfig, hasCloudinaryConfig } = require('./config/cloudinary');
 const { getWatermarkedImageUrl } = require('./utils/cloudinaryWatermark');
 const propertyRoutes = require('./routes/propertyRoutes');
 const authRoutes = require('./routes/authRoutes');
@@ -12,8 +16,6 @@ const requestRoutes = require('./routes/requestRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const testimonialRoutes = require('./routes/testimonialRoutes');
 const errorHandler = require('./middleware/errorHandler');
-
-dotenv.config();
 
 const frontendPath = path.join(__dirname, '..', 'frontend');
 
@@ -172,6 +174,8 @@ app.get('/api/health', (req, res) => {
   res.json({
     success: true,
     message: 'API Bee Consulting en ligne',
+    cloudinaryConfigured: hasCloudinaryConfig(),
+    missingCloudinaryConfig: getMissingCloudinaryConfig()
   });
 });
 
