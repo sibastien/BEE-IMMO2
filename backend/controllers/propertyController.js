@@ -69,12 +69,69 @@ const createProperty = async (req, res, next) => {
 // Afficher toutes les annonces
 const getProperties = async (req, res, next) => {
   try {
-    const properties = await Property.find().sort({ createdAt: -1 });
+    // Include available properties and old data with missing or legacy status values.
+    const properties = await Property.find({
+      $or: [
+        { status: 'available' },
+        { status: { $exists: false } },
+        { status: null },
+        { status: '' },
+        { status: { $nin: ['available', 'sold', 'rented'] } }
+      ]
+    }).sort({ createdAt: -1 });
+
+    // Normalize properties to ensure they have required fields
+    const normalizedProperties = properties.map((property) => {
+      const doc = property.toObject();
+
+      // Ensure status exists and is valid
+      if (!doc.status || !['available', 'sold', 'rented'].includes(doc.status)) {
+        doc.status = 'available';
+      }
+
+      // Ensure images is an array
+      if (!Array.isArray(doc.images)) {
+        if (typeof doc.image === 'string' && doc.image) {
+          // Migrate old 'image' field to 'images' array
+          doc.images = [doc.image];
+        } else {
+          doc.images = [];
+        }
+      }
+
+      // Filter invalid image URLs
+      doc.images = doc.images.filter(
+        (url) =>
+          url &&
+          typeof url === 'string' &&
+          (/^https?:\/\/.+/i.test(url) || /^data:image\/(png|jpe?g|webp);base64,/i.test(url))
+      );
+
+      // Ensure numeric fields have proper defaults for non-land properties
+      if (doc.propertyType !== 'land') {
+        if (typeof doc.bedrooms !== 'number' || doc.bedrooms < 0) {
+          doc.bedrooms = 0;
+        }
+        if (typeof doc.bathrooms !== 'number' || doc.bathrooms < 0) {
+          doc.bathrooms = 0;
+        }
+      }
+
+      // Ensure other numeric fields
+      if (typeof doc.garages !== 'number' || doc.garages < 0) {
+        doc.garages = 0;
+      }
+      if (typeof doc.abris !== 'number' || doc.abris < 0) {
+        doc.abris = 0;
+      }
+
+      return doc;
+    });
 
     res.status(200).json({
       success: true,
-      count: properties.length,
-      data: properties
+      count: normalizedProperties.length,
+      data: normalizedProperties
     });
   } catch (error) {
     next(error);
@@ -91,9 +148,52 @@ const getPropertyById = async (req, res, next) => {
       throw new Error('Annonce introuvable');
     }
 
+    // Normalize the property document
+    const doc = property.toObject();
+
+    // Ensure status exists and is valid
+    if (!doc.status || !['available', 'sold', 'rented'].includes(doc.status)) {
+      doc.status = 'available';
+    }
+
+    // Ensure images is an array
+    if (!Array.isArray(doc.images)) {
+      if (typeof doc.image === 'string' && doc.image) {
+        // Migrate old 'image' field to 'images' array
+        doc.images = [doc.image];
+      } else {
+        doc.images = [];
+      }
+    }
+
+    // Filter invalid image URLs
+    doc.images = doc.images.filter(
+      (url) =>
+        url &&
+        typeof url === 'string' &&
+        (/^https?:\/\/.+/i.test(url) || /^data:image\/(png|jpe?g|webp);base64,/i.test(url))
+    );
+
+    // Ensure numeric fields have proper defaults
+    if (doc.propertyType !== 'land') {
+      if (typeof doc.bedrooms !== 'number' || doc.bedrooms < 0) {
+        doc.bedrooms = 0;
+      }
+      if (typeof doc.bathrooms !== 'number' || doc.bathrooms < 0) {
+        doc.bathrooms = 0;
+      }
+    }
+
+    if (typeof doc.garages !== 'number' || doc.garages < 0) {
+      doc.garages = 0;
+    }
+    if (typeof doc.abris !== 'number' || doc.abris < 0) {
+      doc.abris = 0;
+    }
+
     res.status(200).json({
       success: true,
-      data: property
+      data: doc
     });
   } catch (error) {
     next(error);
