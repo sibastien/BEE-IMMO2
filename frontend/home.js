@@ -200,7 +200,10 @@ const renderProperties = () => {
   publicProperties.innerHTML = visibleProperties
     .map((property) => {
       const propertyUrl = `/property/${property.id || property._id}`;
-      const images = property.images?.length ? property.images : [];
+      // Safely extract images from property, supporting both new 'images' array and old 'image' field
+      const images = Array.isArray(property.images)
+        ? property.images.filter(img => img && typeof img === 'string')
+        : (property.image && typeof property.image === 'string' ? [property.image] : []);
       const isLand = property.propertyType === 'land';
       const image = images.length
         ? `
@@ -208,7 +211,7 @@ const renderProperties = () => {
             ${images
               .map(
                 (imageUrl, index) =>
-                  `<img class="listing-image ${index === 0 ? 'active' : ''}" src="${displayImageUrl(imageUrl)}" alt="${property.title}" />`
+                  `<img class="listing-image ${index === 0 ? 'active' : ''}" src="${displayImageUrl(imageUrl)}" alt="${escapeHtml(property.title)}" />`
               )
               .join('')}
             ${

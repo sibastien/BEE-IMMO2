@@ -122,7 +122,17 @@ const icon = (name) => {
 
 const getPropertyId = () => window.location.pathname.split('/').filter(Boolean).pop();
 
-const getCurrentImages = () => currentProperty?.images || [];
+const getCurrentImages = () => {
+  if (!currentProperty) return [];
+  // Support both new 'images' array and old 'image' field
+  if (Array.isArray(currentProperty.images) && currentProperty.images.length > 0) {
+    return currentProperty.images.filter(img => img && typeof img === 'string');
+  }
+  if (currentProperty.image && typeof currentProperty.image === 'string') {
+    return [currentProperty.image];
+  }
+  return [];
+};
 
 const updateGallery = (index) => {
   const images = getCurrentImages();
@@ -493,7 +503,10 @@ const downloadPropertyBrochure = async () => {
 };
 
 const renderDetail = (property) => {
-  const images = property.images?.length ? property.images : [];
+  // Support both new 'images' array and old 'image' field
+  const images = Array.isArray(property.images)
+    ? property.images.filter(img => img && typeof img === 'string')
+    : (property.image && typeof property.image === 'string' ? [property.image] : []);
   const isLand = property.propertyType === 'land';
   const mainImage = images[0]
     ? `
