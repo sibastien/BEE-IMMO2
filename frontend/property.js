@@ -487,7 +487,7 @@ const downloadPropertyBrochure = async () => {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8);
       doc.setTextColor(120, 112, 96);
-      doc.text('Bee Solution & Consulting - Avenue Abu Dhabi, Hammamet - +21653762565', margin, 291);
+      doc.text('Bee Solution & Consulting - Avenue Abu Dhabi, Hammamet - +21653762570', margin, 291);
       doc.text(`${page}/${pageCount}`, pageWidth - margin, 291, { align: 'right' });
     }
 
@@ -541,7 +541,6 @@ const renderDetail = (property) => {
           <p>Un conseiller vous accompagne pour les visites, les informations du bien et les prochaines etapes.</p>
           <div class="agent-contact-links">
             <a href="tel:+21653762570">+21653762570</a>
-            <a href="tel:+21653762520">+21653762520</a>
             <a href="mailto:direction@beeimmo.com">direction@beeimmo.com</a>
           </div>
         </div>
