@@ -14,6 +14,8 @@ const applyFilters = document.getElementById('applyFilters');
 const carouselPrev = document.getElementById('carouselPrev');
 const carouselNext = document.getElementById('carouselNext');
 const carouselDots = document.getElementById('carouselDots');
+const quickTransactionFilters = document.getElementById('quickTransactionFilters');
+const quickTypeFilters = document.getElementById('quickTypeFilters');
 const testimonialSlider = document.getElementById('testimonialSlider');
 const contactModal = document.getElementById('contactModal');
 const contactForm = document.getElementById('contactForm');
@@ -341,6 +343,46 @@ const moveCarousel = (direction) => {
   scrollToSlide(nextIndex);
 };
 
+const setQuickFilterState = () => {
+  const activeTransaction = forcedTransaction || transactionFilter?.value || '';
+  let activeType = typeFilter?.value || '';
+
+  if (activeTransaction === 'rent' && activeType === 'land' && typeFilter) {
+    typeFilter.value = '';
+    activeType = '';
+  }
+
+  quickTransactionFilters?.querySelectorAll('[data-transaction]').forEach((button) => {
+    button.classList.toggle('active', button.dataset.transaction === activeTransaction);
+  });
+
+  quickTypeFilters?.querySelectorAll('[data-type]').forEach((button) => {
+    const isLand = button.dataset.type === 'land';
+    const shouldHide = activeTransaction === 'rent' && isLand;
+
+    button.classList.toggle('active', button.dataset.type === activeType);
+    button.classList.toggle('is-hidden', shouldHide);
+  });
+};
+
+const applyQuickFilter = ({ transaction, type }) => {
+  if (transaction !== undefined && transactionFilter && !forcedTransaction) {
+    transactionFilter.value = transaction;
+  }
+
+  if (type !== undefined && typeFilter) {
+    typeFilter.value = type;
+  }
+
+  if (transaction === 'rent' && typeFilter?.value === 'land') {
+    typeFilter.value = '';
+  }
+
+  setQuickFilterState();
+  renderProperties();
+  publicProperties?.scrollTo({ left: 0, behavior: 'smooth' });
+};
+
 const loadProperties = async () => {
   try {
     const response = await fetch(API_URL);
@@ -352,6 +394,7 @@ const loadProperties = async () => {
 
     properties = result.data || [];
     shuffledHomeProperties = shuffleArray(properties);
+    setQuickFilterState();
     renderProperties();
   } catch (error) {
     publicCount.textContent = 'API indisponible';
@@ -462,10 +505,28 @@ const submitContactRequest = async (event) => {
 };
 
 [locationFilter, transactionFilter, typeFilter, minBudgetFilter, maxBudgetFilter].forEach((input) => {
-  input?.addEventListener('input', renderProperties);
+  input?.addEventListener('input', () => {
+    setQuickFilterState();
+    renderProperties();
+  });
+});
+
+quickTransactionFilters?.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-transaction]');
+  if (!button) return;
+
+  applyQuickFilter({ transaction: button.dataset.transaction });
+});
+
+quickTypeFilters?.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-type]');
+  if (!button || button.classList.contains('is-hidden')) return;
+
+  applyQuickFilter({ type: button.dataset.type });
 });
 
 applyFilters?.addEventListener('click', () => {
+  setQuickFilterState();
   renderProperties();
 
   const resultsPath = getResultsPath();

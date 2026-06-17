@@ -86,6 +86,22 @@
           <p id="publicCount">Chargement...</p>
         </div>
 
+        <div class="quick-filter-panel" aria-label="Filtres rapides des annonces">
+          <div class="quick-filter-row" id="quickTransactionFilters" role="group" aria-label="Transaction">
+            <button class="quick-filter-pill active" type="button" data-transaction="">Tous</button>
+            <button class="quick-filter-pill" type="button" data-transaction="sale">Acheter</button>
+            <button class="quick-filter-pill" type="button" data-transaction="rent">Louer</button>
+          </div>
+          <div class="quick-filter-row" id="quickTypeFilters" role="group" aria-label="Type de bien">
+            <button class="quick-filter-pill active" type="button" data-type="">Tous les biens</button>
+            <button class="quick-filter-pill" type="button" data-type="land">Terrain</button>
+            <button class="quick-filter-pill" type="button" data-type="villa">Villa</button>
+            <button class="quick-filter-pill" type="button" data-type="apartment">Appartement</button>
+            <button class="quick-filter-pill" type="button" data-type="house">Maison</button>
+            <button class="quick-filter-pill" type="button" data-type="commercial">Commercial</button>
+          </div>
+        </div>
+
         <div class="carousel-shell">
           <button class="carousel-arrow carousel-arrow-left" id="carouselPrev" type="button" aria-label="Annonce precedente">&lsaquo;</button>
           <div class="public-grid" id="publicProperties"></div>
