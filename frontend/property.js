@@ -604,6 +604,7 @@ const loadProperty = async () => {
     document.title = `Bee Solution & Consulting - ${currentProperty.title}`;
     renderDetail(currentProperty);
     startDetailCarousel();
+    window.BeePixel?.trackViewContent(currentProperty);
   } catch (error) {
     detailContainer.innerHTML = `<div class="empty-state">${error.message}</div>`;
     visitForm.classList.add('hidden');
@@ -648,6 +649,13 @@ const submitVisitRequest = async (event) => {
     document.getElementById('visitorMessage').value =
       'Bonjour, je souhaite organiser une visite pour cette annonce.';
     setVisitMessage('Demande envoyee. Bee Solution & Consulting vous contactera bientot.');
+    window.BeePixel?.trackLead({
+      content_name: currentProperty.title,
+      content_category: currentProperty.propertyType,
+      content_ids: [currentProperty.id || currentProperty._id || currentProperty.reference || 'property'],
+      value: Number(currentProperty.price) || 0,
+      currency: 'TND'
+    });
   } catch (error) {
     setVisitMessage(error.message, true);
   }

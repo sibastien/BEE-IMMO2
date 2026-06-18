@@ -183,6 +183,15 @@ const getResultsPath = () => {
   return '';
 };
 
+const trackSearchEvent = (source) => {
+  window.BeePixel?.trackSearch({
+    search_string: getFilterQueryString() || source,
+    content_category: forcedTransaction || transactionFilter?.value || 'all',
+    property_type: typeFilter?.value || 'all',
+    city: locationFilter?.value.trim() || 'all'
+  });
+};
+
 const renderProperties = () => {
   visibleProperties = getFilteredProperties();
   publicCount.textContent = `${visibleProperties.length} annonce${visibleProperties.length > 1 ? 's' : ''}`;
@@ -380,6 +389,7 @@ const applyQuickFilter = ({ transaction, type }) => {
 
   setQuickFilterState();
   renderProperties();
+  trackSearchEvent('quick_filter');
   publicProperties?.scrollTo({ left: 0, behavior: 'smooth' });
 };
 
@@ -498,6 +508,10 @@ const submitContactRequest = async (event) => {
 
     contactForm.reset();
     setContactMessage('Message envoye. Bee Solution & Consulting vous contactera bientot.');
+    window.BeePixel?.trackLead({
+      content_name: 'Contact agence',
+      content_category: 'contact_form'
+    });
     window.setTimeout(closeContactModal, 1400);
   } catch (error) {
     setContactMessage(error.message, true);
@@ -528,6 +542,7 @@ quickTypeFilters?.addEventListener('click', (event) => {
 applyFilters?.addEventListener('click', () => {
   setQuickFilterState();
   renderProperties();
+  trackSearchEvent('search_form');
 
   const resultsPath = getResultsPath();
   const queryString = getFilterQueryString();
