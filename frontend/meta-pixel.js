@@ -1,6 +1,6 @@
 // Meta Pixel tracking for public website pages.
 (function setupMetaPixel() {
-  const pixelId = '1551453463028984';
+  const pixelId = '976765782020591';
 
   if (window.fbq) {
     return;
