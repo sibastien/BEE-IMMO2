@@ -1726,24 +1726,32 @@ a {
 .social-link {
   display: inline-grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   padding: 0;
-  border: 1px solid rgba(213, 168, 61, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 50%;
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.07);
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 18px;
-  font-weight: 800;
-  line-height: 1;
-  text-transform: none;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
-.social-link img {
-  width: 18px;
-  height: 18px;
-  filter: invert(1);
+.social-link svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.social-instagram svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+}
+
+.social-instagram svg circle:last-child {
+  fill: currentColor;
+  stroke: none;
 }
 
 .social-facebook {
@@ -1755,12 +1763,18 @@ a {
     radial-gradient(circle at 30% 107%, #fdf497 0 11%, #fdf497 12%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
 }
 
-.social-linkedin {
-  background: #0a66c2;
+.social-tiktok {
+  background: linear-gradient(135deg, #111111, #2b2b2b);
+}
+
+.social-whatsapp {
+  background: #25d366;
 }
 
 .social-link:hover {
   border-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.26);
+  filter: saturate(1.12) brightness(1.05);
   transform: translateY(-2px);
 }
 
