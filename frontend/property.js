@@ -39,10 +39,7 @@ const moneyFormatter = new Intl.NumberFormat('fr-FR', {
 });
 
 const formatPropertyPrice = (property) => {
-  const price = moneyFormatter.format(property.price);
-  return property.transactionType === 'sale' && property.propertyType === 'land'
-    ? `${price} / m2`
-    : price;
+  return moneyFormatter.format(property.price);
 };
 
 const displayImageUrl = (imageUrl) => window.BeeImages?.withWatermark?.(imageUrl) || imageUrl;
@@ -487,7 +484,7 @@ const downloadPropertyBrochure = async () => {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8);
       doc.setTextColor(120, 112, 96);
-      doc.text('Bee Solution & Consulting - Avenue Abu Dhabi, Hammamet - +21653762570', margin, 291);
+      doc.text('Bee Solution & Consulting - Avenue Abu Dhabi, Hammamet - +21653762520', margin, 291);
       doc.text(`${page}/${pageCount}`, pageWidth - margin, 291, { align: 'right' });
     }
 
@@ -540,7 +537,7 @@ const renderDetail = (property) => {
           <h2>Mariem Sellami</h2>
           <p>Un conseiller vous accompagne pour les visites, les informations du bien et les prochaines etapes.</p>
           <div class="agent-contact-links">
-            <a href="tel:+21653762570">+21653762570</a>
+            <a href="tel:+21653762520">+21653762520</a>
             <a href="mailto:direction@beeimmo.com">direction@beeimmo.com</a>
           </div>
         </div>

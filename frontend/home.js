@@ -55,10 +55,7 @@ const moneyFormatter = new Intl.NumberFormat('fr-FR', {
 });
 
 const formatPropertyPrice = (property) => {
-  const price = moneyFormatter.format(property.price);
-  return property.transactionType === 'sale' && property.propertyType === 'land'
-    ? `${price} / m2`
-    : price;
+  return moneyFormatter.format(property.price);
 };
 
 const displayImageUrl = (imageUrl) => window.BeeImages?.withWatermark?.(imageUrl) || imageUrl;
