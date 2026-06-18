@@ -38,7 +38,7 @@
     trackSearch: (data = {}) => track('Search', data),
     trackViewContent: (property = {}) =>
       track('ViewContent', {
-        content_ids: [property.id || property._id || property.reference || 'property'],
+        content_ids: [property.reference || property.id || property._id || 'property'],
         content_name: property.title || 'Annonce immobiliere',
         content_category: property.propertyType || 'property',
         content_type: property.transactionType || 'property',

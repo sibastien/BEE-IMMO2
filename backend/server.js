@@ -19,6 +19,7 @@ const authRoutes = require('./routes/authRoutes');
 const requestRoutes = require('./routes/requestRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const testimonialRoutes = require('./routes/testimonialRoutes');
+const metaCatalogRoutes = require('./routes/metaCatalogRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
 const frontendPath = path.join(__dirname, '..', 'frontend');
@@ -189,6 +190,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/requests', requestRoutes);
 app.use('/api/blog', blogRoutes);
 app.use('/api/testimonials', testimonialRoutes);
+app.use('/api/meta', metaCatalogRoutes);
 
 // Gestion des erreurs
 app.use(errorHandler);
