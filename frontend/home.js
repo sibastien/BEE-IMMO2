@@ -217,41 +217,62 @@ const renderProperties = () => {
         ? property.images.filter(img => img && typeof img === 'string')
         : (property.image && typeof property.image === 'string' ? [property.image] : []);
       const isLand = property.propertyType === 'land';
+      const imageDotCount = Math.min(images.length, 5);
+      const listingBadges = `
+        <div class="listing-topline">
+          <span>${transactionLabels[property.transactionType] || property.transactionType}</span>
+          ${
+            property.transactionType === 'rent'
+              ? `<span>${rentalTypeLabels[property.rentalType] || rentalTypeLabels.standard}</span>`
+              : ''
+          }
+          <span>${propertyTypeLabels[property.propertyType] || property.propertyType}</span>
+        </div>
+      `;
       const image = images.length
         ? `
-          <div class="listing-slideshow" data-image-count="${images.length}">
-            ${images
-              .map(
-                (imageUrl, index) =>
-                  `<img class="listing-image ${index === 0 ? 'active' : ''}" src="${displayImageUrl(imageUrl)}" alt="${escapeHtml(property.title)}" />`
-              )
-              .join('')}
-            ${
-              images.length > 1
-                ? `<div class="image-dots">${images.map((_, index) => `<span class="${index === 0 ? 'active' : ''}"></span>`).join('')}</div>`
-                : ''
-            }
+          <div class="listing-media">
+            <div class="listing-slideshow" data-image-count="${images.length}">
+              ${images
+                .map(
+                  (imageUrl, index) =>
+                    `<img class="listing-image ${index === 0 ? 'active' : ''}" src="${displayImageUrl(imageUrl)}" alt="${escapeHtml(property.title)}" />`
+                )
+                .join('')}
+              ${
+                images.length > 1
+                  ? `<div class="image-dots">${Array.from({ length: imageDotCount }, (_, index) => `<span class="${index === 0 ? 'active' : ''}"></span>`).join('')}</div>`
+                  : ''
+              }
+            </div>
+            <div class="listing-media-top">
+              ${property.reference ? `<p class="property-reference">REF ${escapeHtml(property.reference)}</p>` : ''}
+              ${images.length > 1 ? `<span class="image-count-badge">${images.length} photos</span>` : ''}
+            </div>
+            <div class="listing-media-bottom">
+              ${listingBadges}
+            </div>
           </div>
         `
-        : '<div class="listing-placeholder">Bee Immobiliers</div>';
+        : `
+          <div class="listing-media">
+            <div class="listing-placeholder">Bee Immobiliers</div>
+            <div class="listing-media-top">
+              ${property.reference ? `<p class="property-reference">REF ${escapeHtml(property.reference)}</p>` : ''}
+            </div>
+            <div class="listing-media-bottom">
+              ${listingBadges}
+            </div>
+          </div>
+        `;
 
       return `
         <article class="listing-card clickable-listing" data-href="${propertyUrl}" tabindex="0" role="link" aria-label="Voir le detail de ${escapeHtml(property.title)}">
           ${image}
           <div class="listing-content">
-            ${property.reference ? `<p class="property-reference">REF ${escapeHtml(property.reference)}</p>` : ''}
-            <div class="listing-topline">
-              <span>${transactionLabels[property.transactionType] || property.transactionType}</span>
-              ${
-                property.transactionType === 'rent'
-                  ? `<span>${rentalTypeLabels[property.rentalType] || rentalTypeLabels.standard}</span>`
-                  : ''
-              }
-              <span>${propertyTypeLabels[property.propertyType] || property.propertyType}</span>
-            </div>
             <h3>${property.title}</h3>
             <p class="listing-location">${property.city}, ${property.district}</p>
-            <strong>${formatPropertyPrice(property)}</strong>
+            <strong class="listing-price">${formatPropertyPrice(property)}</strong>
             <div class="listing-meta">
               <span title="Superficie">${icon('surface')}${property.surface} m2</span>
               ${
@@ -292,12 +313,13 @@ const startImageSlideshows = () => {
 
     window.setInterval(() => {
       images[activeIndex].classList.remove('active');
-      dots[activeIndex]?.classList.remove('active');
 
       activeIndex = (activeIndex + 1) % images.length;
 
       images[activeIndex].classList.add('active');
-      dots[activeIndex]?.classList.add('active');
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === activeIndex % dots.length);
+      });
     }, 3200);
   });
 };
