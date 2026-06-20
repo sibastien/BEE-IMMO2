@@ -91,7 +91,8 @@ const icon = (name) => {
     bed: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11V5"/><path d="M20 19v-6a2 2 0 0 0-2-2H4v8"/><path d="M4 15h16"/><path d="M8 11V7h6a2 2 0 0 1 2 2v2"/></svg>',
     bath: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M6 12V6a2 2 0 0 1 2-2h1"/><path d="M14 6h4"/><path d="M15 4v4"/></svg>',
     garage: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10 12 4l9 6v10H3z"/><path d="M7 20v-7h10v7"/><path d="M9 16h6"/></svg>',
-    abri: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h14"/><path d="M7 16l1.5-5h7L17 16"/><path d="M8 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/><path d="M16 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/></svg>'
+    abri: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h14"/><path d="M7 16l1.5-5h7L17 16"/><path d="M8 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/><path d="M16 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/></svg>',
+    pin: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.6 7-12A7 7 0 0 0 5 9c0 6.4 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>'
   };
 
   return icons[name];
@@ -217,7 +218,6 @@ const renderProperties = () => {
         ? property.images.filter(img => img && typeof img === 'string')
         : (property.image && typeof property.image === 'string' ? [property.image] : []);
       const isLand = property.propertyType === 'land';
-      const imageDotCount = Math.min(images.length, 5);
       const listingBadges = `
         <div class="listing-topline">
           <span>${transactionLabels[property.transactionType] || property.transactionType}</span>
@@ -227,7 +227,7 @@ const renderProperties = () => {
               : ''
           }
           <span>${propertyTypeLabels[property.propertyType] || property.propertyType}</span>
-        </div>
+          </div>
       `;
       const image = images.length
         ? `
@@ -239,18 +239,12 @@ const renderProperties = () => {
                     `<img class="listing-image ${index === 0 ? 'active' : ''}" src="${displayImageUrl(imageUrl)}" alt="${escapeHtml(property.title)}" />`
                 )
                 .join('')}
-              ${
-                images.length > 1
-                  ? `<div class="image-dots">${Array.from({ length: imageDotCount }, (_, index) => `<span class="${index === 0 ? 'active' : ''}"></span>`).join('')}</div>`
-                  : ''
-              }
             </div>
             <div class="listing-media-top">
-              ${property.reference ? `<p class="property-reference">REF ${escapeHtml(property.reference)}</p>` : ''}
-              ${images.length > 1 ? `<span class="image-count-badge">${images.length} photos</span>` : ''}
-            </div>
-            <div class="listing-media-bottom">
               ${listingBadges}
+              <button class="listing-favorite" type="button" aria-label="Ajouter aux favoris" tabindex="-1">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.8a5.4 5.4 0 0 0-7.6 0L12 7l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 22l8.8-8.6a5.4 5.4 0 0 0 0-7.6z"/></svg>
+              </button>
             </div>
           </div>
         `
@@ -258,10 +252,10 @@ const renderProperties = () => {
           <div class="listing-media">
             <div class="listing-placeholder">Bee Immobiliers</div>
             <div class="listing-media-top">
-              ${property.reference ? `<p class="property-reference">REF ${escapeHtml(property.reference)}</p>` : ''}
-            </div>
-            <div class="listing-media-bottom">
               ${listingBadges}
+              <button class="listing-favorite" type="button" aria-label="Ajouter aux favoris" tabindex="-1">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.8a5.4 5.4 0 0 0-7.6 0L12 7l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 22l8.8-8.6a5.4 5.4 0 0 0 0-7.6z"/></svg>
+              </button>
             </div>
           </div>
         `;
@@ -270,9 +264,12 @@ const renderProperties = () => {
         <article class="listing-card clickable-listing" data-href="${propertyUrl}" tabindex="0" role="link" aria-label="Voir le detail de ${escapeHtml(property.title)}">
           ${image}
           <div class="listing-content">
+            <div class="listing-price-row">
+              <strong class="listing-price">${formatPropertyPrice(property)}</strong>
+              ${property.reference ? `<p class="property-reference">Ref. ${escapeHtml(property.reference)}</p>` : ''}
+            </div>
             <h3>${property.title}</h3>
-            <p class="listing-location">${property.city}, ${property.district}</p>
-            <strong class="listing-price">${formatPropertyPrice(property)}</strong>
+            <p class="listing-location">${icon('pin')}${property.city}, ${property.district}</p>
             <div class="listing-meta">
               <span title="Superficie">${icon('surface')}${property.surface} m2</span>
               ${

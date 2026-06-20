@@ -21,6 +21,14 @@
         <a href="/blog">Blog</a>
         <a href="#contact">Contact</a>
       </nav>
+      <button class="home-header-icon home-favorite-icon" type="button" aria-label="Favoris">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.8a5.4 5.4 0 0 0-7.6 0L12 7l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 22l8.8-8.6a5.4 5.4 0 0 0 0-7.6z"/></svg>
+      </button>
+      <button class="home-header-icon home-menu-icon" type="button" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </header>
 
     <main>
@@ -32,85 +40,105 @@
           </div>
 
           <button class="mobile-filter-toggle" id="mobileFilterToggle" type="button" aria-expanded="false" aria-controls="mobileFilterPanel">
-            <span>Vous cherchez quoi ?</span>
-            <strong>Filtrer les annonces</strong>
+            <span class="mobile-filter-search-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.4-4.4"/><circle cx="11" cy="11" r="7"/></svg>
+            </span>
+            <span class="mobile-filter-text">
+              <strong>Vous cherchez quoi ?</strong>
+              <em>Filtrer les annonces</em>
+            </span>
+            <span class="mobile-filter-sliders">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9"/><path d="M17 7h3"/><path d="M15 5v4"/><path d="M4 12h3"/><path d="M11 12h9"/><path d="M9 10v4"/><path d="M4 17h11"/><path d="M19 17h1"/><path d="M17 15v4"/></svg>
+            </span>
           </button>
 
           <div class="mobile-filter-panel" id="mobileFilterPanel">
             <div class="search-panel market-searchbar" aria-label="Recherche immobiliere">
               <label>
-                Ville ou quartier
-                <input id="locationFilter" type="search" placeholder="Hammamet, Yasmine, Nabeul..." />
+                <span class="search-field-icon">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.6 7-12A7 7 0 0 0 5 9c0 6.4 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>
+                </span>
+                <span class="search-field-copy">
+                  <span>Ville ou quartier</span>
+                  <input id="locationFilter" type="search" placeholder="Ex : Tunis, La Marsa..." />
+                </span>
               </label>
 
               <label>
-                Transaction
-                <select id="transactionFilter">
-                  <option value="">Acheter ou louer</option>
-                  <option value="sale">Acheter</option>
-                  <option value="rent">Louer</option>
-                </select>
+                <span class="search-field-icon">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14a4 4 0 1 1 3-6.7"/><path d="M10 11h10"/><path d="M17 8l3 3-3 3"/></svg>
+                </span>
+                <span class="search-field-copy">
+                  <span>Acheter / Louer</span>
+                  <select id="transactionFilter">
+                    <option value="">Toutes les options</option>
+                    <option value="sale">Acheter</option>
+                    <option value="rent">Louer</option>
+                  </select>
+                </span>
               </label>
 
               <label>
-                Type
-                <select id="typeFilter">
-                  <option value="">Tous les biens</option>
-                  <option value="villa">Villa</option>
-                  <option value="land">Terrain</option>
-                  <option value="apartment">Appartement</option>
-                  <option value="house">Maison</option>
-                  <option value="commercial">Commercial</option>
-                </select>
+                <span class="search-field-icon">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+                </span>
+                <span class="search-field-copy">
+                  <span>Type de bien</span>
+                  <select id="typeFilter">
+                    <option value="">Tous les types</option>
+                    <option value="villa">Villa</option>
+                    <option value="land">Terrain</option>
+                    <option value="apartment">Appartement</option>
+                    <option value="house">Maison</option>
+                    <option value="commercial">Commercial</option>
+                  </select>
+                </span>
               </label>
 
-              <label>
-                Budget min
-                <input id="minBudgetFilter" type="number" min="0" placeholder="Min" />
-              </label>
-
-              <label>
-                Budget max
-                <input id="maxBudgetFilter" type="number" min="0" placeholder="Max" />
+              <label class="search-budget-field">
+                <span class="search-field-icon">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z"/><path d="M16 7V5a2 2 0 0 0-2-2H6v4"/><path d="M17 13h.01"/></svg>
+                </span>
+                <span class="search-field-copy">
+                  <span>Budget</span>
+                  <span class="budget-inputs">
+                    <input id="minBudgetFilter" type="number" min="0" placeholder="Min" />
+                    <input id="maxBudgetFilter" type="number" min="0" placeholder="Max (TND)" />
+                  </span>
+                </span>
               </label>
 
               <button class="primary gold-button market-search-button" id="applyFilters" type="button" aria-label="Rechercher">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.4-4.4"/><circle cx="11" cy="11" r="7"/></svg>
               </button>
             </div>
+          </div>
 
-            <div class="market-category-strip" aria-label="Categories immobilieres">
-              <button class="market-category-card active" type="button" data-category-transaction="" data-category-type="">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4z"/><path d="M13 4h7v7h-7z"/><path d="M4 13h7v7H4z"/><path d="M13 13h7v7h-7z"/></svg>
-                <span>Tous</span>
-                <strong>Tous les biens</strong>
-              </button>
-              <button class="market-category-card" type="button" data-category-transaction="sale" data-category-type="villa">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
-                <span>Acheter</span>
-                <strong>Villas</strong>
-              </button>
-              <button class="market-category-card" type="button" data-category-transaction="sale" data-category-type="land">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 7 5-2 6 2 5-2v12l-5 2-6-2-5 2z"/><path d="M9 5v12"/><path d="M15 7v12"/></svg>
-                <span>Acheter</span>
-                <strong>Terrains</strong>
-              </button>
-              <button class="market-category-card" type="button" data-category-transaction="sale" data-category-type="apartment">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 21V4h12v17"/><path d="M9 8h2"/><path d="M13 8h2"/><path d="M9 12h2"/><path d="M13 12h2"/><path d="M9 16h2"/><path d="M13 16h2"/></svg>
-                <span>Acheter</span>
-                <strong>Appartements</strong>
-              </button>
-              <button class="market-category-card" type="button" data-category-transaction="rent" data-category-type="villa">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M14 15a3 3 0 1 1-3-3"/><path d="M14 15h5"/><path d="M17 15v2"/></svg>
-                <span>Louer</span>
-                <strong>Villas</strong>
-              </button>
-              <button class="market-category-card" type="button" data-category-transaction="rent" data-category-type="apartment">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 21V4h12v17"/><path d="M9 8h2"/><path d="M13 8h2"/><path d="M9 12h2"/><path d="M13 12h2"/><path d="M9 16h6"/></svg>
-                <span>Louer</span>
-                <strong>Appartements</strong>
-              </button>
-            </div>
+          <div class="market-category-strip" aria-label="Categories immobilieres">
+            <button class="market-category-card active" type="button" data-category-transaction="" data-category-type="">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4z"/><path d="M13 4h7v7h-7z"/><path d="M4 13h7v7H4z"/><path d="M13 13h7v7h-7z"/></svg>
+              <strong>Tous</strong>
+            </button>
+            <button class="market-category-card" type="button" data-category-transaction="sale" data-category-type="villa">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+              <strong>Villas</strong>
+            </button>
+            <button class="market-category-card" type="button" data-category-transaction="sale" data-category-type="land">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 7 5-2 6 2 5-2v12l-5 2-6-2-5 2z"/><path d="M9 5v12"/><path d="M15 7v12"/></svg>
+              <strong>Terrains</strong>
+            </button>
+            <button class="market-category-card" type="button" data-category-transaction="sale" data-category-type="apartment">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 21V4h12v17"/><path d="M9 8h2"/><path d="M13 8h2"/><path d="M9 12h2"/><path d="M13 12h2"/><path d="M9 16h2"/><path d="M13 16h2"/></svg>
+              <strong>Appartements</strong>
+            </button>
+            <button class="market-category-card" type="button" data-category-transaction="sale" data-category-type="house">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12 12 5l8 7"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/></svg>
+              <strong>Maisons</strong>
+            </button>
+            <button class="market-category-card" type="button" data-category-transaction="sale" data-category-type="commercial">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16"/><path d="M5 10l1-5h12l1 5"/><path d="M6 10v10h12V10"/><path d="M9 20v-5h6v5"/></svg>
+              <strong>Commercial</strong>
+            </button>
           </div>
         </div>
       </section>
