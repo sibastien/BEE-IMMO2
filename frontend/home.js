@@ -16,6 +16,7 @@ const carouselNext = document.getElementById('carouselNext');
 const carouselDots = document.getElementById('carouselDots');
 const quickTransactionFilters = document.getElementById('quickTransactionFilters');
 const quickTypeFilters = document.getElementById('quickTypeFilters');
+const marketCategoryCards = document.querySelectorAll('[data-category-transaction][data-category-type]');
 const testimonialSlider = document.getElementById('testimonialSlider');
 const contactModal = document.getElementById('contactModal');
 const contactForm = document.getElementById('contactForm');
@@ -24,6 +25,7 @@ const contactOpeners = document.querySelectorAll('[data-contact-open]');
 const contactClosers = document.querySelectorAll('[data-contact-close]');
 const forcedTransaction = document.body.dataset.transaction || '';
 const isCatalogPage = document.body.dataset.pageMode === 'catalog';
+const isHomePage = document.body.classList.contains('home-page');
 
 let properties = [];
 let visibleProperties = [];
@@ -369,6 +371,14 @@ const setQuickFilterState = () => {
     button.classList.toggle('active', button.dataset.type === activeType);
     button.classList.toggle('is-hidden', shouldHide);
   });
+
+  marketCategoryCards.forEach((card) => {
+    const isActive =
+      card.dataset.categoryTransaction === activeTransaction &&
+      card.dataset.categoryType === activeType;
+
+    card.classList.toggle('active', isActive);
+  });
 };
 
 const applyQuickFilter = ({ transaction, type }) => {
@@ -536,6 +546,15 @@ quickTypeFilters?.addEventListener('click', (event) => {
   applyQuickFilter({ type: button.dataset.type });
 });
 
+marketCategoryCards.forEach((card) => {
+  card.addEventListener('click', () => {
+    applyQuickFilter({
+      transaction: card.dataset.categoryTransaction,
+      type: card.dataset.categoryType
+    });
+  });
+});
+
 applyFilters?.addEventListener('click', () => {
   setQuickFilterState();
   renderProperties();
@@ -544,7 +563,7 @@ applyFilters?.addEventListener('click', () => {
   const resultsPath = getResultsPath();
   const queryString = getFilterQueryString();
 
-  if (!isCatalogPage && resultsPath) {
+  if (!isCatalogPage && !isHomePage && resultsPath) {
     window.location.href = `${resultsPath}${queryString}`;
     return;
   }

@@ -8,7 +8,7 @@
     <script src="/meta-pixel.js"></script>
     <script src="/google-tag.js"></script>
   </head>
-  <body class="public-page">
+  <body class="public-page home-page">
     <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=976765782020591&ev=PageView&noscript=1" alt="" /></noscript>
     <header class="site-header">
       <a class="brand" href="/">
@@ -19,37 +19,30 @@
         <a href="/acheter">Acheter</a>
         <a href="/louer">Louer</a>
         <a href="/blog">Blog</a>
-        <a href="#services">Services</a>
-        <a href="#avis">Avis</a>
         <a href="#contact">Contact</a>
       </nav>
     </header>
 
     <main>
-      <section class="hero">
-        <div class="hero-carousel" aria-hidden="true">
-          <div class="hero-slide hero-slide-1"></div>
-          <div class="hero-slide hero-slide-2"></div>
-          <div class="hero-slide hero-slide-3"></div>
-        </div>
-        <div class="hero-content">
-          <p class="eyebrow">Conseil immobilier, vente et location</p>
-          <h1>Bee Solution &amp; Consulting</h1>
-          <p class="hero-copy">
-            Un accompagnement serieux pour vendre, acheter, louer et prendre les bonnes decisions immobilieres avec une equipe qui conseille avant de vendre.
-          </p>
-          <div class="search-panel hero-search-panel" aria-label="Recherche immobiliere">
+      <section class="marketplace-home" aria-label="Recherche immobiliere Bee Solution &amp; Consulting">
+        <div class="marketplace-shell">
+          <div class="marketplace-heading">
+            <p class="eyebrow">Bee Solution &amp; Consulting</p>
+            <h1>Trouvez votre bien immobilier</h1>
+          </div>
+
+          <div class="search-panel market-searchbar" aria-label="Recherche immobiliere">
             <label>
               Ville ou quartier
-              <input id="locationFilter" type="search" placeholder="Hammamet, Centre, Yasmine..." />
+              <input id="locationFilter" type="search" placeholder="Hammamet, Yasmine, Nabeul..." />
             </label>
 
             <label>
               Transaction
               <select id="transactionFilter">
-                <option value="">Toutes</option>
-                <option value="sale">Vente</option>
-                <option value="rent">Location</option>
+                <option value="">Acheter ou louer</option>
+                <option value="sale">Acheter</option>
+                <option value="rent">Louer</option>
               </select>
             </label>
 
@@ -57,63 +50,78 @@
               Type
               <select id="typeFilter">
                 <option value="">Tous les biens</option>
-                <option value="apartment">Appartement</option>
-                <option value="house">Maison</option>
                 <option value="villa">Villa</option>
                 <option value="land">Terrain</option>
+                <option value="apartment">Appartement</option>
+                <option value="house">Maison</option>
                 <option value="commercial">Commercial</option>
               </select>
             </label>
 
             <label>
               Budget min
-              <input id="minBudgetFilter" type="number" min="0" placeholder="Ex: 150000" />
+              <input id="minBudgetFilter" type="number" min="0" placeholder="Min" />
             </label>
 
             <label>
               Budget max
-              <input id="maxBudgetFilter" type="number" min="0" placeholder="Ex: 500000" />
+              <input id="maxBudgetFilter" type="number" min="0" placeholder="Max" />
             </label>
 
-            <button class="primary gold-button" id="applyFilters" type="button">Voir les resultats</button>
+            <button class="primary gold-button market-search-button" id="applyFilters" type="button" aria-label="Rechercher">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.4-4.4"/><circle cx="11" cy="11" r="7"/></svg>
+            </button>
+          </div>
+
+          <div class="market-category-strip" aria-label="Categories immobilieres">
+            <button class="market-category-card active" type="button" data-category-transaction="" data-category-type="">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4z"/><path d="M13 4h7v7h-7z"/><path d="M4 13h7v7H4z"/><path d="M13 13h7v7h-7z"/></svg>
+              <span>Tous</span>
+              <strong>Tous les biens</strong>
+            </button>
+            <button class="market-category-card" type="button" data-category-transaction="sale" data-category-type="villa">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+              <span>Acheter</span>
+              <strong>Villas</strong>
+            </button>
+            <button class="market-category-card" type="button" data-category-transaction="sale" data-category-type="land">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 7 5-2 6 2 5-2v12l-5 2-6-2-5 2z"/><path d="M9 5v12"/><path d="M15 7v12"/></svg>
+              <span>Acheter</span>
+              <strong>Terrains</strong>
+            </button>
+            <button class="market-category-card" type="button" data-category-transaction="sale" data-category-type="apartment">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 21V4h12v17"/><path d="M9 8h2"/><path d="M13 8h2"/><path d="M9 12h2"/><path d="M13 12h2"/><path d="M9 16h2"/><path d="M13 16h2"/></svg>
+              <span>Acheter</span>
+              <strong>Appartements</strong>
+            </button>
+            <button class="market-category-card" type="button" data-category-transaction="rent" data-category-type="villa">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M14 15a3 3 0 1 1-3-3"/><path d="M14 15h5"/><path d="M17 15v2"/></svg>
+              <span>Louer</span>
+              <strong>Villas</strong>
+            </button>
+            <button class="market-category-card" type="button" data-category-transaction="rent" data-category-type="apartment">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 21V4h12v17"/><path d="M9 8h2"/><path d="M13 8h2"/><path d="M9 12h2"/><path d="M13 12h2"/><path d="M9 16h6"/></svg>
+              <span>Louer</span>
+              <strong>Appartements</strong>
+            </button>
           </div>
         </div>
       </section>
 
-      <section class="public-section" id="annonces">
-        <div class="section-title">
+      <section class="public-section home-market-section" id="annonces">
+        <div class="section-title home-results-title">
           <div>
-            <p class="eyebrow">Selection disponible</p>
-            <h2>Annonces immobilieres</h2>
+            <h2>Explorez les biens</h2>
           </div>
           <p id="publicCount">Chargement...</p>
         </div>
 
-        <div class="quick-filter-panel" aria-label="Filtres rapides des annonces">
-          <div class="quick-filter-row" id="quickTransactionFilters" role="group" aria-label="Transaction">
-            <button class="quick-filter-pill active" type="button" data-transaction="">Tous</button>
-            <button class="quick-filter-pill" type="button" data-transaction="sale">Acheter</button>
-            <button class="quick-filter-pill" type="button" data-transaction="rent">Louer</button>
-          </div>
-          <div class="quick-filter-row" id="quickTypeFilters" role="group" aria-label="Type de bien">
-            <button class="quick-filter-pill active" type="button" data-type="">Tous les biens</button>
-            <button class="quick-filter-pill" type="button" data-type="land">Terrain</button>
-            <button class="quick-filter-pill" type="button" data-type="villa">Villa</button>
-            <button class="quick-filter-pill" type="button" data-type="apartment">Appartement</button>
-            <button class="quick-filter-pill" type="button" data-type="house">Maison</button>
-            <button class="quick-filter-pill" type="button" data-type="commercial">Commercial</button>
-          </div>
-        </div>
-
-        <div class="carousel-shell">
-          <button class="carousel-arrow carousel-arrow-left" id="carouselPrev" type="button" aria-label="Annonce precedente">&lsaquo;</button>
-          <div class="public-grid" id="publicProperties"></div>
-          <button class="carousel-arrow carousel-arrow-right" id="carouselNext" type="button" aria-label="Annonce suivante">&rsaquo;</button>
-          <div class="carousel-dots hidden" id="carouselDots"></div>
+        <div class="carousel-shell home-listings-shell">
+          <div class="public-grid home-listings-grid" id="publicProperties"></div>
         </div>
       </section>
 
-      <section class="advisory-section" aria-label="Accompagnement conseil immobilier">
+      <section class="advisory-section home-hidden-section" aria-label="Accompagnement conseil immobilier">
         <div class="advisory-copy">
           <p class="eyebrow">Cabinet de conseil immobilier</p>
           <h2>Des decisions mieux preparees, pas seulement des annonces.</h2>
@@ -140,7 +148,7 @@
         </div>
       </section>
 
-      <section class="why-section" aria-label="Pourquoi choisir Bee Solution &amp; Consulting">
+      <section class="why-section home-hidden-section" aria-label="Pourquoi choisir Bee Solution &amp; Consulting">
         <div class="why-visual" aria-hidden="true">
           <div class="why-photo why-photo-large">
             <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=900&q=80" alt="" />
@@ -185,7 +193,7 @@
         </div>
       </section>
 
-      <section class="services-section" id="services" aria-label="Services Bee Solution &amp; Consulting">
+      <section class="services-section home-hidden-section" id="services" aria-label="Services Bee Solution &amp; Consulting">
         <div class="services-inner">
           <div class="service-card">
             <span class="service-icon">&#8962;</span>
@@ -217,7 +225,7 @@
         </div>
       </section>
 
-      <section class="testimonials-section" id="avis" aria-label="Temoignages clients">
+      <section class="testimonials-section home-hidden-section" id="avis" aria-label="Temoignages clients">
         <div class="section-title testimonials-title">
           <div>
             <p class="eyebrow">Ils nous font confiance</p>
