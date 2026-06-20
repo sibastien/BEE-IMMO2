@@ -2944,6 +2944,10 @@ button:disabled {
   stroke-width: 2.4;
 }
 
+.mobile-filter-toggle {
+  display: none;
+}
+
 .market-category-strip {
   display: grid;
   grid-auto-flow: column;
@@ -3169,11 +3173,112 @@ button:disabled {
 
 @media (max-width: 560px) {
   .marketplace-home {
-    padding: 14px 14px 6px;
+    padding: 10px 14px 4px;
+  }
+
+  .marketplace-heading {
+    margin-bottom: 8px;
   }
 
   .marketplace-heading h1 {
-    font-size: 28px;
+    font-size: 23px;
+  }
+
+  .marketplace-heading .eyebrow {
+    display: none;
+  }
+
+  .mobile-filter-toggle {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    width: 100%;
+    min-height: 52px;
+    padding: 10px 14px;
+    border: 1px solid rgba(213, 168, 61, 0.42);
+    border-radius: 999px;
+    color: #ffffff;
+    background: linear-gradient(135deg, #171511, #302b22);
+    box-shadow: 0 14px 34px rgba(17, 17, 17, 0.16);
+    text-align: left;
+    overflow: hidden;
+  }
+
+  .mobile-filter-toggle::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: radial-gradient(circle at 20% 20%, rgba(255, 216, 90, 0.34), transparent 34%);
+    opacity: 0.95;
+    pointer-events: none;
+    animation: filter-pulse 1.8s ease-in-out infinite;
+  }
+
+  .mobile-filter-toggle::after {
+    content: "+";
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: var(--black);
+    background: #ffd85a;
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .mobile-filter-toggle.active::after {
+    content: "-";
+  }
+
+  .mobile-filter-toggle span,
+  .mobile-filter-toggle strong {
+    position: relative;
+    z-index: 1;
+    grid-column: 1;
+  }
+
+  .mobile-filter-toggle span {
+    color: #ffd85a;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .mobile-filter-toggle strong {
+    color: #ffffff;
+    font-size: 15px;
+  }
+
+  @keyframes filter-pulse {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.75;
+    }
+
+    50% {
+      transform: scale(1.04);
+      opacity: 1;
+    }
+  }
+
+  .mobile-filter-panel {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: max-height 0.28s ease, opacity 0.22s ease, transform 0.22s ease;
+  }
+
+  .mobile-filter-panel.open {
+    max-height: 760px;
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .market-searchbar {
@@ -3218,6 +3323,7 @@ button:disabled {
   }
 
   .home-market-section {
+    padding-top: 4px;
     padding-left: 14px;
     padding-right: 14px;
   }

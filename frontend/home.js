@@ -17,6 +17,8 @@ const carouselDots = document.getElementById('carouselDots');
 const quickTransactionFilters = document.getElementById('quickTransactionFilters');
 const quickTypeFilters = document.getElementById('quickTypeFilters');
 const marketCategoryCards = document.querySelectorAll('[data-category-transaction][data-category-type]');
+const mobileFilterToggle = document.getElementById('mobileFilterToggle');
+const mobileFilterPanel = document.getElementById('mobileFilterPanel');
 const testimonialSlider = document.getElementById('testimonialSlider');
 const contactModal = document.getElementById('contactModal');
 const contactForm = document.getElementById('contactForm');
@@ -381,6 +383,20 @@ const setQuickFilterState = () => {
   });
 };
 
+const setMobileFiltersOpen = (isOpen) => {
+  if (!mobileFilterToggle || !mobileFilterPanel) return;
+
+  mobileFilterToggle.setAttribute('aria-expanded', String(isOpen));
+  mobileFilterToggle.classList.toggle('active', isOpen);
+  mobileFilterPanel.classList.toggle('open', isOpen);
+};
+
+const closeMobileFilters = () => {
+  if (window.matchMedia('(max-width: 560px)').matches) {
+    setMobileFiltersOpen(false);
+  }
+};
+
 const applyQuickFilter = ({ transaction, type }) => {
   if (transaction !== undefined && transactionFilter && !forcedTransaction) {
     transactionFilter.value = transaction;
@@ -552,13 +568,25 @@ marketCategoryCards.forEach((card) => {
       transaction: card.dataset.categoryTransaction,
       type: card.dataset.categoryType
     });
+    closeMobileFilters();
+
+    document.getElementById('annonces')?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
   });
+});
+
+mobileFilterToggle?.addEventListener('click', () => {
+  const isOpen = mobileFilterToggle.getAttribute('aria-expanded') === 'true';
+  setMobileFiltersOpen(!isOpen);
 });
 
 applyFilters?.addEventListener('click', () => {
   setQuickFilterState();
   renderProperties();
   trackSearchEvent('search_form');
+  closeMobileFilters();
 
   const resultsPath = getResultsPath();
   const queryString = getFilterQueryString();
