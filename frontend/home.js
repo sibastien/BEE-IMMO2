@@ -233,7 +233,7 @@ const renderProperties = () => {
             }
           </div>
         `
-        : '<div class="listing-placeholder">Bee Solution & Consulting</div>';
+        : '<div class="listing-placeholder">Bee Immobiliers</div>';
 
       return `
         <article class="listing-card clickable-listing" data-href="${propertyUrl}" tabindex="0" role="link" aria-label="Voir le detail de ${escapeHtml(property.title)}">
@@ -444,7 +444,7 @@ const renderTestimonials = (testimonials) => {
     testimonialSlider.innerHTML = `
       <article class="testimonial-card">
         <p>Aucun temoignage publie pour le moment.</p>
-        <strong>Bee Solution & Consulting</strong>
+        <strong>Bee Immobiliers</strong>
         <span>Avis clients</span>
       </article>
     `;
@@ -457,7 +457,7 @@ const renderTestimonials = (testimonials) => {
         <div class="stars">${renderStars(testimonial.rating)}</div>
         <p>${escapeHtml(testimonial.quote)}</p>
         <strong>${escapeHtml(testimonial.clientName)}</strong>
-        <span>${escapeHtml(testimonial.context || 'Client Bee Solution & Consulting')}</span>
+        <span>${escapeHtml(testimonial.context || 'Client Bee Immobiliers')}</span>
       </article>
     `)
     .join('');
@@ -530,7 +530,7 @@ const submitContactRequest = async (event) => {
     }
 
     contactForm.reset();
-    setContactMessage('Message envoye. Bee Solution & Consulting vous contactera bientot.');
+    setContactMessage('Message envoye. Bee Immobiliers vous contactera bientot.');
     window.BeePixel?.trackLead({
       content_name: 'Contact agence',
       content_category: 'contact_form'

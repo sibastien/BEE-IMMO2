@@ -107,7 +107,7 @@ const getCatalogFeed = async (req, res, next) => {
         `${Number(property.price || 0).toFixed(2)} TND`,
         `${siteUrl}/property/${property._id}`,
         imageLink,
-        'Bee Solution & Consulting',
+        'Bee Immobiliers',
         productType,
         transactionLabels[property.transactionType] || property.transactionType,
         propertyTypeLabels[property.propertyType] || property.propertyType,
@@ -118,7 +118,7 @@ const getCatalogFeed = async (req, res, next) => {
 
     res.set({
       'Content-Type': 'text/csv; charset=utf-8',
-      'Content-Disposition': 'inline; filename="bee-consulting-meta-catalog.csv"',
+      'Content-Disposition': 'inline; filename="bee-immobiliers-meta-catalog.csv"',
       'Cache-Control': 'public, max-age=900'
     });
     res.send([headers.join(','), ...rows].join('\n'));

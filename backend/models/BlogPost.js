@@ -51,7 +51,7 @@ const blogPostSchema = new mongoose.Schema(
     author: {
       type: String,
       trim: true,
-      default: 'Bee Consulting'
+      default: 'Bee Immobiliers'
     },
     status: {
       type: String,

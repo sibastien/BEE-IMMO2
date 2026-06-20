@@ -17,11 +17,11 @@ const renderContent = (content) =>
     .join('');
 
 const renderArticle = (post) => {
-  document.title = `Bee Solution & Consulting - ${post.title}`;
+  document.title = `Bee Immobiliers - ${post.title}`;
 
   const image = post.coverImage
     ? `<img class="article-cover" src="${post.coverImage}" alt="${post.title}" />`
-    : '<div class="article-cover article-placeholder">Bee Solution & Consulting</div>';
+    : '<div class="article-cover article-placeholder">Bee Immobiliers</div>';
 
   blogArticle.innerHTML = `
     ${image}
@@ -29,7 +29,7 @@ const renderArticle = (post) => {
       <div class="blog-meta">
         <span>${post.category || 'Conseils immobiliers'}</span>
         <span>${formatDate(post.publishedAt || post.createdAt)}</span>
-        <span>${post.author || 'Bee Solution & Consulting'}</span>
+        <span>${post.author || 'Bee Immobiliers'}</span>
       </div>
       <h1>${post.title}</h1>
       <p class="article-excerpt">${post.excerpt}</p>

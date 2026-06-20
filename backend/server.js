@@ -49,11 +49,11 @@ const getAbsoluteUrl = (req, value) => {
 
 const buildPropertyMeta = (req, property) => {
   const title = property
-    ? `${property.title} | Bee Consulting`
-    : 'Bee Consulting - Immobilier';
+    ? `${property.title} | Bee Immobiliers`
+    : 'Bee Immobiliers - Immobilier';
   const description = property
     ? `${property.city || ''}${property.district ? `, ${property.district}` : ''} - ${property.description || ''}`.trim()
-    : 'Acheter, vendre ou louer un bien immobilier avec Bee Consulting.';
+    : 'Acheter, vendre ou louer un bien immobilier avec Bee Immobiliers.';
   const image = property
     ? `${req.protocol}://${req.get('host')}/property/${property._id}/og-image`
     : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80';
@@ -61,7 +61,7 @@ const buildPropertyMeta = (req, property) => {
 
   return `
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Bee Consulting" />
+    <meta property="og:site_name" content="Bee Immobiliers" />
     <meta property="og:title" content="${escapeHtml(title)}" />
     <meta property="og:description" content="${escapeHtml(description).slice(0, 280)}" />
     <meta property="og:image" content="${escapeHtml(image)}" />
@@ -134,7 +134,7 @@ app.get('/property/:id', async (req, res, next) => {
       fs.readFile(path.join(frontendPath, 'property.html'), 'utf8'),
       Property.findById(req.params.id).catch(() => null)
     ]);
-    const htmlWithMeta = html.replace(/<\/head>/i, `<!-- Bee Consulting Open Graph -->${buildPropertyMeta(req, property)}</head>`);
+    const htmlWithMeta = html.replace(/<\/head>/i, `<!-- Bee Immobiliers Open Graph -->${buildPropertyMeta(req, property)}</head>`);
 
     res.set('X-Bee-Open-Graph', 'property');
     res.type('html').send(htmlWithMeta);
@@ -178,7 +178,7 @@ app.get('/property/:id/og-image', async (req, res, next) => {
 app.get('/api/health', (req, res) => {
   res.json({
     success: true,
-    message: 'API Bee Consulting en ligne',
+    message: 'API Bee Immobiliers en ligne',
     cloudinaryConfigured: hasCloudinaryConfig(),
     cloudinaryConfigSource: getCloudinaryConfigSource(),
     missingCloudinaryConfig: getMissingCloudinaryConfig()

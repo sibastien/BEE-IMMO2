@@ -204,7 +204,7 @@ const shareProperty = async () => {
     if (navigator.share) {
       await navigator.share({
         title: shareTitle,
-        text: 'Decouvrez ce bien sur Bee Solution & Consulting',
+        text: 'Decouvrez ce bien sur Bee Immobiliers',
         url: shareUrl
       });
       return;
@@ -241,7 +241,7 @@ const getPdfFileName = (property) => {
     .replace(/^-+|-+$/g, '')
     .slice(0, 44);
 
-  return `brochure-${reference}-${title || 'bee-consulting'}.pdf`;
+  return `brochure-${reference}-${title || 'bee-immobiliers'}.pdf`;
 };
 
 const getImageData = (imageUrl) =>
@@ -356,7 +356,7 @@ const downloadPropertyBrochure = async () => {
     doc.setTextColor(213, 168, 61);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(15);
-    doc.text('Bee Solution & Consulting', margin, 18);
+    doc.text('Bee Immobiliers', margin, 18);
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(9);
     doc.text('Brochure immobiliere', margin, 26);
@@ -484,7 +484,7 @@ const downloadPropertyBrochure = async () => {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8);
       doc.setTextColor(120, 112, 96);
-      doc.text('Bee Solution & Consulting - Avenue Abu Dhabi, Hammamet - +21653762520', margin, 291);
+      doc.text('Bee Immobiliers - Avenue Abu Dhabi, Hammamet - +21653762520', margin, 291);
       doc.text(`${page}/${pageCount}`, pageWidth - margin, 291, { align: 'right' });
     }
 
@@ -522,14 +522,14 @@ const renderDetail = (property) => {
         }
       </div>
     `
-    : '<div class="detail-placeholder">Bee Solution & Consulting</div>';
+    : '<div class="detail-placeholder">Bee Immobiliers</div>';
 
   detailContainer.innerHTML = `
     <div class="detail-gallery">
       ${mainImage}
       <div class="agent-contact-card">
-        <div class="agent-flip" aria-label="Conseillere Bee Solution & Consulting">
-          <img class="agent-contact-photo agent-flip-front" src="/assets/bee-agent.png" alt="Conseillere Bee Solution & Consulting" />
+        <div class="agent-flip" aria-label="Conseillere Bee Immobiliers">
+          <img class="agent-contact-photo agent-flip-front" src="/assets/bee-agent.png" alt="Conseillere Bee Immobiliers" />
           <img class="agent-contact-photo agent-flip-back" src="/assets/bee-solution-consulting-logo.jpg" alt="" />
         </div>
         <div class="agent-contact-content">
@@ -598,7 +598,7 @@ const loadProperty = async () => {
     }
 
     currentProperty = result.data;
-    document.title = `Bee Solution & Consulting - ${currentProperty.title}`;
+    document.title = `Bee Immobiliers - ${currentProperty.title}`;
     renderDetail(currentProperty);
     startDetailCarousel();
     window.BeePixel?.trackViewContent(currentProperty);
@@ -645,7 +645,7 @@ const submitVisitRequest = async (event) => {
     visitForm.reset();
     document.getElementById('visitorMessage').value =
       'Bonjour, je souhaite organiser une visite pour cette annonce.';
-    setVisitMessage('Demande envoyee. Bee Solution & Consulting vous contactera bientot.');
+    setVisitMessage('Demande envoyee. Bee Immobiliers vous contactera bientot.');
     window.BeePixel?.trackLead({
       content_name: currentProperty.title,
       content_category: currentProperty.propertyType,

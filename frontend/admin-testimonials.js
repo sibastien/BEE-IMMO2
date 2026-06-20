@@ -57,7 +57,7 @@ const setMessage = (message, isError = false) => {
 
 const getFormData = () => ({
   clientName: document.getElementById('clientName').value.trim(),
-  context: document.getElementById('context').value.trim() || 'Client Bee Solution & Consulting',
+  context: document.getElementById('context').value.trim() || 'Client Bee Immobiliers',
   quote: document.getElementById('quote').value.trim(),
   rating: Number(document.getElementById('rating').value),
   sortOrder: Number(document.getElementById('sortOrder').value || 0),
@@ -108,7 +108,7 @@ const renderTestimonials = (testimonials) => {
             <div class="property-header">
               <div>
                 <h3 class="property-title">${escapeHtml(testimonial.clientName)}</h3>
-                <p class="property-description">${escapeHtml(testimonial.context || 'Client Bee Solution & Consulting')}</p>
+                <p class="property-description">${escapeHtml(testimonial.context || 'Client Bee Immobiliers')}</p>
               </div>
               <span class="badge ${isPublished ? 'available' : 'rented'}">${isPublished ? 'Publie' : 'Brouillon'}</span>
             </div>

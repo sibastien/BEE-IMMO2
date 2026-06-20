@@ -11,7 +11,7 @@ const testimonialSchema = new mongoose.Schema(
     context: {
       type: String,
       trim: true,
-      default: 'Client Bee Solution & Consulting'
+      default: 'Client Bee Immobiliers'
     },
     quote: {
       type: String,
