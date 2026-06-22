@@ -5618,3 +5618,194 @@ textarea:focus {
     font-size: 16px;
   }
 }
+
+/* Put the honeycomb layer behind category text */
+.home-page .market-category-card,
+.catalog-page .market-category-card,
+.market-category-card {
+  position: relative;
+  isolation: isolate;
+  grid-template-columns: 34px minmax(0, 1fr);
+  justify-items: start;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.home-page .market-category-card::after,
+.catalog-page .market-category-card::after,
+.market-category-card::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  right: -10px;
+  bottom: 4px;
+  z-index: -1;
+  width: 92px;
+  opacity: 0.7;
+  background: var(--hex-pattern) right center / 76px 66px no-repeat;
+  pointer-events: none;
+}
+
+.home-page .market-category-card svg,
+.catalog-page .market-category-card svg,
+.market-category-card svg,
+.home-page .market-category-card strong,
+.catalog-page .market-category-card strong,
+.market-category-card strong {
+  position: relative;
+  z-index: 1;
+}
+
+.home-page .market-category-card strong,
+.catalog-page .market-category-card strong,
+.market-category-card strong {
+  justify-self: start;
+  overflow: visible;
+  text-align: left;
+  text-overflow: clip;
+}
+
+@media (max-width: 560px) {
+  .home-page .market-category-card,
+  .catalog-page .market-category-card,
+  .market-category-card {
+    grid-template-columns: 28px auto;
+  }
+
+  .home-page .market-category-card::after,
+  .catalog-page .market-category-card::after,
+  .market-category-card::after {
+    right: -18px;
+    width: 72px;
+    opacity: 0.55;
+    background-size: 64px 56px;
+  }
+}
+
+/* Match desktop property media badges with the mobile layout */
+.home-page .listing-media-top,
+.catalog-page .listing-media-top {
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  align-items: flex-start;
+}
+
+.home-page .listing-media-badge-stack,
+.catalog-page .listing-media-badge-stack {
+  width: 100%;
+  max-width: 100%;
+}
+
+.home-page .listing-media-mobile-pills,
+.catalog-page .listing-media-mobile-pills {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+
+.home-page .listing-media-reference,
+.catalog-page .listing-media-reference,
+.home-page .listing-photo-count,
+.catalog-page .listing-photo-count {
+  display: inline-flex;
+  align-items: center;
+  min-height: 27px;
+  margin: 0;
+  padding: 7px 11px;
+  border: 1px solid rgba(229, 170, 24, 0.52);
+  border-radius: 999px;
+  color: #17120a;
+  background: rgba(255, 247, 225, 0.96);
+  box-shadow: 0 8px 18px rgba(14, 12, 8, 0.13);
+  font-size: 11px;
+  font-weight: 950;
+  line-height: 1;
+}
+
+.home-page .listing-photo-count,
+.catalog-page .listing-photo-count {
+  margin-left: auto;
+}
+
+.home-page .listing-desktop-badges,
+.catalog-page .listing-desktop-badges,
+.home-page .listing-favorite,
+.catalog-page .listing-favorite {
+  display: none;
+}
+
+.home-page .listing-media-bottom,
+.catalog-page .listing-media-bottom {
+  position: absolute;
+  z-index: 3;
+  left: 12px;
+  right: 12px;
+  bottom: 10px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.home-page .listing-media-bottom .listing-topline,
+.catalog-page .listing-media-bottom .listing-topline {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+}
+
+.home-page .listing-media-bottom .listing-topline span,
+.catalog-page .listing-media-bottom .listing-topline span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 25px;
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 232, 157, 0.42);
+  border-radius: 999px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #e9ad15, #c98b00);
+  box-shadow: 0 7px 14px rgba(14, 12, 8, 0.18);
+  font-size: 10.5px;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.home-page .listing-media-bottom .listing-topline span:last-child,
+.catalog-page .listing-media-bottom .listing-topline span:last-child {
+  background: #090806;
+}
+
+.home-page .listing-card .image-dots,
+.catalog-page .listing-card .image-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 48%;
+  min-height: 20px;
+  padding: 5px 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(22, 20, 18, 0.72);
+  box-shadow: 0 8px 16px rgba(10, 9, 7, 0.18);
+}
+
+.home-page .listing-card .image-dots span,
+.catalog-page .listing-card .image-dots span {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.58);
+}
+
+.home-page .listing-card .image-dots span.active,
+.catalog-page .listing-card .image-dots span.active {
+  width: 16px;
+  background: #f3c334;
+}
