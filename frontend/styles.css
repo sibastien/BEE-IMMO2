@@ -3338,7 +3338,7 @@ button:disabled {
   }
 }
 
-/* Premium Bee Immobiliers design system */
+/* Premium Bee Immobilier design system */
 :root {
   --gold: #e6b72f;
   --gold-bright: #ffd85a;
@@ -5430,5 +5430,71 @@ textarea:focus {
   .listing-price,
   .listing-content > strong.listing-price {
     font-size: 20px;
+  }
+}
+
+/* Final category filter alignment */
+.market-category-card {
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  justify-items: start;
+  column-gap: 16px;
+  min-height: 74px;
+}
+
+.market-category-card svg {
+  justify-self: center;
+  align-self: center;
+  width: 26px;
+  height: 26px;
+}
+
+.market-category-card strong {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 26px;
+  margin: 0;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .market-category-card {
+    grid-template-columns: 30px auto;
+    column-gap: 10px;
+    min-height: 58px;
+    align-items: center;
+  }
+
+  .market-category-card svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .market-category-card strong {
+    min-height: 24px;
+    font-size: 16px;
+  }
+}
+
+/* Keep the address badge readable over property photos */
+.home-page .listing-topline .listing-address-badge,
+.catalog-page .listing-topline .listing-address-badge {
+  max-width: min(230px, 100%);
+  overflow: hidden;
+  border-color: rgba(239, 189, 49, 0.5);
+  color: #fff7df;
+  background: rgba(8, 7, 5, 0.86);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .home-page .listing-topline .listing-address-badge,
+  .catalog-page .listing-topline .listing-address-badge {
+    max-width: min(180px, 100%);
+    color: #fff7df;
+    background: rgba(8, 7, 5, 0.88);
   }
 }

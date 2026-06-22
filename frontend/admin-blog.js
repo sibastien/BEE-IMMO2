@@ -60,7 +60,7 @@ const getFormData = () => ({
   excerpt: document.getElementById('excerpt').value.trim(),
   content: document.getElementById('content').value.trim(),
   category: document.getElementById('category').value.trim() || 'Conseils immobiliers',
-  author: document.getElementById('author').value.trim() || 'Bee Immobiliers',
+  author: document.getElementById('author').value.trim() || 'Bee Immobilier',
   coverImage: document.getElementById('coverImage').value.trim(),
   status: document.getElementById('status').value
 });
@@ -69,7 +69,7 @@ const resetForm = () => {
   form.reset();
   document.getElementById('postId').value = '';
   document.getElementById('category').value = 'Conseils immobiliers';
-  document.getElementById('author').value = 'Bee Immobiliers';
+  document.getElementById('author').value = 'Bee Immobilier';
   submitButton.textContent = "Publier l'article";
   setMessage('');
 };
