@@ -4,6 +4,8 @@ const {
   cloudinary
 } = require('../config/cloudinary');
 const { getNextReference } = require('../utils/propertyReference');
+const { buildPropertySlug, findPropertyByIdentifier } = require('../utils/propertySlug');
+const { getPublicPropertyFilter } = require('../utils/propertyPublication');
 
 const isBase64Image = (image) => /^data:image\/(png|jpe?g|webp);base64,/i.test(image || '');
 
@@ -69,16 +71,7 @@ const createProperty = async (req, res, next) => {
 // Afficher toutes les annonces
 const getProperties = async (req, res, next) => {
   try {
-    // Include available properties and old data with missing or legacy status values.
-    const properties = await Property.find({
-      $or: [
-        { status: 'available' },
-        { status: { $exists: false } },
-        { status: null },
-        { status: '' },
-        { status: { $nin: ['available', 'sold', 'rented'] } }
-      ]
-    }).sort({ createdAt: -1 });
+    const properties = await Property.find(getPublicPropertyFilter()).sort({ createdAt: -1 });
 
     // Normalize properties to ensure they have required fields
     const normalizedProperties = properties.map((property) => {
@@ -88,6 +81,8 @@ const getProperties = async (req, res, next) => {
       if (!doc.status || !['available', 'sold', 'rented'].includes(doc.status)) {
         doc.status = 'available';
       }
+
+      doc.slug = buildPropertySlug(doc);
 
       // Ensure images is an array
       if (!Array.isArray(doc.images)) {
@@ -138,10 +133,10 @@ const getProperties = async (req, res, next) => {
   }
 };
 
-// Afficher une annonce par ID
+// Afficher une annonce par ID ou slug
 const getPropertyById = async (req, res, next) => {
   try {
-    const property = await Property.findById(req.params.id);
+    const property = await findPropertyByIdentifier(Property, req.params.id);
 
     if (!property) {
       res.status(404);
@@ -155,6 +150,8 @@ const getPropertyById = async (req, res, next) => {
     if (!doc.status || !['available', 'sold', 'rented'].includes(doc.status)) {
       doc.status = 'available';
     }
+
+    doc.slug = buildPropertySlug(doc);
 
     // Ensure images is an array
     if (!Array.isArray(doc.images)) {

@@ -1,5 +1,7 @@
 const Property = require('../models/Property');
 const { getWatermarkedImageUrl } = require('../utils/cloudinaryWatermark');
+const { getPublicPropertyFilter } = require('../utils/propertyPublication');
+const { buildPropertySlug } = require('../utils/propertySlug');
 
 const propertyTypeLabels = {
   apartment: 'Appartement',
@@ -20,7 +22,7 @@ const getPublicSiteUrl = (req) => {
     .map((origin) => origin.trim())
     .find(Boolean);
 
-  return (clientOrigin || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
+  return (process.env.SITE_URL || clientOrigin || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '');
 };
 
 const getApiUrl = (req) => `${req.protocol}://${req.get('host')}`;
@@ -52,15 +54,8 @@ const getImageUrl = (req, property, imageUrl) => {
 const getCatalogFeed = async (req, res, next) => {
   try {
     const siteUrl = getPublicSiteUrl(req);
-    const properties = await Property.find({
-      $or: [
-        { status: 'available' },
-        { status: { $exists: false } },
-        { status: null },
-        { status: '' },
-        { status: { $nin: ['available', 'sold', 'rented'] } }
-      ]
-    }).sort({ updatedAt: -1, createdAt: -1 });
+    const properties = await Property.find(getPublicPropertyFilter())
+      .sort({ updatedAt: -1, createdAt: -1 });
 
     const headers = [
       'id',
@@ -105,7 +100,7 @@ const getCatalogFeed = async (req, res, next) => {
         'in stock',
         'new',
         `${Number(property.price || 0).toFixed(2)} TND`,
-        `${siteUrl}/property/${property._id}`,
+        `${siteUrl}/property/${buildPropertySlug(property)}`,
         imageLink,
         'Bee Immobilier',
         productType,

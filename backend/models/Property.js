@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { buildPropertySlug } = require('../utils/propertySlug');
 
 const propertySchema = new mongoose.Schema(
   {
@@ -22,6 +23,14 @@ const propertySchema = new mongoose.Schema(
       unique: true,
       sparse: true,
       match: [/^[A-Z]{2}\d{3}$/, 'La reference doit respecter le format VA001']
+    },
+    slug: {
+      type: String,
+      trim: true,
+      lowercase: true,
+      unique: true,
+      sparse: true,
+      index: true
     },
     price: {
       type: Number,
@@ -120,11 +129,29 @@ const propertySchema = new mongoose.Schema(
         message: 'Le statut est invalide'
       },
       default: 'available'
+    },
+    isPublished: {
+      type: Boolean,
+      default: true,
+      index: true
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
+      index: true
     }
   },
   {
     timestamps: true
   }
 );
+
+propertySchema.pre('validate', function setPropertySlug(next) {
+  if (!this.slug) {
+    this.slug = buildPropertySlug(this);
+  }
+
+  next();
+});
 
 module.exports = mongoose.model('Property', propertySchema);

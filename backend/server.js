@@ -20,7 +20,10 @@ const requestRoutes = require('./routes/requestRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const testimonialRoutes = require('./routes/testimonialRoutes');
 const metaCatalogRoutes = require('./routes/metaCatalogRoutes');
+const getSitemap = require('./controllers/sitemapController');
 const errorHandler = require('./middleware/errorHandler');
+const { isPublicProperty } = require('./utils/propertyPublication');
+const { buildPropertySlug, findPropertyByIdentifier } = require('./utils/propertySlug');
 
 const frontendPath = path.join(__dirname, '..', 'frontend');
 
@@ -47,6 +50,9 @@ const getAbsoluteUrl = (req, value) => {
   return `${req.protocol}://${req.get('host')}${value.startsWith('/') ? value : `/${value}`}`;
 };
 
+const getSiteUrl = (req) =>
+  (process.env.SITE_URL || `${req.protocol}://${req.get('host')}`).replace(/\/+$/, '');
+
 const buildPropertyMeta = (req, property) => {
   const title = property
     ? `${property.title} | Bee Immobilier`
@@ -57,7 +63,10 @@ const buildPropertyMeta = (req, property) => {
   const image = property
     ? `${req.protocol}://${req.get('host')}/property/${property._id}/og-image`
     : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80';
-  const url = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+  const slug = property ? buildPropertySlug(property) : '';
+  const url = property
+    ? `${getSiteUrl(req)}/property/${encodeURIComponent(slug)}`
+    : `${getSiteUrl(req)}${req.originalUrl}`;
 
   return `
     <meta property="og:type" content="website" />
@@ -69,6 +78,7 @@ const buildPropertyMeta = (req, property) => {
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:url" content="${escapeHtml(url)}" />
+    <link rel="canonical" href="${escapeHtml(url)}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escapeHtml(title)}" />
     <meta name="twitter:description" content="${escapeHtml(description).slice(0, 280)}" />
@@ -89,6 +99,10 @@ app.use(
   })
 );
 app.use(express.json({ limit: '40mb' }));
+
+// SEO routes must stay before static files and any future catch-all route.
+app.get('/sitemap.xml', getSitemap);
+
 app.use(express.static(frontendPath));
 
 // Routes
@@ -128,12 +142,20 @@ app.get('/blog/:slug', (req, res) => {
   res.sendFile('blog-detail.html', { root: frontendPath });
 });
 
-app.get('/property/:id', async (req, res, next) => {
+app.get('/property/:identifier', async (req, res, next) => {
   try {
-    const [html, property] = await Promise.all([
-      fs.readFile(path.join(frontendPath, 'property.html'), 'utf8'),
-      Property.findById(req.params.id).catch(() => null)
-    ]);
+    const property = await findPropertyByIdentifier(Property, req.params.identifier);
+
+    if (!isPublicProperty(property)) {
+      return res.status(404).sendFile('property.html', { root: frontendPath });
+    }
+
+    const canonicalSlug = buildPropertySlug(property);
+    if (req.params.identifier !== canonicalSlug) {
+      return res.redirect(301, `/property/${encodeURIComponent(canonicalSlug)}`);
+    }
+
+    const html = await fs.readFile(path.join(frontendPath, 'property.html'), 'utf8');
     const htmlWithMeta = html.replace(/<\/head>/i, `<!-- Bee Immobilier Open Graph -->${buildPropertyMeta(req, property)}</head>`);
 
     res.set('X-Bee-Open-Graph', 'property');

@@ -212,7 +212,7 @@ const renderProperties = () => {
 
   publicProperties.innerHTML = visibleProperties
     .map((property) => {
-      const propertyUrl = `/property/${property.id || property._id}`;
+      const propertyUrl = `/property/${property.slug || property.id || property._id}`;
       // Safely extract images from property, supporting both new 'images' array and old 'image' field
       const images = Array.isArray(property.images)
         ? property.images.filter(img => img && typeof img === 'string')
