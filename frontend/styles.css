@@ -5816,3 +5816,18 @@ textarea:focus {
 .listing-card .image-dots {
   display: none !important;
 }
+
+/* Replace the photo-count pill with the address at top-right */
+.home-page .listing-media-mobile-pills .listing-address-badge,
+.catalog-page .listing-media-mobile-pills .listing-address-badge {
+  flex: 0 1 auto;
+  margin-left: auto;
+  max-width: min(64%, 230px);
+}
+
+@media (max-width: 560px) {
+  .home-page .listing-media-mobile-pills .listing-address-badge,
+  .catalog-page .listing-media-mobile-pills .listing-address-badge {
+    max-width: min(62%, 210px);
+  }
+}
