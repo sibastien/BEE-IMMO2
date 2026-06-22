@@ -218,6 +218,18 @@ const renderProperties = () => {
         ? property.images.filter(img => img && typeof img === 'string')
         : (property.image && typeof property.image === 'string' ? [property.image] : []);
       const isLand = property.propertyType === 'land';
+      const photoCount = images.length;
+      const imageDots = photoCount > 1
+        ? `<div class="image-dots" aria-hidden="true">
+            ${images.map((_, index) => `<span class="${index === 0 ? 'active' : ''}"></span>`).join('')}
+          </div>`
+        : '';
+      const mediaReference = property.reference
+        ? `<p class="property-reference listing-media-reference">REF ${escapeHtml(property.reference)}</p>`
+        : '';
+      const photoCountBadge = photoCount > 0
+        ? `<span class="listing-photo-count">${photoCount} photo${photoCount > 1 ? 's' : ''}</span>`
+        : '';
       const listingBadges = `
         <div class="listing-topline">
           <span>${transactionLabels[property.transactionType] || property.transactionType}</span>
@@ -241,10 +253,18 @@ const renderProperties = () => {
                 .join('')}
             </div>
             <div class="listing-media-top">
-              ${listingBadges}
+              <div class="listing-media-mobile-pills">
+                ${mediaReference}
+                ${photoCountBadge}
+              </div>
+              <div class="listing-desktop-badges">${listingBadges}</div>
               <button class="listing-favorite" type="button" aria-label="Ajouter aux favoris" tabindex="-1">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.8a5.4 5.4 0 0 0-7.6 0L12 7l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 22l8.8-8.6a5.4 5.4 0 0 0 0-7.6z"/></svg>
               </button>
+            </div>
+            <div class="listing-media-bottom">
+              ${listingBadges}
+              ${imageDots}
             </div>
           </div>
         `
@@ -252,10 +272,16 @@ const renderProperties = () => {
           <div class="listing-media">
             <div class="listing-placeholder">Bee Immobiliers</div>
             <div class="listing-media-top">
-              ${listingBadges}
+              <div class="listing-media-mobile-pills">
+                ${mediaReference}
+              </div>
+              <div class="listing-desktop-badges">${listingBadges}</div>
               <button class="listing-favorite" type="button" aria-label="Ajouter aux favoris" tabindex="-1">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.8a5.4 5.4 0 0 0-7.6 0L12 7l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 22l8.8-8.6a5.4 5.4 0 0 0 0-7.6z"/></svg>
               </button>
+            </div>
+            <div class="listing-media-bottom">
+              ${listingBadges}
             </div>
           </div>
         `;
