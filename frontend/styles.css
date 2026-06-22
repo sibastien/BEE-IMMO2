@@ -5136,13 +5136,28 @@ textarea:focus {
   stroke-width: 1.9;
 }
 
+.home-page .listing-address,
+.catalog-page .listing-address {
+  order: 3;
+  display: -webkit-box;
+  min-height: 14px;
+  margin: -2px 0 0;
+  overflow: hidden;
+  color: #8a806f;
+  font-size: 10.5px;
+  font-weight: 650;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
 .home-page .listing-card .listing-meta,
 .catalog-page .listing-card .listing-meta {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
   margin-top: 5px;
-  order: 3;
+  order: 4;
 }
 
 .home-page .listing-card .listing-meta span,
@@ -5358,8 +5373,19 @@ textarea:focus {
     display: none;
   }
 
-  .listing-price-row {
+  .home-page .listing-address,
+  .catalog-page .listing-address {
     order: 3;
+    min-height: 16px;
+    margin-top: -3px;
+    color: #776e60;
+    font-size: 12px;
+    font-weight: 650;
+    -webkit-line-clamp: 1;
+  }
+
+  .listing-price-row {
+    order: 4;
   }
 
   .listing-price,
@@ -5377,7 +5403,7 @@ textarea:focus {
     flex-wrap: wrap;
     gap: 8px;
     margin-top: 3px;
-    order: 4;
+    order: 5;
   }
 
   .home-page .listing-card .listing-meta span,

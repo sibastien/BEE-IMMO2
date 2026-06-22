@@ -296,6 +296,7 @@ const renderProperties = () => {
             </div>
             <h3>${property.title}</h3>
             <p class="listing-location">${icon('pin')}${property.city}, ${property.district}</p>
+            ${property.address ? `<p class="listing-address">${escapeHtml(property.address)}</p>` : ''}
             <div class="listing-meta">
               <span title="Superficie">${icon('surface')}${property.surface} m2</span>
               ${
