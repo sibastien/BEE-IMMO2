@@ -230,6 +230,10 @@ const renderProperties = () => {
       const photoCountBadge = photoCount > 0
         ? `<span class="listing-photo-count">${photoCount} photo${photoCount > 1 ? 's' : ''}</span>`
         : '';
+      const locationBadgeText = property.address || [property.district, property.city].filter(Boolean).join(', ');
+      const addressBadge = locationBadgeText
+        ? `<span class="listing-address-badge">${icon('pin')}${escapeHtml(locationBadgeText)}</span>`
+        : '';
       const listingBadges = `
         <div class="listing-topline">
           <span>${transactionLabels[property.transactionType] || property.transactionType}</span>
@@ -239,7 +243,6 @@ const renderProperties = () => {
               : ''
           }
           <span>${propertyTypeLabels[property.propertyType] || property.propertyType}</span>
-          ${property.address ? `<span class="listing-address-badge">${escapeHtml(property.address)}</span>` : ''}
           </div>
       `;
       const image = images.length
@@ -254,11 +257,14 @@ const renderProperties = () => {
                 .join('')}
             </div>
             <div class="listing-media-top">
-              <div class="listing-media-mobile-pills">
-                ${mediaReference}
-                ${photoCountBadge}
+              <div class="listing-media-badge-stack">
+                <div class="listing-media-mobile-pills">
+                  ${mediaReference}
+                  ${photoCountBadge}
+                </div>
+                <div class="listing-desktop-badges">${listingBadges}</div>
+                ${addressBadge}
               </div>
-              <div class="listing-desktop-badges">${listingBadges}</div>
               <button class="listing-favorite" type="button" aria-label="Ajouter aux favoris" tabindex="-1">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.8a5.4 5.4 0 0 0-7.6 0L12 7l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 22l8.8-8.6a5.4 5.4 0 0 0 0-7.6z"/></svg>
               </button>
@@ -273,10 +279,13 @@ const renderProperties = () => {
           <div class="listing-media">
             <div class="listing-placeholder">Bee Immobilier</div>
             <div class="listing-media-top">
-              <div class="listing-media-mobile-pills">
-                ${mediaReference}
+              <div class="listing-media-badge-stack">
+                <div class="listing-media-mobile-pills">
+                  ${mediaReference}
+                </div>
+                <div class="listing-desktop-badges">${listingBadges}</div>
+                ${addressBadge}
               </div>
-              <div class="listing-desktop-badges">${listingBadges}</div>
               <button class="listing-favorite" type="button" aria-label="Ajouter aux favoris" tabindex="-1">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.8a5.4 5.4 0 0 0-7.6 0L12 7l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 22l8.8-8.6a5.4 5.4 0 0 0 0-7.6z"/></svg>
               </button>

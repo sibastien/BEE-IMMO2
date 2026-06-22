@@ -5498,3 +5498,123 @@ textarea:focus {
     background: rgba(8, 7, 5, 0.88);
   }
 }
+
+/* Strong final pass: visible address pill and centered category labels */
+.home-page .listing-media-badge-stack,
+.catalog-page .listing-media-badge-stack {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  min-width: 0;
+  max-width: calc(100% - 48px);
+}
+
+.home-page .listing-media-badge-stack .listing-address-badge,
+.catalog-page .listing-media-badge-stack .listing-address-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: max-content;
+  max-width: 100%;
+  min-height: 27px;
+  padding: 7px 11px;
+  overflow: hidden;
+  border: 1px solid rgba(239, 189, 49, 0.58);
+  border-radius: 999px;
+  color: #fff9e8;
+  background: rgba(8, 7, 5, 0.9);
+  box-shadow: 0 9px 18px rgba(8, 7, 5, 0.22);
+  font-size: 10.5px;
+  font-weight: 850;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-page .listing-media-badge-stack .listing-address-badge svg,
+.catalog-page .listing-media-badge-stack .listing-address-badge svg {
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.home-page .market-category-card,
+.catalog-page .market-category-card,
+.market-category-card {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 40px;
+  align-items: center;
+  justify-items: center;
+  column-gap: 10px;
+  min-height: 74px;
+  padding-right: 16px;
+  padding-left: 16px;
+}
+
+.home-page .market-category-card svg,
+.catalog-page .market-category-card svg,
+.market-category-card svg {
+  grid-column: 1;
+  justify-self: center;
+  width: 26px;
+  height: 26px;
+}
+
+.home-page .market-category-card strong,
+.catalog-page .market-category-card strong,
+.market-category-card strong {
+  grid-column: 2;
+  justify-self: center;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: 15px;
+  line-height: 1;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .home-page .listing-media-badge-stack,
+  .catalog-page .listing-media-badge-stack {
+    max-width: calc(100% - 4px);
+  }
+
+  .home-page .listing-media-badge-stack .listing-address-badge,
+  .catalog-page .listing-media-badge-stack .listing-address-badge {
+    max-width: min(210px, 100%);
+    min-height: 26px;
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+
+  .home-page .market-category-card,
+  .catalog-page .market-category-card,
+  .market-category-card {
+    grid-template-columns: 28px minmax(0, 1fr) 28px;
+    column-gap: 8px;
+    min-height: 58px;
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .home-page .market-category-card svg,
+  .catalog-page .market-category-card svg,
+  .market-category-card svg {
+    width: 23px;
+    height: 23px;
+  }
+
+  .home-page .market-category-card strong,
+  .catalog-page .market-category-card strong,
+  .market-category-card strong {
+    font-size: 16px;
+  }
+}
