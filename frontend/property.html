@@ -37,23 +37,23 @@
           <div class="grid-2">
             <label>
               Nom complet
-              <input id="visitorName" type="text" required />
+              <input id="visitorName" name="name" type="text" placeholder="Ex: Ahmed Ben Ali" autocomplete="name" required />
             </label>
 
             <label>
               Telephone
-              <input id="visitorPhone" type="tel" required />
+              <input id="visitorPhone" name="phone" type="tel" placeholder="Ex: +216 53 762 520" autocomplete="tel" required />
             </label>
           </div>
 
           <label>
             Email
-            <input id="visitorEmail" type="email" />
+            <input id="visitorEmail" name="email" type="email" placeholder="Ex: votre@email.com" autocomplete="email" />
           </label>
 
           <label>
             Message
-            <textarea id="visitorMessage" rows="4" required>Bonjour, je souhaite organiser une visite pour cette annonce.</textarea>
+            <textarea id="visitorMessage" name="message" rows="4" placeholder="Ex: Bonjour, je souhaite organiser une visite pour cette annonce." required></textarea>
           </label>
 
           <button class="gold-button contact-button" type="submit">Envoyer la demande</button>

@@ -5032,6 +5032,18 @@ textarea:focus {
   background: #090806;
 }
 
+.home-page .listing-media-top .listing-topline .listing-address-badge,
+.catalog-page .listing-media-top .listing-topline .listing-address-badge,
+.home-page .listing-media-bottom .listing-topline .listing-address-badge,
+.catalog-page .listing-media-bottom .listing-topline .listing-address-badge {
+  max-width: min(210px, 100%);
+  overflow: hidden;
+  color: #15120d;
+  background: rgba(255, 247, 225, 0.96);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .listing-favorite {
   display: grid;
   place-items: center;
@@ -5136,28 +5148,13 @@ textarea:focus {
   stroke-width: 1.9;
 }
 
-.home-page .listing-address,
-.catalog-page .listing-address {
-  order: 3;
-  display: -webkit-box;
-  min-height: 14px;
-  margin: -2px 0 0;
-  overflow: hidden;
-  color: #8a806f;
-  font-size: 10.5px;
-  font-weight: 650;
-  line-height: 1.25;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-}
-
 .home-page .listing-card .listing-meta,
 .catalog-page .listing-card .listing-meta {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
   margin-top: 5px;
-  order: 4;
+  order: 3;
 }
 
 .home-page .listing-card .listing-meta span,
@@ -5317,6 +5314,11 @@ textarea:focus {
     font-size: 11px;
   }
 
+  .home-page .listing-media-bottom .listing-topline .listing-address-badge,
+  .catalog-page .listing-media-bottom .listing-topline .listing-address-badge {
+    max-width: min(165px, 100%);
+  }
+
   .listing-card .image-dots {
     display: inline-flex;
     align-items: center;
@@ -5373,19 +5375,8 @@ textarea:focus {
     display: none;
   }
 
-  .home-page .listing-address,
-  .catalog-page .listing-address {
-    order: 3;
-    min-height: 16px;
-    margin-top: -3px;
-    color: #776e60;
-    font-size: 12px;
-    font-weight: 650;
-    -webkit-line-clamp: 1;
-  }
-
   .listing-price-row {
-    order: 4;
+    order: 3;
   }
 
   .listing-price,
@@ -5403,7 +5394,7 @@ textarea:focus {
     flex-wrap: wrap;
     gap: 8px;
     margin-top: 3px;
-    order: 5;
+    order: 4;
   }
 
   .home-page .listing-card .listing-meta span,

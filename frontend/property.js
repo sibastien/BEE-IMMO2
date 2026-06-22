@@ -643,8 +643,6 @@ const submitVisitRequest = async (event) => {
     }
 
     visitForm.reset();
-    document.getElementById('visitorMessage').value =
-      'Bonjour, je souhaite organiser une visite pour cette annonce.';
     setVisitMessage('Demande envoyee. Bee Immobiliers vous contactera bientot.');
     window.BeePixel?.trackLead({
       content_name: currentProperty.title,
