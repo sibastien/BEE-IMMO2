@@ -5831,3 +5831,20 @@ textarea:focus {
     max-width: min(62%, 210px);
   }
 }
+
+/* Keep every property reference on one line */
+.property-reference {
+  overflow-wrap: normal;
+  white-space: nowrap;
+  word-break: keep-all;
+}
+
+.home-page .listing-media-reference,
+.catalog-page .listing-media-reference,
+.listing-media-reference {
+  flex: 0 0 auto;
+  min-width: max-content;
+  max-width: none;
+  justify-content: center;
+  white-space: nowrap;
+}
