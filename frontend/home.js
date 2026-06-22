@@ -219,11 +219,6 @@ const renderProperties = () => {
         : (property.image && typeof property.image === 'string' ? [property.image] : []);
       const isLand = property.propertyType === 'land';
       const photoCount = images.length;
-      const imageDots = photoCount > 1
-        ? `<div class="image-dots" aria-hidden="true">
-            ${images.map((_, index) => `<span class="${index === 0 ? 'active' : ''}"></span>`).join('')}
-          </div>`
-        : '';
       const mediaReference = property.reference
         ? `<p class="property-reference listing-media-reference">REF ${escapeHtml(property.reference)}</p>`
         : '';
@@ -271,7 +266,6 @@ const renderProperties = () => {
             </div>
             <div class="listing-media-bottom">
               ${listingBadges}
-              ${imageDots}
             </div>
           </div>
         `

@@ -5809,3 +5809,10 @@ textarea:focus {
   width: 16px;
   background: #f3c334;
 }
+
+/* Remove slideshow dot strip from property cards */
+.home-page .listing-card .image-dots,
+.catalog-page .listing-card .image-dots,
+.listing-card .image-dots {
+  display: none !important;
+}
