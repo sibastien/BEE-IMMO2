@@ -223,7 +223,7 @@ const renderProperties = () => {
         : '';
       const locationBadgeText = property.address || [property.district, property.city].filter(Boolean).join(', ');
       const addressBadge = locationBadgeText
-        ? `<span class="listing-address-badge">${icon('pin')}${escapeHtml(locationBadgeText)}</span>`
+        ? `<span class="listing-address-badge">${icon('pin')}<span class="listing-address-text">${escapeHtml(locationBadgeText)}</span></span>`
         : '';
       const listingBadges = `
         <div class="listing-topline">

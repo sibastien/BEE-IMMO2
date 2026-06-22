@@ -5848,3 +5848,34 @@ textarea:focus {
   justify-content: center;
   white-space: nowrap;
 }
+
+/* Truncate long top-right addresses cleanly inside the card */
+.home-page .listing-media-mobile-pills,
+.catalog-page .listing-media-mobile-pills {
+  min-width: 0;
+}
+
+.home-page .listing-media-mobile-pills .listing-address-badge,
+.catalog-page .listing-media-mobile-pills .listing-address-badge {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: min(62%, 220px);
+  overflow: hidden;
+}
+
+.home-page .listing-address-text,
+.catalog-page .listing-address-text {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .home-page .listing-media-mobile-pills .listing-address-badge,
+  .catalog-page .listing-media-mobile-pills .listing-address-badge {
+    max-width: min(58%, 190px);
+  }
+}
