@@ -33,6 +33,9 @@ let properties = [];
 let visibleProperties = [];
 let shuffledHomeProperties = [];
 
+// On the homepage, only show a single row of listings (4 cards on desktop).
+const HOME_LISTING_LIMIT = 4;
+
 const propertyTypeLabels = {
   apartment: 'Appartement',
   house: 'Maison',
@@ -131,7 +134,7 @@ const getFilteredProperties = () => {
     if (!isCatalogPage) return 0;
 
     return new Date(b.createdAt) - new Date(a.createdAt);
-  });
+  }).slice(0, isCatalogPage ? undefined : HOME_LISTING_LIMIT);
 };
 
 const hydrateFiltersFromUrl = () => {
