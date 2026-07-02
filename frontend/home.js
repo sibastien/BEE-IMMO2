@@ -19,6 +19,8 @@ const quickTypeFilters = document.getElementById('quickTypeFilters');
 const marketCategoryCards = document.querySelectorAll('[data-category-transaction][data-category-type]');
 const mobileFilterToggle = document.getElementById('mobileFilterToggle');
 const mobileFilterPanel = document.getElementById('mobileFilterPanel');
+const homeViewMore = document.getElementById('homeViewMore');
+const homeViewMoreLabel = document.getElementById('homeViewMoreLabel');
 const testimonialSlider = document.getElementById('testimonialSlider');
 const contactModal = document.getElementById('contactModal');
 const contactForm = document.getElementById('contactForm');
@@ -47,6 +49,15 @@ const propertyTypeLabels = {
 const transactionLabels = {
   sale: 'Vente',
   rent: 'Location'
+};
+
+// Labels used by the homepage "Voir plus" button (plural form per category).
+const viewMoreTypeLabels = {
+  apartment: "Voir plus d'appartements",
+  house: 'Voir plus de maisons',
+  villa: 'Voir plus de villas',
+  land: 'Voir plus de terrains',
+  commercial: 'Voir plus de locaux commerciaux'
 };
 
 const rentalTypeLabels = {
@@ -188,6 +199,23 @@ const getResultsPath = () => {
   return '';
 };
 
+const updateViewMoreButton = () => {
+  if (!homeViewMore || !isHomePage) return;
+
+  const transaction = forcedTransaction || transactionFilter?.value || 'sale';
+  const type = typeFilter?.value || '';
+  const basePath = transaction === 'rent' ? '/louer' : '/acheter';
+
+  const params = new URLSearchParams();
+  if (type) params.set('type', type);
+  const query = params.toString();
+
+  homeViewMore.href = query ? `${basePath}?${query}` : basePath;
+  homeViewMoreLabel.textContent = type
+    ? (viewMoreTypeLabels[type] || 'Voir plus de biens')
+    : 'Voir toutes les annonces';
+};
+
 const trackSearchEvent = (source) => {
   window.BeePixel?.trackSearch({
     search_string: getFilterQueryString() || source,
@@ -201,13 +229,19 @@ const renderProperties = () => {
   visibleProperties = getFilteredProperties();
   publicCount.textContent = `${visibleProperties.length} annonce${visibleProperties.length > 1 ? 's' : ''}`;
 
+  const viewMoreContainer = homeViewMore?.closest('.home-view-more');
+
   if (visibleProperties.length === 0) {
     publicProperties.innerHTML = '<div class="empty-state">Aucune annonce ne correspond aux filtres.</div>';
     carouselPrev?.classList.add('hidden');
     carouselNext?.classList.add('hidden');
     carouselDots?.classList.add('hidden');
+    viewMoreContainer?.classList.add('is-hidden');
     return;
   }
+
+  viewMoreContainer?.classList.remove('is-hidden');
+  updateViewMoreButton();
 
   carouselPrev?.classList.toggle('hidden', isCatalogPage || visibleProperties.length <= 1);
   carouselNext?.classList.toggle('hidden', isCatalogPage || visibleProperties.length <= 1);
