@@ -255,23 +255,16 @@ const renderProperties = () => {
         ? property.images.filter(img => img && typeof img === 'string')
         : (property.image && typeof property.image === 'string' ? [property.image] : []);
       const isLand = property.propertyType === 'land';
-      const mediaReference = property.reference
-        ? `<p class="property-reference listing-media-reference">REF ${escapeHtml(property.reference)}</p>`
-        : '';
       const locationBadgeText = property.address || [property.district, property.city].filter(Boolean).join(', ');
-      const addressBadge = locationBadgeText
-        ? `<span class="listing-address-badge">${icon('pin')}<span class="listing-address-text">${escapeHtml(locationBadgeText)}</span></span>`
-        : '';
-      const listingBadges = `
-        <div class="listing-topline">
-          <span>${transactionLabels[property.transactionType] || property.transactionType}</span>
-          ${
-            property.transactionType === 'rent'
-              ? `<span>${rentalTypeLabels[property.rentalType] || rentalTypeLabels.standard}</span>`
-              : ''
-          }
-          <span>${propertyTypeLabels[property.propertyType] || property.propertyType}</span>
-          </div>
+      const transactionLabel = transactionLabels[property.transactionType] || property.transactionType;
+      const typeLabel = propertyTypeLabels[property.propertyType] || property.propertyType;
+      const mediaOverlay = `
+        <div class="listing-media-overlay">
+          <span class="listing-tag listing-tag-${property.transactionType}">${transactionLabel}</span>
+          <button class="listing-favorite" type="button" aria-label="Ajouter aux favoris" tabindex="-1">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.8a5.4 5.4 0 0 0-7.6 0L12 7l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 22l8.8-8.6a5.4 5.4 0 0 0 0-7.6z"/></svg>
+          </button>
+        </div>
       `;
       const image = images.length
         ? `
@@ -284,41 +277,13 @@ const renderProperties = () => {
                 )
                 .join('')}
             </div>
-            <div class="listing-media-top">
-              <div class="listing-media-badge-stack">
-                <div class="listing-media-mobile-pills">
-                  ${mediaReference}
-                  ${addressBadge}
-                </div>
-                <div class="listing-desktop-badges">${listingBadges}</div>
-              </div>
-              <button class="listing-favorite" type="button" aria-label="Ajouter aux favoris" tabindex="-1">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.8a5.4 5.4 0 0 0-7.6 0L12 7l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 22l8.8-8.6a5.4 5.4 0 0 0 0-7.6z"/></svg>
-              </button>
-            </div>
-            <div class="listing-media-bottom">
-              ${listingBadges}
-            </div>
+            ${mediaOverlay}
           </div>
         `
         : `
           <div class="listing-media">
             <div class="listing-placeholder">Bee Immobilier</div>
-            <div class="listing-media-top">
-              <div class="listing-media-badge-stack">
-                <div class="listing-media-mobile-pills">
-                  ${mediaReference}
-                  ${addressBadge}
-                </div>
-                <div class="listing-desktop-badges">${listingBadges}</div>
-              </div>
-              <button class="listing-favorite" type="button" aria-label="Ajouter aux favoris" tabindex="-1">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.8a5.4 5.4 0 0 0-7.6 0L12 7l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 22l8.8-8.6a5.4 5.4 0 0 0 0-7.6z"/></svg>
-              </button>
-            </div>
-            <div class="listing-media-bottom">
-              ${listingBadges}
-            </div>
+            ${mediaOverlay}
           </div>
         `;
 
@@ -328,10 +293,13 @@ const renderProperties = () => {
           <div class="listing-content">
             <div class="listing-price-row">
               <strong class="listing-price">${formatPropertyPrice(property)}</strong>
-              ${property.reference ? `<p class="property-reference">Ref. ${escapeHtml(property.reference)}</p>` : ''}
+              <div class="listing-price-tags">
+                <span class="listing-type-chip">${typeLabel}</span>
+                ${property.reference ? `<span class="listing-ref-chip">REF ${escapeHtml(property.reference)}</span>` : ''}
+              </div>
             </div>
             <h3>${property.title}</h3>
-            <p class="listing-location">${icon('pin')}${property.city}, ${property.district}</p>
+            <p class="listing-location">${icon('pin')}${escapeHtml(locationBadgeText || `${property.city}, ${property.district}`)}</p>
             <div class="listing-meta">
               <span title="Superficie">${icon('surface')}${property.surface} m2</span>
               ${
