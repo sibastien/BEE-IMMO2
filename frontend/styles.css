@@ -5974,3 +5974,34 @@ textarea:focus {
     max-width: min(58%, 190px);
   }
 }
+
+/* ==== Homepage cards: show full property info below the photo ==== */
+.home-page .home-listings-grid .listing-card .listing-content h3 {
+  display: -webkit-box;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+  color: #211d17;
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1.22;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.home-page .home-listings-grid .listing-card .listing-actions {
+  display: block;
+  margin-top: 4px;
+}
+
+.home-page .home-listings-grid .listing-card .listing-actions .listing-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 9px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+}
