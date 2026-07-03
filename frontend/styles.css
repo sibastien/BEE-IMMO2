@@ -5975,7 +5975,19 @@ textarea:focus {
   }
 }
 
-/* ==== Homepage cards: show full property info below the photo ==== */
+/* ==== Homepage cards: stack vertically so the info + icons show under the photo ==== */
+.home-page .home-listings-grid .listing-card {
+  flex-direction: column;
+}
+
+.home-page .home-listings-grid .listing-card .listing-media,
+.home-page .home-listings-grid .listing-card .listing-content {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
 .home-page .home-listings-grid .listing-card .listing-content h3 {
   display: -webkit-box;
   min-height: 0;
@@ -5989,19 +6001,31 @@ textarea:focus {
   -webkit-line-clamp: 2;
 }
 
+/* Card is clickable; no per-card button (keeps the info clean) */
 .home-page .home-listings-grid .listing-card .listing-actions {
-  display: block;
-  margin-top: 4px;
+  display: none !important;
 }
 
-.home-page .home-listings-grid .listing-card .listing-actions .listing-cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 9px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 800;
-  text-decoration: none;
+@media (max-width: 560px) {
+  /* Keep each card within the viewport width (prevents right-edge clipping) */
+  .home-page .home-listings-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  /* Put the type + reference chips on their own left-aligned line */
+  .home-page .home-listings-grid .listing-price-row {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    row-gap: 5px;
+  }
+
+  .home-page .home-listings-grid .listing-price-tags {
+    flex-basis: 100%;
+    justify-content: flex-start;
+  }
+
+  /* Remove the black search/filter box on mobile */
+  .mobile-filter-toggle {
+    display: none !important;
+  }
 }
