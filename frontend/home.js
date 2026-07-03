@@ -709,6 +709,35 @@ document.addEventListener('keydown', (event) => {
 });
 
 contactForm?.addEventListener('submit', submitContactRequest);
+
+// Mobile navigation: the hamburger toggles the nav dropdown.
+const siteHeader = document.querySelector('.site-header');
+const homeMenuIcon = document.querySelector('.home-menu-icon');
+
+const setNavOpen = (isOpen) => {
+  siteHeader?.classList.toggle('nav-open', isOpen);
+  homeMenuIcon?.classList.toggle('active', isOpen);
+  homeMenuIcon?.setAttribute('aria-expanded', String(isOpen));
+};
+
+homeMenuIcon?.addEventListener('click', () => {
+  setNavOpen(!siteHeader?.classList.contains('nav-open'));
+});
+
+siteHeader?.querySelectorAll('nav a').forEach((link) => {
+  link.addEventListener('click', () => setNavOpen(false));
+});
+
+document.addEventListener('click', (event) => {
+  if (
+    siteHeader?.classList.contains('nav-open') &&
+    !event.target.closest('.site-header nav') &&
+    !event.target.closest('.home-menu-icon')
+  ) {
+    setNavOpen(false);
+  }
+});
+
 hydrateFiltersFromUrl();
 loadProperties();
 loadTestimonials();
