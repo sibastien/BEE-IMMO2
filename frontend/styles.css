@@ -6029,3 +6029,12 @@ textarea:focus {
     display: none !important;
   }
 }
+
+/* Web version: even spacing between the meta items (surface / rooms) */
+@media (min-width: 561px) {
+  .home-page .home-listings-grid .listing-card .listing-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+  }
+}
