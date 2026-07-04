@@ -35,8 +35,10 @@ let properties = [];
 let visibleProperties = [];
 let shuffledHomeProperties = [];
 
-// On the homepage, only show a single row of listings (4 cards on desktop).
-const HOME_LISTING_LIMIT = 4;
+// On the homepage, load a handful of listings per category so the user can
+// page through them left/right with the carousel arrows (4 visible at a time
+// on desktop) without leaving for the full "Voir plus" catalog.
+const HOME_LISTING_LIMIT = 12;
 
 const propertyTypeLabels = {
   apartment: 'Appartement',

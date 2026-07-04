@@ -6118,3 +6118,149 @@ textarea:focus {
     transform: translateY(-9px) rotate(-45deg);
   }
 }
+
+/* ==== Fix: the price must never touch/overlap the type + reference chips ==== */
+/* Price stays left, chips stay right with a guaranteed gap; when the card is
+   too narrow to fit both on one line, the chips wrap onto their own line
+   instead of the price sliding under them. */
+.listing-price-row {
+  flex-wrap: wrap;
+  column-gap: 14px;
+  row-gap: 5px;
+}
+
+.listing-price-tags {
+  flex-wrap: wrap;
+}
+
+/* ==== Catalog ("Voir plus") cards: render exactly like the homepage cards ==== */
+/* Without these, catalog cards fall back to the horizontal row layout and the
+   full-width photo hides the white info block. Mirror the homepage grid card. */
+.catalog-page .public-grid .listing-card {
+  flex-direction: column;
+}
+
+.catalog-page .public-grid .listing-card .listing-media,
+.catalog-page .public-grid .listing-card .listing-content {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.catalog-page .public-grid .listing-slideshow,
+.catalog-page .public-grid .listing-image,
+.catalog-page .public-grid .listing-placeholder {
+  aspect-ratio: 4 / 3;
+}
+
+.catalog-page .public-grid .listing-card .listing-content {
+  gap: 5px;
+  padding: 11px 12px 13px;
+}
+
+.catalog-page .public-grid .listing-card .listing-content h3 {
+  display: -webkit-box;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+  color: #211d17;
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1.22;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.catalog-page .public-grid .listing-card .listing-location {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.catalog-page .public-grid .listing-card .listing-meta {
+  min-height: 30px;
+  overflow: hidden;
+}
+
+@media (min-width: 561px) {
+  .catalog-page .public-grid .listing-card .listing-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+  }
+}
+
+.catalog-page .public-grid .listing-card .listing-actions {
+  display: none !important;
+}
+
+/* ==== Homepage listings become a horizontal carousel ==== */
+/* Show 4 cards per view on desktop; the rest sit off-screen and are reached
+   with the left/right arrows, so a user can browse the 5th, 6th... listing of
+   a category in place without hitting "Voir plus". */
+.home-page .home-listings-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  grid-template-columns: none;
+  gap: var(--market-gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+
+.home-page .home-listings-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.home-page .home-listings-grid .listing-card {
+  flex: 0 0 calc((100% - 3 * var(--market-gap)) / 4);
+  scroll-snap-align: start;
+}
+
+@media (max-width: 1100px) {
+  .home-page .home-listings-grid .listing-card {
+    flex-basis: calc((100% - 2 * var(--market-gap)) / 3);
+  }
+}
+
+@media (max-width: 760px) {
+  .home-page .home-listings-grid .listing-card {
+    flex-basis: calc((100% - var(--market-gap)) / 2);
+  }
+}
+
+@media (max-width: 520px) {
+  .home-page .home-listings-grid {
+    /* Undo the earlier single-column override so cards can scroll sideways */
+    grid-template-columns: none !important;
+  }
+
+  .home-page .home-listings-grid .listing-card {
+    flex-basis: 84%; /* one card plus a peek of the next */
+  }
+}
+
+/* Arrows sit at the left/right extremities of the homepage row */
+.home-page .home-listings-shell {
+  position: relative;
+}
+
+.home-page .home-listings-shell .carousel-arrow {
+  top: 42%;
+}
+
+.home-page .home-listings-shell .carousel-arrow-left {
+  left: -6px;
+}
+
+.home-page .home-listings-shell .carousel-arrow-right {
+  right: -6px;
+}
+
+/* One dot per listing would be cluttered here; arrows are enough */
+.home-page .home-listings-shell .carousel-dots {
+  display: none;
+}
