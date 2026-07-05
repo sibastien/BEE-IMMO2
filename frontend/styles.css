@@ -708,7 +708,7 @@ a {
 .catalog-page .public-grid {
   grid-auto-flow: row;
   grid-auto-columns: initial;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   overflow: visible;
   padding: 0;
   scroll-snap-type: none;
@@ -2656,6 +2656,10 @@ button:disabled {
 
   .public-grid {
     grid-auto-columns: minmax(270px, 82vw);
+  }
+
+  .catalog-page .public-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .blog-grid {
@@ -6188,8 +6192,7 @@ textarea:focus {
 }
 
 .catalog-page .public-grid .listing-card .listing-actions {
-  display: grid !important;
-  margin-top: 8px;
+  display: none !important;
 }
 
 /* ==== Homepage listings become a horizontal carousel ==== */
