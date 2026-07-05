@@ -5280,21 +5280,13 @@ textarea:focus {
   display: none;
 }
 
-@media (min-width: 1120px) {
-  .catalog-page .public-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
 @media (max-width: 1119px) {
-  .catalog-page .public-grid,
   .home-page .home-listings-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 860px) {
-  .catalog-page .public-grid,
   .home-page .home-listings-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
