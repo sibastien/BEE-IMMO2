@@ -708,7 +708,7 @@ a {
 .catalog-page .public-grid {
   grid-auto-flow: row;
   grid-auto-columns: initial;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   overflow: visible;
   padding: 0;
   scroll-snap-type: none;
@@ -2656,10 +2656,6 @@ button:disabled {
 
   .public-grid {
     grid-auto-columns: minmax(270px, 82vw);
-  }
-
-  .catalog-page .public-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .blog-grid {
@@ -6133,66 +6129,142 @@ textarea:focus {
   flex-wrap: wrap;
 }
 
-/* ==== Catalog ("Voir plus") cards: render exactly like the homepage cards ==== */
-/* Without these, catalog cards fall back to the horizontal row layout and the
-   full-width photo hides the white info block. Mirror the homepage grid card. */
+/* ==== Catalog ("Voir plus") cards: full-width row, photo on the left ==== */
+/* One listing per row: fixed-width photo on the left, details on the right
+   (title, location, description, meta, price + CTA at the bottom). */
 .catalog-page .public-grid .listing-card {
-  flex-direction: column;
+  flex-direction: row;
+  align-items: stretch;
 }
 
-.catalog-page .public-grid .listing-card .listing-media,
+.catalog-page .public-grid .listing-card .listing-media {
+  box-sizing: border-box;
+  flex: 0 0 240px;
+  width: 240px;
+  aspect-ratio: unset;
+  border-radius: 8px 0 0 8px;
+}
+
 .catalog-page .public-grid .listing-card .listing-content {
   box-sizing: border-box;
-  width: 100%;
+  flex: 1 1 auto;
   min-width: 0;
   max-width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "title chips"
+    "location location"
+    "description description"
+    "meta meta"
+    "price actions";
+  align-items: start;
+  gap: 6px 12px;
+  padding: 16px 18px;
 }
 
 .catalog-page .public-grid .listing-slideshow,
 .catalog-page .public-grid .listing-image,
 .catalog-page .public-grid .listing-placeholder {
-  aspect-ratio: 4 / 3;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: unset;
 }
 
-.catalog-page .public-grid .listing-card .listing-content {
-  gap: 5px;
-  padding: 11px 12px 13px;
+.catalog-page .public-grid .listing-card .listing-price-row {
+  display: contents;
+}
+
+.catalog-page .public-grid .listing-card .listing-price {
+  grid-area: price;
+  align-self: center;
+}
+
+.catalog-page .public-grid .listing-card .listing-price-tags {
+  grid-area: chips;
+  justify-self: end;
 }
 
 .catalog-page .public-grid .listing-card .listing-content h3 {
+  grid-area: title;
   display: -webkit-box;
   min-height: 0;
   margin: 0;
   overflow: hidden;
   color: #211d17;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 900;
-  line-height: 1.22;
+  line-height: 1.25;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
 
 .catalog-page .public-grid .listing-card .listing-location {
+  grid-area: location;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.catalog-page .public-grid .listing-card .listing-meta {
-  min-height: 30px;
+.catalog-page .public-grid .listing-card .listing-description {
+  grid-area: description;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   overflow: hidden;
 }
 
-@media (min-width: 561px) {
-  .catalog-page .public-grid .listing-card .listing-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 14px;
-  }
+.catalog-page .public-grid .listing-card .listing-meta {
+  grid-area: meta;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
 }
 
 .catalog-page .public-grid .listing-card .listing-actions {
-  display: none !important;
+  grid-area: actions;
+  align-self: center;
+  display: flex !important;
+  justify-content: flex-end;
+}
+
+@media (max-width: 560px) {
+  .catalog-page .public-grid .listing-card {
+    flex-direction: column;
+  }
+
+  .catalog-page .public-grid .listing-card .listing-media {
+    flex: none;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .catalog-page .public-grid .listing-card .listing-content {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "chips"
+      "location"
+      "description"
+      "meta"
+      "price"
+      "actions";
+  }
+
+  .catalog-page .public-grid .listing-card .listing-price-tags {
+    justify-self: start;
+  }
+}
+
+.home-page .listing-card .listing-description {
+  display: none;
 }
 
 /* ==== Homepage listings become a horizontal carousel ==== */

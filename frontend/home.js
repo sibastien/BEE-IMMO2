@@ -302,6 +302,7 @@ const renderProperties = () => {
             </div>
             <h3>${property.title}</h3>
             <p class="listing-location">${icon('pin')}${escapeHtml(locationBadgeText || `${property.city}, ${property.district}`)}</p>
+            <p class="listing-description">${escapeHtml(property.description || '')}</p>
             <div class="listing-meta">
               <span title="Superficie">${icon('surface')}${property.surface} m2</span>
               ${
