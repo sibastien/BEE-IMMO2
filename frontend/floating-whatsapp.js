@@ -1,6 +1,6 @@
 // Adds a floating WhatsApp shortcut on public pages.
 (function setupFloatingWhatsApp() {
-  const phoneNumber = '21653762520';
+  const phoneNumber = '21653762500';
 
   const addButton = () => {
     if (document.querySelector('.floating-whatsapp')) {

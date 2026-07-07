@@ -484,7 +484,7 @@ const downloadPropertyBrochure = async () => {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8);
       doc.setTextColor(120, 112, 96);
-      doc.text('Bee Immobilier - Avenue Abu Dhabi, Hammamet - +21653762520', margin, 291);
+      doc.text('Bee Immobilier - Avenue Abu Dhabi, Hammamet - +21653762500', margin, 291);
       doc.text(`${page}/${pageCount}`, pageWidth - margin, 291, { align: 'right' });
     }
 
@@ -537,8 +537,8 @@ const renderDetail = (property) => {
           <h2>Mariem Sellami</h2>
           <p>Un conseiller vous accompagne pour les visites, les informations du bien et les prochaines etapes.</p>
           <div class="agent-contact-links">
-            <a href="tel:+21653762520">+21653762520</a>
-            <a href="mailto:direction@beeimmo.com">direction@beeimmo.com</a>
+            <a href="tel:+21653762500">+21653762500</a>
+            <a href="mailto:direction@beeimmobilier.com">direction@beeimmobilier.com</a>
           </div>
         </div>
       </div>
