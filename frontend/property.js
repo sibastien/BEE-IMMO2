@@ -63,8 +63,9 @@ const splitLongDescription = (description) => {
   const cleanText = cleanDescriptionText(description);
   if (!cleanText) return [];
 
+  // Every Enter pressed in the admin becomes a new line on the site
   const manualParagraphs = cleanText
-    .split(/\n{2,}|\n(?=[A-ZÀ-Ÿ0-9-])/)
+    .split(/\n+/)
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
 

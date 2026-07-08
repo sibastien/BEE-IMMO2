@@ -1576,6 +1576,29 @@ a {
   grid-template-columns: 1fr;
   margin-top: 0;
   padding: 20px;
+  color: var(--text);
+  background: transparent;
+}
+
+.detail-info .visit-section .eyebrow {
+  color: var(--primary-dark);
+}
+
+.detail-info .visit-section p {
+  color: var(--muted);
+}
+
+.detail-info .visit-form label {
+  color: var(--text);
+}
+
+.detail-info .visit-or {
+  color: var(--muted);
+}
+
+.detail-info .visit-or::before,
+.detail-info .visit-or::after {
+  background: var(--line);
 }
 
 .visit-or {
