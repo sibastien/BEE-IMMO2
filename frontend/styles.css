@@ -1567,9 +1567,17 @@ a {
   padding: 18px 22px;
 }
 
+/* overflow: clip keeps the decorative clipping but, unlike hidden,
+   does not create a scroll container, so position: sticky still works */
+.public-page main.detail-page {
+  overflow: clip;
+}
+
 .detail-info-sticky {
   position: sticky;
   top: 16px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
 }
 
 .detail-info .visit-section {
