@@ -1573,39 +1573,46 @@ a {
   overflow: clip;
 }
 
-.detail-info-sticky {
-  position: sticky;
-  top: 16px;
-  max-height: calc(100vh - 32px);
-  overflow-y: auto;
+/* Sidebar wrapper stretches to the full height of the row so the sticky
+   contact form can travel all the way down alongside the description */
+.detail-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-self: stretch;
+  min-width: 0;
 }
 
-.detail-info .visit-section {
+.detail-contact-slot {
+  position: sticky;
+  top: 16px;
+}
+
+.detail-side .visit-section {
   grid-template-columns: 1fr;
   margin-top: 0;
   padding: 20px;
   color: var(--text);
-  background: transparent;
 }
 
-.detail-info .visit-section .eyebrow {
+.detail-side .visit-section .eyebrow {
   color: var(--primary-dark);
 }
 
-.detail-info .visit-section p {
+.detail-side .visit-section p {
   color: var(--muted);
 }
 
-.detail-info .visit-form label {
+.detail-side .visit-form label {
   color: var(--text);
 }
 
-.detail-info .visit-or {
+.detail-side .visit-or {
   color: var(--muted);
 }
 
-.detail-info .visit-or::before,
-.detail-info .visit-or::after {
+.detail-side .visit-or::before,
+.detail-side .visit-or::after {
   background: var(--line);
 }
 
@@ -2600,7 +2607,7 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 
-  .detail-info-sticky {
+  .detail-contact-slot {
     position: static;
   }
 
@@ -6418,4 +6425,61 @@ textarea:focus {
 /* One dot per listing would be cluttered here; arrows are enough */
 .home-page .home-listings-shell .carousel-dots {
   display: none;
+}
+
+/* Property detail page - mobile layout: photos, price/title, description, agent, contact */
+@media (max-width: 900px) {
+  .detail-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .detail-gallery,
+  .detail-side {
+    display: contents;
+  }
+
+  .detail-carousel,
+  .detail-placeholder {
+    order: 1;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .detail-info {
+    order: 2;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px;
+  }
+
+  .detail-info h1 {
+    font-size: 24px;
+  }
+
+  .detail-gallery .detail-description {
+    order: 3;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 18px;
+  }
+
+  .agent-contact-card {
+    order: 4;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+
+  .detail-contact-slot {
+    order: 5;
+    position: static;
+  }
+
+  .detail-contact-slot .visit-section {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
 }

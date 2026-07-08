@@ -550,7 +550,8 @@ const renderDetail = (property) => {
       </div>
     </div>
 
-    <aside class="detail-info detail-info-sticky">
+    <aside class="detail-side">
+      <div class="detail-info">
       <div class="detail-actions">
         <button class="detail-share-button" type="button" data-share-property>Partager</button>
         <button class="detail-download-button" type="button" data-download-brochure>Telecharger la brochure PDF</button>
@@ -582,6 +583,8 @@ const renderDetail = (property) => {
               <span title="Abris voiture">${icon('abri')}<strong>${property.abris || 0}</strong></span>
             `
         }
+      </div>
+
       </div>
 
       <div class="detail-contact-slot" id="detailContactSlot"></div>
