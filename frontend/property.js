@@ -527,7 +527,7 @@ const renderDetail = (property) => {
   detailContainer.innerHTML = `
     <div class="detail-gallery">
       ${mainImage}
-      <div class="agent-contact-card">
+      <div class="agent-contact-card agent-top">
         <div class="agent-flip" aria-label="Conseillere Bee Immobilier">
           <img class="agent-contact-photo agent-flip-front" src="/assets/bee-agent.png" alt="Conseillere Bee Immobilier" />
           <img class="agent-contact-photo agent-flip-back" src="/assets/bee-solution-consulting-logo.jpg" alt="" />
@@ -542,9 +542,14 @@ const renderDetail = (property) => {
           </div>
         </div>
       </div>
+
+      <div class="detail-description">
+        <h2>Description</h2>
+        <div class="formatted-description">${renderFormattedDescription(property.description)}</div>
+      </div>
     </div>
 
-    <aside class="detail-info">
+    <aside class="detail-info detail-info-sticky">
       <div class="detail-actions">
         <button class="detail-share-button" type="button" data-share-property>Partager</button>
         <button class="detail-download-button" type="button" data-download-brochure>Telecharger la brochure PDF</button>
@@ -578,14 +583,23 @@ const renderDetail = (property) => {
         }
       </div>
 
-      <div class="detail-description">
-        <h2>Description</h2>
-        <div class="formatted-description">${renderFormattedDescription(property.description)}</div>
-      </div>
-
-      <a class="gold-button contact-button" href="#contact">Demander une visite</a>
+      <div class="detail-contact-slot" id="detailContactSlot"></div>
     </aside>
   `;
+
+  // Move the visit form (with its listeners intact) into the sticky sidebar
+  const contactSection = document.getElementById('contact');
+  const contactSlot = document.getElementById('detailContactSlot');
+  if (contactSection && contactSlot) {
+    contactSlot.appendChild(contactSection);
+  }
+
+  // Prefill the WhatsApp link with the property reference and link
+  const whatsappLink = document.getElementById('visitWhatsapp');
+  if (whatsappLink) {
+    const message = `Bonjour, je suis interesse par votre annonce "${property.title}"${property.reference ? ` (REF ${property.reference})` : ''} : ${window.location.href}`;
+    whatsappLink.href = `https://wa.me/21653762500?text=${encodeURIComponent(message)}`;
+  }
 };
 
 const loadProperty = async () => {
