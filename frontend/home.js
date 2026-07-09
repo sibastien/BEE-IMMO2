@@ -40,6 +40,12 @@ let shuffledHomeProperties = [];
 // on desktop) without leaving for the full "Voir plus" catalog.
 const HOME_LISTING_LIMIT = 12;
 
+// On catalog pages (acheter / louer), show listings 20 at a time with
+// page navigation instead of one long list.
+const CATALOG_PAGE_SIZE = 20;
+let catalogPage = 1;
+let catalogPagination = null;
+
 const propertyTypeLabels = {
   apartment: 'Appartement',
   house: 'Maison',
@@ -227,9 +233,64 @@ const trackSearchEvent = (source) => {
   });
 };
 
-const renderProperties = () => {
+const renderCatalogPagination = (totalPages) => {
+  if (!catalogPagination) {
+    catalogPagination = document.createElement('div');
+    catalogPagination.className = 'catalog-pagination';
+    publicProperties.insertAdjacentElement('afterend', catalogPagination);
+
+    catalogPagination.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-page]');
+      if (!button || button.disabled) return;
+      catalogPage = Number(button.dataset.page);
+      renderProperties({ resetPage: false });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  if (totalPages <= 1) {
+    catalogPagination.innerHTML = '';
+    return;
+  }
+
+  const pageButtons = [];
+  for (let page = 1; page <= totalPages; page += 1) {
+    // Always show first/last page, plus a window around the current page.
+    const isEdge = page === 1 || page === totalPages;
+    const isNear = Math.abs(page - catalogPage) <= 1;
+
+    if (!isEdge && !isNear) {
+      if (pageButtons[pageButtons.length - 1] !== '<span class="pagination-ellipsis">…</span>') {
+        pageButtons.push('<span class="pagination-ellipsis">…</span>');
+      }
+      continue;
+    }
+
+    pageButtons.push(
+      `<button type="button" data-page="${page}" class="${page === catalogPage ? 'active' : ''}" ${page === catalogPage ? 'aria-current="page"' : ''}>${page}</button>`
+    );
+  }
+
+  catalogPagination.innerHTML = `
+    <button type="button" data-page="${catalogPage - 1}" ${catalogPage === 1 ? 'disabled' : ''} aria-label="Page precedente">&lsaquo;</button>
+    ${pageButtons.join('')}
+    <button type="button" data-page="${catalogPage + 1}" ${catalogPage === totalPages ? 'disabled' : ''} aria-label="Page suivante">&rsaquo;</button>
+  `;
+};
+
+const renderProperties = ({ resetPage = true } = {}) => {
   visibleProperties = getFilteredProperties();
   publicCount.textContent = `${visibleProperties.length} annonce${visibleProperties.length > 1 ? 's' : ''}`;
+
+  let listedProperties = visibleProperties;
+
+  if (isCatalogPage) {
+    if (resetPage) catalogPage = 1;
+    const totalPages = Math.max(1, Math.ceil(visibleProperties.length / CATALOG_PAGE_SIZE));
+    catalogPage = Math.min(Math.max(catalogPage, 1), totalPages);
+    listedProperties = visibleProperties.slice((catalogPage - 1) * CATALOG_PAGE_SIZE, catalogPage * CATALOG_PAGE_SIZE);
+    renderCatalogPagination(totalPages);
+  }
 
   const viewMoreContainer = homeViewMore?.closest('.home-view-more');
 
@@ -239,6 +300,7 @@ const renderProperties = () => {
     carouselNext?.classList.add('hidden');
     carouselDots?.classList.add('hidden');
     viewMoreContainer?.classList.add('is-hidden');
+    if (catalogPagination) catalogPagination.innerHTML = '';
     return;
   }
 
@@ -249,7 +311,7 @@ const renderProperties = () => {
   carouselNext?.classList.toggle('hidden', isCatalogPage || visibleProperties.length <= 1);
   carouselDots?.classList.toggle('hidden', isCatalogPage);
 
-  publicProperties.innerHTML = visibleProperties
+  publicProperties.innerHTML = listedProperties
     .map((property) => {
       const propertyUrl = `/property/${property.slug || property.id || property._id}`;
       // Safely extract images from property, supporting both new 'images' array and old 'image' field

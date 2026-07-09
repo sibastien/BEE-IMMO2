@@ -6483,3 +6483,49 @@ textarea:focus {
     border-radius: 8px;
   }
 }
+
+/* Pagination on catalog pages (acheter / louer) */
+.catalog-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.catalog-pagination button {
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #e4dccb;
+  border-radius: 8px;
+  background: #fff;
+  color: #211d17;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.catalog-pagination button:hover:not(:disabled):not(.active) {
+  border-color: var(--primary);
+  background: var(--honey-soft, #fff9ea);
+}
+
+.catalog-pagination button.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  cursor: default;
+}
+
+.catalog-pagination button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.pagination-ellipsis {
+  padding: 0 4px;
+  color: var(--muted, #6b6355);
+}
