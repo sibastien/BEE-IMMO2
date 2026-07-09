@@ -46,6 +46,38 @@ const CATALOG_PAGE_SIZE = 20;
 let catalogPage = 1;
 let catalogPagination = null;
 
+// Grid / list display toggle on catalog pages; the choice is remembered.
+const viewToggle = document.getElementById('viewToggle');
+const CATALOG_VIEW_KEY = 'bee-catalog-view';
+
+const applyCatalogView = (view) => {
+  publicProperties?.classList.toggle('grid-view', view === 'grid');
+  viewToggle?.querySelectorAll('button[data-view]').forEach((button) => {
+    button.classList.toggle('active', button.dataset.view === view);
+  });
+  try {
+    localStorage.setItem(CATALOG_VIEW_KEY, view);
+  } catch (error) {
+    /* localStorage unavailable (private mode) — toggle still works for this visit */
+  }
+};
+
+if (isCatalogPage && viewToggle) {
+  let savedView = 'list';
+  try {
+    savedView = localStorage.getItem(CATALOG_VIEW_KEY) || 'list';
+  } catch (error) {
+    /* ignore */
+  }
+  applyCatalogView(savedView === 'grid' ? 'grid' : 'list');
+
+  viewToggle.addEventListener('click', (event) => {
+    const button = event.target.closest('button[data-view]');
+    if (!button) return;
+    applyCatalogView(button.dataset.view);
+  });
+}
+
 const propertyTypeLabels = {
   apartment: 'Appartement',
   house: 'Maison',
