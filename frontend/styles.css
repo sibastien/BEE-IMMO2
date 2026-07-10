@@ -6641,9 +6641,11 @@ textarea:focus {
 }
 
 .home-page .site-header {
-  z-index: 1;
+  z-index: 10;
   border-bottom: 0;
   background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
 }
 
 .home-page main,
@@ -6654,6 +6656,22 @@ textarea:focus {
 
 .home-page.public-page main {
   background: transparent;
+}
+
+.home-page .brand-logo {
+  mix-blend-mode: multiply;
+}
+
+.home-page .brand-text {
+  max-width: none;
+  white-space: nowrap;
+  color: #1c160d;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-shadow:
+    0 1px 10px rgba(255, 253, 248, 0.95),
+    0 0 2px rgba(255, 253, 248, 0.85);
 }
 
 @media (max-width: 560px) {
@@ -6672,5 +6690,15 @@ textarea:focus {
 
   .home-page .site-header {
     background: transparent;
+  }
+
+  .home-page .brand {
+    align-items: center;
+  }
+
+  .home-page .brand-text {
+    padding-left: 0;
+    font-size: 11px;
+    text-align: center;
   }
 }
