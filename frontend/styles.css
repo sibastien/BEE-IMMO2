@@ -6619,33 +6619,58 @@ textarea:focus {
   justify-content: flex-start;
 }
 
-/* Hammamet photo background on home hero (photo: Wikimedia Commons, CC BY-SA) */
-.home-page .marketplace-home {
-  position: relative;
-  background-image:
+/* Hammamet photo background across header + home hero (photo: Wikimedia Commons, CC BY-SA) */
+.home-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 560px;
+  background:
     linear-gradient(
       180deg,
-      rgba(255, 253, 248, 0.78) 0%,
-      rgba(252, 247, 238, 0.5) 42%,
-      rgba(251, 250, 246, 0.82) 82%,
+      rgba(255, 253, 248, 0.5) 0%,
+      rgba(252, 247, 238, 0.24) 38%,
+      rgba(251, 250, 246, 0.66) 72%,
+      rgba(251, 250, 246, 0.97) 92%,
       rgba(251, 250, 246, 1) 100%
     ),
-    url("/assets/hammamet-hero.jpg");
-  background-size: auto, cover;
-  background-position: center, center 28%;
-  background-repeat: no-repeat, no-repeat;
+    url("/assets/hammamet-hero.jpg") center bottom / cover no-repeat;
+  pointer-events: none;
+}
+
+.home-page .site-header {
+  z-index: 1;
+  border-bottom: 0;
+  background: transparent;
+}
+
+.home-page main,
+.floating-whatsapp {
+  position: relative;
+  z-index: 1;
+}
+
+.home-page.public-page main {
+  background: transparent;
 }
 
 @media (max-width: 560px) {
-  .home-page .marketplace-home {
-    background-image:
+  .home-page::before {
+    height: 470px;
+    background:
       linear-gradient(
         180deg,
-        rgba(255, 253, 248, 0.85) 0%,
-        rgba(252, 247, 238, 0.68) 45%,
+        rgba(255, 253, 248, 0.55) 0%,
+        rgba(252, 247, 238, 0.35) 38%,
+        rgba(251, 246, 236, 0.88) 64%,
         rgba(251, 246, 236, 1) 100%
       ),
-      url("/assets/hammamet-hero.jpg");
-    background-position: center, center 16%;
+      url("/assets/hammamet-hero.jpg") center bottom / cover no-repeat;
+  }
+
+  .home-page .site-header {
+    background: transparent;
   }
 }
