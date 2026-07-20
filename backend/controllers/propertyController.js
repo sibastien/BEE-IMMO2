@@ -72,7 +72,7 @@ const createProperty = async (req, res, next) => {
 // Afficher toutes les annonces (source: ImmoGest, read-only)
 const getProperties = async (req, res, next) => {
   try {
-    const normalizedProperties = getPublishedProperties();
+    const normalizedProperties = await getPublishedProperties();
 
     res.status(200).json({
       success: true,
@@ -87,7 +87,7 @@ const getProperties = async (req, res, next) => {
 // Afficher une annonce par ID ou slug (source: ImmoGest, read-only)
 const getPropertyById = async (req, res, next) => {
   try {
-    const doc = getPublishedPropertyByIdentifier(req.params.id);
+    const doc = await getPublishedPropertyByIdentifier(req.params.id);
 
     if (!doc) {
       res.status(404);

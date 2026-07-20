@@ -5,15 +5,27 @@
 // reshapes them to look like the Mongoose Property documents the rest of
 // this codebase (controllers, frontend) already expects.
 //
+// Photos: ImmoGest serves photos from its own server (crm.beeimmobilier.com),
+// not Cloudinary, so the existing Cloudinary-URL watermark (getWatermarkedImageUrl /
+// BeeImages.withWatermark) can't touch them as-is. To keep that watermark code
+// unchanged, each ImmoGest photo is uploaded to Cloudinary the first time it's
+// seen, and the resulting res.cloudinary.com URL is cached on disk so we don't
+// re-upload on every request.
+//
 // Requires: npm install better-sqlite3   (in the OTHER site's backend/)
 
+const fs = require('fs');
+const path = require('path');
 const Database = require('better-sqlite3');
+const { cloudinary } = require('../config/cloudinary');
 const { buildPropertySlug } = require('./propertySlug');
 
 const IMMOGEST_DB_PATH =
   process.env.IMMOGEST_DB_PATH || '/home/ubuntu/crm/immogest-pro/server/data/immogest.db';
 
 const IMMOGEST_PUBLIC_URL = process.env.IMMOGEST_PUBLIC_URL || 'https://crm.beeimmobilier.com';
+
+const CACHE_PATH = path.join(__dirname, '..', 'data', 'immogest-image-cache.json');
 
 const db = new Database(IMMOGEST_DB_PATH, { readonly: true, fileMustExist: true });
 
@@ -33,7 +45,37 @@ function mapStatus(status) {
   return 'available';
 }
 
-function parseImages(photosJson) {
+// --- Cloudinary URL cache (ImmoGest photo URL -> Cloudinary secure_url) ---
+
+function loadCache() {
+  try {
+    return JSON.parse(fs.readFileSync(CACHE_PATH, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+function saveCache(cache) {
+  fs.mkdirSync(path.dirname(CACHE_PATH), { recursive: true });
+  fs.writeFileSync(CACHE_PATH, JSON.stringify(cache), 'utf8');
+}
+
+let imageCache = loadCache();
+
+async function toCloudinaryUrl(immogestUrl) {
+  if (imageCache[immogestUrl]) return imageCache[immogestUrl];
+
+  const upload = await cloudinary.uploader.upload(immogestUrl, {
+    folder: 'bee-consulting/properties',
+    resource_type: 'image',
+  });
+
+  imageCache[immogestUrl] = upload.secure_url;
+  saveCache(imageCache);
+  return upload.secure_url;
+}
+
+function parseImageUrls(photosJson) {
   let photos;
   try {
     photos = JSON.parse(photosJson || '[]');
@@ -43,18 +85,18 @@ function parseImages(photosJson) {
   if (!Array.isArray(photos)) return [];
   return photos
     .filter((url) => url && typeof url === 'string')
-    .map((url) => (url.startsWith('/') ? `${IMMOGEST_PUBLIC_URL}${url}` : url))
-    .filter(
-      (url) =>
-        /^https?:\/\/.+/i.test(url) || /^data:image\/(png|jpe?g|webp);base64,/i.test(url)
-    );
+    .map((url) => (url.startsWith('/') ? `${IMMOGEST_PUBLIC_URL}${url}` : url));
 }
+
+// --- Row -> doc mapping ---
 
 // Row (snake_case, as stored in ImmoGest) -> doc shaped like a Mongoose
 // Property.toObject(), so the existing controller normalization/response
 // code doesn't need to know the data came from a different database.
-function rowToDoc(row) {
+async function rowToDoc(row) {
   const propertyType = PROPERTY_TYPE[row.type] || 'apartment';
+  const immogestImageUrls = parseImageUrls(row.photos);
+  const images = await Promise.all(immogestImageUrls.map(toCloudinaryUrl));
 
   const doc = {
     _id: row.id,
@@ -74,7 +116,7 @@ function rowToDoc(row) {
     bathrooms: propertyType === 'land' ? 0 : row.bathrooms || 0,
     garages: row.parking ? 1 : 0,
     abris: 0,
-    images: parseImages(row.photos),
+    images,
     status: mapStatus(row.status),
     isPublished: !!row.published,
     deletedAt: null,
@@ -86,16 +128,16 @@ function rowToDoc(row) {
   return doc;
 }
 
-function getPublishedProperties() {
+async function getPublishedProperties() {
   const rows = db
     .prepare('SELECT * FROM properties WHERE published = 1 ORDER BY created_at DESC')
     .all();
-  return rows.map(rowToDoc);
+  return Promise.all(rows.map(rowToDoc));
 }
 
 // Mirrors findPropertyByIdentifier: accepts an ImmoGest id (e.g. "prop-172...")
 // or a slug ("villa-vue-mer-v-abc-123"), only among published properties.
-function getPublishedPropertyByIdentifier(identifier) {
+async function getPublishedPropertyByIdentifier(identifier) {
   const value = String(identifier || '').trim();
   if (!value) return null;
 
@@ -103,8 +145,11 @@ function getPublishedPropertyByIdentifier(identifier) {
   if (byId) return rowToDoc(byId);
 
   const rows = db.prepare('SELECT * FROM properties WHERE published = 1').all();
-  const bySlug = rows.find((row) => buildPropertySlug(rowToDoc(row)) === value);
-  return bySlug ? rowToDoc(bySlug) : null;
+  for (const row of rows) {
+    const doc = await rowToDoc(row);
+    if (doc.slug === value) return doc;
+  }
+  return null;
 }
 
 module.exports = { getPublishedProperties, getPublishedPropertyByIdentifier };
