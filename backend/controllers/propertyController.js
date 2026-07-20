@@ -6,6 +6,7 @@ const {
 const { getNextReference } = require('../utils/propertyReference');
 const { buildPropertySlug, findPropertyByIdentifier } = require('../utils/propertySlug');
 const { getPublicPropertyFilter } = require('../utils/propertyPublication');
+const { getPublishedProperties, getPublishedPropertyByIdentifier } = require('../utils/immogestDb');
 
 const isBase64Image = (image) => /^data:image\/(png|jpe?g|webp);base64,/i.test(image || '');
 
@@ -68,60 +69,10 @@ const createProperty = async (req, res, next) => {
   }
 };
 
-// Afficher toutes les annonces
+// Afficher toutes les annonces (source: ImmoGest, read-only)
 const getProperties = async (req, res, next) => {
   try {
-    const properties = await Property.find(getPublicPropertyFilter()).sort({ createdAt: -1 });
-
-    // Normalize properties to ensure they have required fields
-    const normalizedProperties = properties.map((property) => {
-      const doc = property.toObject();
-
-      // Ensure status exists and is valid
-      if (!doc.status || !['available', 'sold', 'rented'].includes(doc.status)) {
-        doc.status = 'available';
-      }
-
-      doc.slug = buildPropertySlug(doc);
-
-      // Ensure images is an array
-      if (!Array.isArray(doc.images)) {
-        if (typeof doc.image === 'string' && doc.image) {
-          // Migrate old 'image' field to 'images' array
-          doc.images = [doc.image];
-        } else {
-          doc.images = [];
-        }
-      }
-
-      // Filter invalid image URLs
-      doc.images = doc.images.filter(
-        (url) =>
-          url &&
-          typeof url === 'string' &&
-          (/^https?:\/\/.+/i.test(url) || /^data:image\/(png|jpe?g|webp);base64,/i.test(url))
-      );
-
-      // Ensure numeric fields have proper defaults for non-land properties
-      if (doc.propertyType !== 'land') {
-        if (typeof doc.bedrooms !== 'number' || doc.bedrooms < 0) {
-          doc.bedrooms = 0;
-        }
-        if (typeof doc.bathrooms !== 'number' || doc.bathrooms < 0) {
-          doc.bathrooms = 0;
-        }
-      }
-
-      // Ensure other numeric fields
-      if (typeof doc.garages !== 'number' || doc.garages < 0) {
-        doc.garages = 0;
-      }
-      if (typeof doc.abris !== 'number' || doc.abris < 0) {
-        doc.abris = 0;
-      }
-
-      return doc;
-    });
+    const normalizedProperties = getPublishedProperties();
 
     res.status(200).json({
       success: true,
@@ -133,59 +84,14 @@ const getProperties = async (req, res, next) => {
   }
 };
 
-// Afficher une annonce par ID ou slug
+// Afficher une annonce par ID ou slug (source: ImmoGest, read-only)
 const getPropertyById = async (req, res, next) => {
   try {
-    const property = await findPropertyByIdentifier(Property, req.params.id);
+    const doc = getPublishedPropertyByIdentifier(req.params.id);
 
-    if (!property) {
+    if (!doc) {
       res.status(404);
       throw new Error('Annonce introuvable');
-    }
-
-    // Normalize the property document
-    const doc = property.toObject();
-
-    // Ensure status exists and is valid
-    if (!doc.status || !['available', 'sold', 'rented'].includes(doc.status)) {
-      doc.status = 'available';
-    }
-
-    doc.slug = buildPropertySlug(doc);
-
-    // Ensure images is an array
-    if (!Array.isArray(doc.images)) {
-      if (typeof doc.image === 'string' && doc.image) {
-        // Migrate old 'image' field to 'images' array
-        doc.images = [doc.image];
-      } else {
-        doc.images = [];
-      }
-    }
-
-    // Filter invalid image URLs
-    doc.images = doc.images.filter(
-      (url) =>
-        url &&
-        typeof url === 'string' &&
-        (/^https?:\/\/.+/i.test(url) || /^data:image\/(png|jpe?g|webp);base64,/i.test(url))
-    );
-
-    // Ensure numeric fields have proper defaults
-    if (doc.propertyType !== 'land') {
-      if (typeof doc.bedrooms !== 'number' || doc.bedrooms < 0) {
-        doc.bedrooms = 0;
-      }
-      if (typeof doc.bathrooms !== 'number' || doc.bathrooms < 0) {
-        doc.bathrooms = 0;
-      }
-    }
-
-    if (typeof doc.garages !== 'number' || doc.garages < 0) {
-      doc.garages = 0;
-    }
-    if (typeof doc.abris !== 'number' || doc.abris < 0) {
-      doc.abris = 0;
     }
 
     res.status(200).json({
