@@ -13,6 +13,8 @@ const { buildPropertySlug } = require('./propertySlug');
 const IMMOGEST_DB_PATH =
   process.env.IMMOGEST_DB_PATH || '/home/ubuntu/crm/immogest-pro/server/data/immogest.db';
 
+const IMMOGEST_PUBLIC_URL = process.env.IMMOGEST_PUBLIC_URL || 'https://crm.beeimmobilier.com';
+
 const db = new Database(IMMOGEST_DB_PATH, { readonly: true, fileMustExist: true });
 
 const TRANSACTION_TYPE = { vente: 'sale', location: 'rent' };
@@ -39,12 +41,13 @@ function parseImages(photosJson) {
     photos = [];
   }
   if (!Array.isArray(photos)) return [];
-  return photos.filter(
-    (url) =>
-      url &&
-      typeof url === 'string' &&
-      (/^https?:\/\/.+/i.test(url) || /^data:image\/(png|jpe?g|webp);base64,/i.test(url))
-  );
+  return photos
+    .filter((url) => url && typeof url === 'string')
+    .map((url) => (url.startsWith('/') ? `${IMMOGEST_PUBLIC_URL}${url}` : url))
+    .filter(
+      (url) =>
+        /^https?:\/\/.+/i.test(url) || /^data:image\/(png|jpe?g|webp);base64,/i.test(url)
+    );
 }
 
 // Row (snake_case, as stored in ImmoGest) -> doc shaped like a Mongoose
