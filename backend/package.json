@@ -10,7 +10,8 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "migrate:cloudinary": "node scripts/migrateImagesToCloudinary.js",
-    "migrate:references": "node scripts/migratePropertyReferences.js"
+    "migrate:references": "node scripts/migratePropertyReferences.js",
+    "import:immogest": "node scripts/importPropertiesToImmoGest.js"
   },
   "dependencies": {
     "better-sqlite3": "^12.2.0",
