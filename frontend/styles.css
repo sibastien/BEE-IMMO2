@@ -1558,6 +1558,40 @@ a {
   stroke-width: 1.8;
 }
 
+.detail-features h2 {
+  margin: 20px 0 10px;
+  font-size: 1rem;
+  color: var(--black);
+}
+
+.detail-features-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.feature-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fbf8ef;
+  color: #5f4b13;
+  font-size: 0.85rem;
+}
+
+.feature-tag svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
 .detail-description {
   border-top: 1px solid var(--line);
   padding-top: 16px;

@@ -32,6 +32,28 @@ const rentalTypeLabels = {
   nightly: 'Nuitee'
 };
 
+// Equipements & prestations: maps ImmoGest's French feature labels to an icon key.
+const featureIconKeys = {
+  'Parking': 'parking',
+  'Ascenseur': 'elevator',
+  'Piscine': 'pool',
+  'Jardin': 'garden',
+  'Terrasse': 'terrace',
+  'Balcon': 'balcony',
+  'Climatisation': 'ac',
+  'Meublé': 'furnished',
+  'Gardien': 'guard',
+  'Concierge': 'concierge',
+  'Cave': 'cave',
+  'Buanderie': 'laundry',
+  'Vue mer': 'sea',
+  'Neuf': 'new',
+  'Viabilisé': 'utilities',
+  'WiFi': 'wifi'
+};
+
+const featureIcon = (label) => icon(featureIconKeys[label] || 'check');
+
 const moneyFormatter = new Intl.NumberFormat('fr-FR', {
   style: 'currency',
   currency: 'TND',
@@ -112,7 +134,24 @@ const icon = (name) => {
     bed: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11V5"/><path d="M20 19v-6a2 2 0 0 0-2-2H4v8"/><path d="M4 15h16"/><path d="M8 11V7h6a2 2 0 0 1 2 2v2"/></svg>',
     bath: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M6 12V6a2 2 0 0 1 2-2h1"/><path d="M14 6h4"/><path d="M15 4v4"/></svg>',
     garage: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10 12 4l9 6v10H3z"/><path d="M7 20v-7h10v7"/><path d="M9 16h6"/></svg>',
-    abri: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h14"/><path d="M7 16l1.5-5h7L17 16"/><path d="M8 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/><path d="M16 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/></svg>'
+    abri: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 16h14"/><path d="M7 16l1.5-5h7L17 16"/><path d="M8 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/><path d="M16 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/></svg>',
+    parking: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>',
+    elevator: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M10 9l2-2 2 2"/><path d="M10 15l2 2 2-2"/></svg>',
+    pool: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0 3-1 4.5 0"/><path d="M6 13V6a2 2 0 0 1 2-2h3l7 7"/></svg>',
+    garden: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22V12"/><path d="M12 12c0-4-3-7-7-7 0 4 3 7 7 7"/><path d="M12 12c0-4 3-7 7-7 0 4-3 7-7 7"/></svg>',
+    terrace: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18"/><path d="M5 20V10l7-5 7 5v10"/><path d="M9 20v-6h6v6"/></svg>',
+    balcony: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="4" rx="1"/><path d="M6 14v6M12 14v6M18 14v6"/></svg>',
+    ac: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="6" rx="1"/><path d="M7 16v3M12 16v3M17 16v3"/></svg>',
+    furnished: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18v-5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5"/><path d="M4 15h16"/><path d="M6 11V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3"/></svg>',
+    guard: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>',
+    concierge: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M6 21v-2a6 6 0 0 1 12 0v2"/></svg>',
+    cave: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V11a8 8 0 0 1 16 0v10"/><path d="M4 21h16"/></svg>',
+    laundry: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M8 6h1"/></svg>',
+    sea: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 16c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0 3-1 4.5 0"/><path d="M3 20c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0 3-1 4.5 0"/><circle cx="17" cy="6" r="2"/></svg>',
+    new: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 21 12 17l-5.5 4L8 13.5 3 9l6.5-.5z"/></svg>',
+    utilities: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>',
+    wifi: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 8.5a16 16 0 0 1 20 0"/><path d="M5 12a11 11 0 0 1 14 0"/><path d="M8.5 15.5a6 6 0 0 1 7 0"/><circle cx="12" cy="19" r="1"/></svg>',
+    check: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>'
   };
 
   return icons[name];
@@ -584,6 +623,21 @@ const renderDetail = (property) => {
             `
         }
       </div>
+
+      ${
+        Array.isArray(property.features) && property.features.length > 0
+          ? `
+            <div class="detail-features">
+              <h2>Equipements &amp; prestations</h2>
+              <div class="detail-features-list">
+                ${property.features
+                  .map((f) => `<span class="feature-tag">${featureIcon(f)}<span>${escapeHtml(f)}</span></span>`)
+                  .join('')}
+              </div>
+            </div>
+          `
+          : ''
+      }
 
       </div>
 

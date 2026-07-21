@@ -33,6 +33,16 @@ function mapStatus(status) {
   return 'available';
 }
 
+function parseFeatures(featuresJson) {
+  let features;
+  try {
+    features = JSON.parse(featuresJson || '[]');
+  } catch {
+    features = [];
+  }
+  return Array.isArray(features) ? features.filter((f) => f && typeof f === 'string') : [];
+}
+
 function parseImages(photosJson) {
   let photos;
   try {
@@ -75,6 +85,7 @@ function rowToDoc(row) {
     garages: row.parking ? 1 : 0,
     abris: 0,
     images: parseImages(row.photos),
+    features: parseFeatures(row.features),
     status: mapStatus(row.status),
     isPublished: !!row.published,
     deletedAt: null,
