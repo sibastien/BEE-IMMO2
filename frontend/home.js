@@ -419,6 +419,8 @@ const renderProperties = ({ resetPage = true } = {}) => {
     })
     .join('');
 
+  window.BeeImages?.applyWatermarks?.('.listing-media');
+
   if (!isCatalogPage) {
     renderDots();
   }

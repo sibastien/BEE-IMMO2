@@ -284,16 +284,48 @@ const getPdfFileName = (property) => {
   return `brochure-${reference}-${title || 'bee-immobilier'}.pdf`;
 };
 
+const loadWatermarkLogo = (() => {
+  let promise = null;
+  return () => {
+    if (!promise) {
+      promise = new Promise((resolve) => {
+        const logo = new Image();
+        logo.onload = () => resolve(logo);
+        logo.onerror = () => resolve(null);
+        logo.src = window.BeeImages?.logoSrc || '/assets/bee-logo-transparent.png';
+      });
+    }
+    return promise;
+  };
+})();
+
 const getImageData = (imageUrl) =>
   new Promise((resolve) => {
     const image = new Image();
     image.crossOrigin = 'anonymous';
-    image.onload = () => {
+    image.onload = async () => {
       const canvas = document.createElement('canvas');
       canvas.width = image.naturalWidth;
       canvas.height = image.naturalHeight;
       const context = canvas.getContext('2d');
       context.drawImage(image, 0, 0);
+
+      const logo = await loadWatermarkLogo();
+      if (logo) {
+        const logoWidth = canvas.width * 0.18;
+        const logoHeight = logoWidth * (logo.naturalHeight / logo.naturalWidth);
+        const margin = canvas.width * 0.04;
+        context.globalAlpha = 0.58;
+        context.drawImage(
+          logo,
+          canvas.width - logoWidth - margin,
+          canvas.height - logoHeight - margin,
+          logoWidth,
+          logoHeight
+        );
+        context.globalAlpha = 1;
+      }
+
       resolve({
         dataUrl: canvas.toDataURL('image/jpeg', 0.88),
         width: image.naturalWidth,
@@ -658,6 +690,8 @@ const renderDetail = (property) => {
     const message = `Bonjour, je suis interesse par votre annonce "${property.title}"${property.reference ? ` (REF ${property.reference})` : ''} : ${window.location.href}`;
     whatsappLink.href = `https://wa.me/21653762500?text=${encodeURIComponent(message)}`;
   }
+
+  window.BeeImages?.applyWatermarks?.('.detail-carousel');
 };
 
 const loadProperty = async () => {
